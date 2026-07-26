@@ -78,6 +78,13 @@ export class HeaderComponent {
     this.isTCodeSearch() ? this.quickNav.search(this.searchQuery()) : []
   );
 
+  /** Below tablet, the global search is hidden behind a toggle instead of always inline — there's no room for it next to the hdr-pills. */
+  protected readonly mobileSearchOpen = signal(false);
+
+  toggleMobileSearch(): void {
+    this.mobileSearchOpen.update((v) => !v);
+  }
+
   protected readonly apps = SSO_APPS;
   protected readonly tenants = ['Prime Bank Ltd.', 'Northgate Finance', 'Meridian Trust Co.'];
   protected readonly activeTenant = signal(this.tenants[0]);
@@ -89,7 +96,11 @@ export class HeaderComponent {
   ];
 
   runSearch(): void {
-    if (!this.rail.expanded()) {
+    // Desktop-only affordance: clicking search in the collapsed icon rail
+    // just expands it to reveal the search field first. Skip this when the
+    // mobile search overlay is what's actually open, or a phone with the
+    // drawer closed would silently open the drawer instead of searching.
+    if (!this.mobileSearchOpen() && !this.rail.expanded()) {
       this.rail.toggle();
       return;
     }
@@ -104,6 +115,7 @@ export class HeaderComponent {
     this.breadcrumb.set(['Search'], `Results for "${query}" — ${this.searchType()}`);
     // Wire to a real search service/route here — the POC only simulated this.
     console.info('Searching', this.searchType(), query);
+    this.mobileSearchOpen.set(false);
   }
 
   private runTCodeSearch(): void {
@@ -122,6 +134,7 @@ export class HeaderComponent {
     this.breadcrumb.set(item.labels.slice(0, -1), item.label);
     this.searchQuery.set(item.code);
     this.menu.close();
+    this.mobileSearchOpen.set(false);
 
     const feature = this.tree.getNode(item.path);
     if (feature?.route) {

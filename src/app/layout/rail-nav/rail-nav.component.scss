@@ -1,5 +1,11 @@
+@use '../../../styles/breakpoints' as bp;
+
 :host {
   display: block;
+}
+
+.rail-backdrop {
+  display: none;
 }
 
 .rail {
@@ -17,6 +23,36 @@
 
   &.exp {
     width: 230px;
+  }
+}
+
+// Below desktop, the rail becomes an off-canvas drawer over the content
+// instead of an inline column — there's no room to permanently reserve
+// 64-230px of horizontal space on a phone or portrait tablet.
+@include bp.tablet-down {
+  .rail-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 44; // just below .rail
+  }
+
+  .rail {
+    position: fixed;
+    top: 58px; // header height
+    bottom: 28px; // status bar height
+    left: 0;
+    z-index: 46;
+    width: 260px;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease;
+
+    &.exp {
+      width: 260px;
+      transform: translateX(0);
+    }
   }
 }
 

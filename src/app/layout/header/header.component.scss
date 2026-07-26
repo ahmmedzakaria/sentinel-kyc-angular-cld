@@ -1,9 +1,19 @@
+@use '../../../styles/breakpoints' as bp;
+
 :host {
   display: block;
 }
 
+.menu-btn {
+  display: none;
+}
+.search-btn {
+  display: none;
+}
+
 header {
   height: 58px;
+  position: relative; // anchors the mobile search overlay row below it
   background: var(--chrome-bg);
   color: var(--chrome-text);
   display: flex;
@@ -398,5 +408,72 @@ header.icon-view .hdr-pill {
       font-weight: 500;
       line-height: 1.25;
     }
+  }
+}
+
+// Below desktop there's no room for a permanently-expanded rail, so the
+// hamburger here becomes the only way to open the off-canvas drawer.
+@include bp.tablet-down {
+  .menu-btn {
+    display: flex;
+  }
+
+  // Same visual treatment as the desktop "icon view" (collapsed rail) state,
+  // just driven by viewport instead of rail width — there's no inline space
+  // for full labels on a tablet regardless of whether the drawer is open.
+  .brand-text {
+    display: none;
+  }
+  .hdr-pill {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+
+    .lbl-text,
+    .chev {
+      display: none;
+    }
+  }
+}
+
+// Below tablet, the inline search bar doesn't fit next to the icon-only
+// pills — it's tucked behind a toggle and shown as a full-width row instead.
+@include bp.mobile {
+  header {
+    gap: var(--space-4);
+    padding: 0 var(--space-4);
+  }
+
+  .search-btn {
+    display: flex;
+  }
+
+  .hdr-center {
+    display: none;
+  }
+
+  header.mobile-search-open {
+    .hdr-center {
+      display: flex;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      padding: var(--space-3) var(--space-4);
+      background: var(--chrome-bg);
+      border-bottom: 1px solid var(--chrome-border-strong);
+      box-shadow: var(--shadow);
+      z-index: 41; // above rail-nav's mega-panel/backdrop, below the rail drawer itself
+    }
+    .global-search {
+      max-width: none;
+    }
+  }
+
+  // No room for every hdr-pill at once, even icon-only — the least
+  // essential switches move behind the Profile menu on the smallest screens
+  // rather than overflowing the header.
+  .hide-xs {
+    display: none;
   }
 }

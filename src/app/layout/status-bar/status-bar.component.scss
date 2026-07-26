@@ -1,3 +1,5 @@
+@use '../../../styles/breakpoints' as bp;
+
 .statusbar {
   height: 28px;
   background: var(--chrome-bg);
@@ -74,5 +76,24 @@
   &.active {
     background: var(--chrome-hover-bg);
     color: var(--accent);
+  }
+}
+
+// The status bar is 28px tall and only ever had room for three dense groups
+// on a full-width desktop viewport — below tablet the least essential group
+// (T-code/favorite or "last synced") drops first, then on phones only the
+// clock survives in the right-hand group.
+@include bp.tablet-down {
+  .sb-mid {
+    display: none;
+  }
+}
+
+@include bp.mobile {
+  .sb-left {
+    display: none;
+  }
+  .hide-xs {
+    display: none;
   }
 }

@@ -1,3 +1,5 @@
+@use '../../../styles/breakpoints' as bp;
+
 .mega-panel {
   background: var(--card);
   border: 1px solid var(--border);
@@ -14,6 +16,38 @@
   grid-template-columns: 220px minmax(0, 1fr);
   gap: var(--space-11);
   align-items: start;
+}
+
+// The desktop width formula assumes a fixed rail (64-230px) sits to its
+// left — below desktop the rail is an off-canvas drawer instead (see
+// rail-nav.component.scss), so that offset no longer means anything; the
+// panel gets almost the full viewport width and stacks into one column.
+@include bp.tablet-down {
+  .mega-panel {
+    width: calc(100vw - var(--space-8));
+    max-height: 80vh;
+    padding: var(--space-8);
+  }
+
+  .mega-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .mega-context {
+    border-inline-end: none;
+    border-bottom: 1px solid var(--border);
+    padding-inline-end: 0;
+    padding-bottom: var(--space-8);
+  }
+
+  .mega-context-art {
+    height: 80px;
+
+    .group-icon {
+      font-size: var(--font-size-2xl);
+    }
+  }
 }
 
 .mega-context {

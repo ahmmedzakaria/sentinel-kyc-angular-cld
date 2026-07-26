@@ -1,4 +1,8 @@
-<header [class.icon-view]="!rail.expanded()">
+<header [class.icon-view]="!rail.expanded()" [class.mobile-search-open]="mobileSearchOpen()">
+  <button type="button" class="hdr-btn menu-btn focus-ring" aria-label="Toggle navigation" (click)="rail.toggle()">
+    <app-icon name="hamburger" />
+  </button>
+
   <div class="brand">
     <svg class="brand-logo" viewBox="0 0 32 32" fill="none" aria-hidden="true">
       <rect class="logo-panel" x="6.5" y="6.5" width="19" height="19" rx="5" stroke-width="1.4" />
@@ -41,6 +45,16 @@
   </div>
 
   <div class="hdr-right">
+    <!-- Mobile-only: opens the global search as a full-width overlay row -->
+    <button
+      type="button"
+      class="hdr-btn search-btn focus-ring"
+      aria-label="Toggle search"
+      (click)="toggleMobileSearch()"
+    >
+      <app-icon [name]="mobileSearchOpen() ? 'close' : 'search'" [size]="17" />
+    </button>
+
     <!-- Favorites -->
     <app-header-dropdown id="favorites">
       <button trigger type="button" class="hdr-pill focus-ring" (click)="menu.toggle('favorites')">
@@ -126,7 +140,7 @@
     </app-header-dropdown>
 
     <!-- Language -->
-    <app-header-dropdown id="language">
+    <app-header-dropdown id="language" class="hide-xs">
       <button trigger type="button" class="hdr-pill focus-ring" (click)="menu.toggle('language')">
         <span class="icon-wrap"><app-icon name="globe" [size]="15" /></span>
         <span class="lbl-text">{{ languages[0].label }}</span>
@@ -168,7 +182,7 @@
     </app-header-dropdown>
 
     <!-- Tenant -->
-    <app-header-dropdown id="tenant">
+    <app-header-dropdown id="tenant" class="hide-xs">
       <button trigger type="button" class="hdr-pill focus-ring" (click)="menu.toggle('tenant')">
         <span class="icon-wrap"><app-icon name="building" [size]="15" /></span>
         <span class="lbl-text">{{ activeTenant() }}</span>

@@ -1,3 +1,12 @@
+@if (rail.expanded()) {
+  <!-- Mouse/touch-only dismiss affordance — the equivalent keyboard action is
+       the header's hamburger button (a real, focusable <button>) toggling
+       the same rail.expanded() state, so this decorative backdrop is
+       correctly excluded from the a11y tree rather than needing its own
+       keyboard handling. -->
+  <div class="rail-backdrop" aria-hidden="true" (click)="rail.collapse()"></div>
+}
+
 <nav class="rail" [class.exp]="rail.expanded()">
   <button type="button" class="toggle focus-ring" (click)="toggleWidth()" aria-label="Toggle navigation width">
     <app-icon name="hamburger" />
@@ -61,7 +70,8 @@
     [cdkConnectedOverlayOrigin]="origin"
     [cdkConnectedOverlayOpen]="!!megaPanel.content()"
     [cdkConnectedOverlayPositions]="[
-      { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 0 }
+      { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 0 },
+      { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetX: 8, offsetY: 4 }
     ]"
   >
     <app-mega-panel />
