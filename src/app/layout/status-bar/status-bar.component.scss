@@ -57,3 +57,22 @@
   font-family: 'IBM Plex Mono', monospace;
   color: var(--chrome-icon);
 }
+.status-favorite {
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: var(--chrome-text-muted);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 6px;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover,
+  &.active {
+    background: var(--chrome-hover-bg);
+    color: var(--accent);
+  }
+}

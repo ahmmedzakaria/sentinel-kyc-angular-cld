@@ -11,12 +11,27 @@ describe('NAVIGATION_TREE', () => {
     }
   });
 
-  it('has 9 top-level module groups, each with an icon and at least one module', () => {
-    expect(NAVIGATION_TREE.length).toBe(9);
+  it('has 11 top-level module groups, each with an icon and at least one module', () => {
+    expect(NAVIGATION_TREE.length).toBe(11);
     for (const group of NAVIGATION_TREE) {
       expect(group.icon).toBeTruthy();
       expect((group.children ?? []).length).toBeGreaterThan(0);
     }
+  });
+
+  it('includes the Compliance and Finance module groups from the source POC', () => {
+    const labels = NAVIGATION_TREE.map((g) => g.label);
+    expect(labels).toContain('Compliance');
+    expect(labels).toContain('Finance');
+  });
+
+  it('KYC uses its own custom Setup/Report groups instead of the shared defaults', () => {
+    const compliance = NAVIGATION_TREE.find((g) => g.label === 'Compliance');
+    const kyc = compliance?.children?.find((m) => m.label === 'KYC');
+    const setup = kyc?.children?.find((c) => c.label === 'Setup');
+    const report = kyc?.children?.find((c) => c.label === 'Report');
+    expect((setup?.children ?? []).map((g) => g.label)).toEqual(['KYC Configuration', 'Verification Setup']);
+    expect((report?.children ?? []).map((g) => g.label)).toEqual(['KYC Reports']);
   });
 
   it('wires the Customer Search feature to the People CRUD route', () => {

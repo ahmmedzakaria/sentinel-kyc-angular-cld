@@ -2,6 +2,7 @@
   "brand": { "name": "Sentinel KYC", "tagline": "Compliance Console" },
   "search": { "placeholder": "Search by customer name…", "button": "Search" },
   "header": {
+    "favorites": "Favorites",
     "apps": "Apps",
     "alerts": "Alerts",
     "tasks": "Tasks",

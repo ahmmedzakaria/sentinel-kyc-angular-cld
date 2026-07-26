@@ -2,6 +2,7 @@
   "brand": { "name": "سنتينل كي واي سي", "tagline": "لوحة الامتثال" },
   "search": { "placeholder": "البحث باسم العميل…", "button": "بحث" },
   "header": {
+    "favorites": "المفضلة",
     "apps": "التطبيقات",
     "alerts": "التنبيهات",
     "tasks": "المهام",

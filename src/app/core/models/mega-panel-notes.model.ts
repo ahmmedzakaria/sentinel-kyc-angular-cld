@@ -4,11 +4,13 @@
  */
 export const MODULE_GROUP_NOTES: Record<string, string> = {
   Banking: 'Work through customer, account, loan, transaction, cheque, and remittance tasks from one operational surface.',
+  Compliance: 'Manage KYC, KYB, AML screening, due diligence, monitoring, case investigation, and regulatory reporting workflows.',
   Survey: 'Capture field information, verify boundaries or assets, and continue into GIS-backed survey workflows.',
   POS: 'Move quickly through sales, cash desk, inventory, settlement, and retail service actions.',
   'Health & Medical': 'Access patient, appointment, clinic, and pharmacy operations grouped for front-desk teams.',
   Education: 'Manage student, academic, attendance, fee, and guardian workflows from the selected category.',
   'E-Commerce': 'Review marketplace, catalog, order, fulfillment, and delivery actions in a single panel.',
+  Finance: 'Control ledger, payable, receivable, budgeting, treasury, and financial close workflows from one finance workspace.',
   Administration: 'Configure users, tenants, branches, roles, and platform settings for controlled operations.',
   Security: 'Review access, sessions, privileges, devices, and audit activity for secure administration.',
   Reporting: 'Open operational, management, compliance, and analytics reports by business area.'

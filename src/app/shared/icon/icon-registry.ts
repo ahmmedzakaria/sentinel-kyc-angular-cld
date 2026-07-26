@@ -52,5 +52,6 @@ export const ICONS: Record<string, string> = {
   check: '<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>',
   calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/>',
   eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
-  'eye-off': '<path d="M3 3l18 18" stroke-linecap="round"/><path d="M10.6 5.2A10.7 10.7 0 0112 5c6.5 0 10 7 10 7a17 17 0 01-3.5 4.3M6.6 6.6C4 8.3 2 12 2 12s3.5 7 10 7a9.7 9.7 0 004.2-.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.9 9.9a3 3 0 004.2 4.2" stroke-linecap="round" stroke-linejoin="round"/>'
+  'eye-off': '<path d="M3 3l18 18" stroke-linecap="round"/><path d="M10.6 5.2A10.7 10.7 0 0112 5c6.5 0 10 7 10 7a17 17 0 01-3.5 4.3M6.6 6.6C4 8.3 2 12 2 12s3.5 7 10 7a9.7 9.7 0 004.2-.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.9 9.9a3 3 0 004.2 4.2" stroke-linecap="round" stroke-linejoin="round"/>',
+  star: '<path d="M12 3.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17.4l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3.5z" stroke-linejoin="round"/>'
 };

@@ -36,17 +36,22 @@ const DEFAULT_REPORT_GROUPS: NavNode[] = [
  * The source POC built this as [Operation, Report, Setup] — every module in the
  * whole tree used the same two default Setup/Report groups. Fixed to the
  * Operation → Setup → Report order used everywhere else in this app.
+ *
+ * Most modules share the default Setup/Report groups, but a handful (KYC,
+ * General Ledger, Accounts Payable/Receivable, HR, Payroll, Fixed Asset) define
+ * their own in the source POC — `setupGroups`/`reportGroups` let those opt out
+ * of the defaults instead of forcing every module through the same two.
  */
-function categories(operationGroups: NavNode[]): NavNode[] {
+function categories(operationGroups: NavNode[], setupGroups?: NavNode[], reportGroups?: NavNode[]): NavNode[] {
   return [
     { label: 'Operation', type: 'category', children: operationGroups },
-    { label: 'Setup', type: 'category', children: DEFAULT_SETUP_GROUPS },
-    { label: 'Report', type: 'category', children: DEFAULT_REPORT_GROUPS }
+    { label: 'Setup', type: 'category', children: setupGroups ?? DEFAULT_SETUP_GROUPS },
+    { label: 'Report', type: 'category', children: reportGroups ?? DEFAULT_REPORT_GROUPS }
   ];
 }
 
-function buildModule(label: string, operationGroups: NavNode[]): NavNode {
-  return { label, type: 'module', children: categories(operationGroups) };
+function buildModule(label: string, operationGroups: NavNode[], setupGroups?: NavNode[], reportGroups?: NavNode[]): NavNode {
+  return { label, type: 'module', children: categories(operationGroups, setupGroups, reportGroups) };
 }
 
 function moduleGroup(label: string, icon: string, modules: NavNode[]): NavNode {
@@ -103,6 +108,110 @@ export const NAVIGATION_TREE: NavNode[] = [
       featureGroup('Settlement', ['Batch Settlement', 'Settlement Review', 'Fee Adjustment', 'Dispute Handling'])
     ])
   ]),
+  moduleGroup('Compliance', '🛡️', [
+    buildModule(
+      'KYC',
+      [
+        featureGroup('Person KYC', [
+          'Customer Registration',
+          'KYC Profile',
+          'Document Capture',
+          'Identity Verification',
+          'Risk Classification',
+          'Approval Review'
+        ]),
+        featureGroup('Business Verification', [
+          'Business Profile',
+          'Owner Information',
+          'Trade License Check',
+          'Address Verification',
+          'Business Risk Rating'
+        ]),
+        featureGroup('KYC Review', ['Pending Review', 'Send Back', 'Approve KYC', 'Reject KYC', 'Review History'])
+      ],
+      [
+        featureGroup('KYC Configuration', ['Document Type Setup', 'Risk Rule Setup', 'Review Frequency', 'Approval Matrix']),
+        featureGroup('Verification Setup', ['Provider Mapping', 'Required Field Setup', 'Checklist Setup'])
+      ],
+      [featureGroup('KYC Reports', ['Customer Register', 'Pending KYC', 'Rejected KYC', 'High Risk Customers', 'Verification Aging'])]
+    ),
+    buildModule('KYB', [
+      featureGroup('Business Onboarding', [
+        'Business Registration',
+        'Beneficial Owner Capture',
+        'Ownership Structure',
+        'Entity Verification',
+        'KYB Approval'
+      ]),
+      featureGroup('Legal Document Review', [
+        'Registration Certificate',
+        'Tax Document',
+        'Trade License',
+        'Board Resolution',
+        'Document Exception'
+      ])
+    ]),
+    buildModule('AML Screening', [
+      featureGroup('Watchlist Screening', [
+        'Sanction Screening',
+        'PEP Screening',
+        'Adverse Media Search',
+        'Watchlist Match Review',
+        'False Positive Marking'
+      ]),
+      featureGroup('Screening Queue', ['Pending Matches', 'Escalated Matches', 'Batch Screening', 'Screening History'])
+    ]),
+    buildModule('Customer Due Diligence', [
+      featureGroup('CDD Review', [
+        'CDD Checklist',
+        'Customer Risk Review',
+        'Profile Refresh',
+        'Source of Fund Review',
+        'Review Approval'
+      ]),
+      featureGroup('Enhanced Due Diligence', ['EDD Request', 'EDD Investigation', 'Senior Approval', 'EDD Closure'])
+    ]),
+    buildModule('Transaction Monitoring', [
+      featureGroup('Monitoring Alerts', [
+        'Alert Queue',
+        'Alert Assignment',
+        'Alert Investigation',
+        'Alert Disposition',
+        'Alert Escalation'
+      ]),
+      featureGroup('Scenario Review', ['Threshold Breach', 'Velocity Pattern', 'Structuring Alert', 'Unusual Activity'])
+    ]),
+    buildModule('Compliance Case Management', [
+      featureGroup('Case Operations', [
+        'Create Case',
+        'Case Search',
+        'Case Assignment',
+        'Investigation Notes',
+        'Case Escalation',
+        'Case Closure'
+      ]),
+      featureGroup('Evidence Management', ['Evidence Upload', 'Evidence Review', 'Linked Alerts', 'Case Timeline'])
+    ]),
+    buildModule('Regulatory Reporting', [
+      featureGroup('Regulatory Submissions', [
+        'STR Draft',
+        'SAR Draft',
+        'CTR Register',
+        'Submission Review',
+        'Regulator Response'
+      ]),
+      featureGroup('Compliance Registers', [
+        'High Risk Register',
+        'PEP Register',
+        'Rejected Customer Register',
+        'Screening Register'
+      ])
+    ]),
+    buildModule('Compliance Policy & Setup', [
+      featureGroup('Policy Configuration', ['Risk Policy', 'Screening Policy', 'CDD Policy', 'EDD Policy', 'Retention Policy']),
+      featureGroup('Rule Configuration', ['Risk Score Rule', 'Alert Threshold', 'Escalation Rule', 'Review Calendar'])
+    ])
+  ]),
   moduleGroup('Survey', '📋', [
     buildModule('Land Survey', [
       featureGroup('Land Information', ['New Survey', 'Search Survey', 'Update Survey', 'GIS Map', 'Boundary Verification', 'Owner History']),
@@ -153,6 +262,71 @@ export const NAVIGATION_TREE: NavNode[] = [
     ]),
     buildModule('Delivery', [featureGroup('Fulfillment', ['Assign Rider', 'Dispatch Order', 'Delivery Update', 'Failed Delivery', 'Proof of Delivery'])])
   ]),
+  moduleGroup('Finance', '💼', [
+    buildModule(
+      'General Ledger',
+      [
+        featureGroup('Journal Management', [
+          'Journal Entry',
+          'Journal Search',
+          'Journal Approval',
+          'Journal Reversal',
+          'Recurring Journal'
+        ]),
+        featureGroup('Ledger Operation', ['Chart of Accounts', 'Ledger Posting', 'Trial Balance', 'Opening Balance', 'Period Close'])
+      ],
+      [featureGroup('Ledger Setup', ['Account Group Setup', 'Fiscal Year Setup', 'Posting Rule Setup', 'Currency Setup'])],
+      [featureGroup('Ledger Reports', ['General Ledger', 'Trial Balance', 'Journal Register', 'Account Statement'])]
+    ),
+    buildModule(
+      'Accounts Payable',
+      [
+        featureGroup('Vendor Invoice', ['Invoice Entry', 'Invoice Search', 'Invoice Approval', 'Invoice Hold', 'Payment Request']),
+        featureGroup('Vendor Payment', ['Payment Voucher', 'Payment Review', 'Payment Release', 'Advance Adjustment'])
+      ],
+      [featureGroup('Payable Setup', ['Vendor Setup', 'Payment Term Setup', 'Tax Rule Setup', 'Approval Matrix'])],
+      [featureGroup('Payable Reports', ['Vendor Ledger', 'Aging Payable', 'Payment Register', 'Outstanding Invoice'])]
+    ),
+    buildModule(
+      'Accounts Receivable',
+      [
+        featureGroup('Customer Invoice', ['Invoice Create', 'Invoice Search', 'Invoice Approval', 'Credit Note', 'Receipt Allocation']),
+        featureGroup('Collection', ['Receipt Entry', 'Collection Review', 'Deposit Slip', 'Bad Debt Proposal'])
+      ],
+      [featureGroup('Receivable Setup', ['Customer Setup', 'Collection Rule Setup', 'Credit Term Setup'])],
+      [featureGroup('Receivable Reports', ['Customer Ledger', 'Aging Receivable', 'Collection Register', 'Outstanding Bill'])]
+    ),
+    buildModule('Budget & Cost Control', [
+      featureGroup('Budget Operation', [
+        'Budget Create',
+        'Budget Revision',
+        'Budget Approval',
+        'Budget Transfer',
+        'Budget Utilization'
+      ]),
+      featureGroup('Cost Center Control', [
+        'Cost Center Allocation',
+        'Expense Review',
+        'Variance Analysis',
+        'Commitment Tracking'
+      ])
+    ]),
+    buildModule('Treasury Management', [
+      featureGroup('Cash & Bank', [
+        'Bank Account Setup',
+        'Bank Reconciliation',
+        'Cash Forecast',
+        'Fund Transfer',
+        'Liquidity Position'
+      ]),
+      featureGroup('Investment & Borrowing', [
+        'Investment Register',
+        'Maturity Review',
+        'Borrowing Register',
+        'Interest Accrual'
+      ])
+    ])
+  ]),
   moduleGroup('Administration', '⚙️', [
     buildModule('System Administration', [
       featureGroup('User Administration', ['User Create', 'User Search', 'User Update', 'Deactivate User', 'Password Reset']),
@@ -161,7 +335,69 @@ export const NAVIGATION_TREE: NavNode[] = [
     buildModule('Tenant Administration', [
       featureGroup('Tenant Management', ['Tenant Create', 'Tenant Search', 'Tenant Settings', 'Tenant Status']),
       featureGroup('Branch Management', ['Branch Create', 'Branch Search', 'Branch Update', 'Branch Status'])
-    ])
+    ]),
+    buildModule(
+      'Human Resource Management',
+      [
+        featureGroup('Employee Management', [
+          'Employee Onboarding',
+          'Employee Search',
+          'Employee Profile',
+          'Employment Status',
+          'Employee Transfer'
+        ]),
+        featureGroup('Attendance & Leave', [
+          'Attendance Entry',
+          'Attendance Review',
+          'Leave Application',
+          'Leave Approval',
+          'Roster Management'
+        ])
+      ],
+      [featureGroup('HR Setup', ['Department Setup', 'Designation Setup', 'Leave Type Setup', 'Shift Setup', 'Holiday Calendar'])],
+      [featureGroup('HR Reports', ['Employee Register', 'Attendance Summary', 'Leave Balance', 'Headcount Report'])]
+    ),
+    buildModule(
+      'Payroll Management',
+      [
+        featureGroup('Payroll Processing', [
+          'Salary Structure',
+          'Payroll Run',
+          'Payroll Review',
+          'Payroll Approval',
+          'Salary Disbursement'
+        ]),
+        featureGroup('Payroll Adjustment', [
+          'Allowance Entry',
+          'Deduction Entry',
+          'Overtime Calculation',
+          'Bonus Processing',
+          'Tax Adjustment'
+        ])
+      ],
+      [featureGroup('Payroll Setup', ['Pay Grade Setup', 'Allowance Setup', 'Deduction Setup', 'Tax Slab Setup', 'Bank Advice Setup'])],
+      [featureGroup('Payroll Reports', ['Payslip', 'Salary Register', 'Tax Statement', 'Payroll Summary'])]
+    ),
+    buildModule(
+      'Fixed Asset Management',
+      [
+        featureGroup('Asset Lifecycle', [
+          'Asset Registration',
+          'Asset Search',
+          'Asset Transfer',
+          'Asset Maintenance',
+          'Asset Disposal'
+        ]),
+        featureGroup('Asset Accounting', [
+          'Asset Capitalization',
+          'Depreciation Run',
+          'Depreciation Review',
+          'Asset Revaluation'
+        ])
+      ],
+      [featureGroup('Asset Setup', ['Asset Category Setup', 'Location Setup', 'Depreciation Method', 'Custodian Setup'])],
+      [featureGroup('Asset Reports', ['Asset Register', 'Depreciation Schedule', 'Asset Movement', 'Disposal Register'])]
+    )
   ]),
   moduleGroup('Security', '🔐', [
     buildModule('Access Control', [
@@ -183,11 +419,22 @@ export const NAVIGATION_TREE: NavNode[] = [
 export function moduleIcon(label: string): string {
   const key = label.toLowerCase();
   if (key.includes('banking')) return 'bank';
+  if (key.includes('transaction monitoring') || key.includes('case management')) return 'clipboard';
+  if (key.includes('regulatory') || key.includes('policy')) return 'document';
+  if (key.includes('kyc') || key.includes('kyb') || key.includes('aml') || key.includes('diligence') || key.includes('compliance')) {
+    return 'id-card';
+  }
   if (key.includes('survey')) return 'compass';
   if (key.includes('pos')) return 'shop-front';
   if (key.includes('clinic') || key.includes('pharmacy')) return 'health';
   if (key.includes('student') || key.includes('fee')) return 'graduation-cap';
   if (key.includes('marketplace') || key.includes('delivery')) return 'cart';
+  if (key.includes('ledger') || key.includes('payable') || key.includes('receivable') || key.includes('budget') || key.includes('treasury')) {
+    return 'bank';
+  }
+  if (key.includes('human resource') || key.includes('employee')) return 'users';
+  if (key.includes('payroll')) return 'percent';
+  if (key.includes('fixed asset') || key.includes('asset')) return 'building';
   if (key.includes('administration')) return 'gear';
   if (key.includes('security') || key.includes('control')) return 'shield-check';
   if (key.includes('report') || key.includes('analytics')) return 'analytics';

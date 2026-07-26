@@ -34,6 +34,26 @@ header {
     margin-top: 1px;
   }
 }
+.brand-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--accent);
+  box-shadow: 0 1px 2px rgba(18, 24, 33, 0.14);
+  display: block;
+  flex-shrink: 0;
+
+  .logo-panel {
+    fill: rgba(255, 255, 255, 0.14);
+    stroke: rgba(255, 255, 255, 0.72);
+  }
+  .logo-path {
+    stroke: #fff;
+  }
+  .logo-node {
+    fill: #fff;
+  }
+}
 header.icon-view .brand-text {
   display: none;
 }
@@ -193,6 +213,24 @@ header.icon-view .hdr-pill {
   padding: 0 3px;
   border: 2px solid var(--chrome-bg);
 }
+.favorite-count {
+  position: absolute;
+  top: -4px;
+  inset-inline-end: -6px;
+  min-width: 15px;
+  height: 15px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border: 2px solid var(--chrome-bg);
+  line-height: 1;
+}
 
 .avatar {
   width: 30px;
@@ -273,6 +311,55 @@ header.icon-view .hdr-pill {
       font-size: 11px;
       color: var(--text-muted);
       font-weight: 400;
+    }
+  }
+  .empty {
+    padding: 16px 14px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .favorite-list {
+    max-height: 320px;
+    overflow: auto;
+    padding-bottom: 6px;
+  }
+  .favorite-row {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: start;
+    color: var(--text);
+    padding: 9px 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px;
+    cursor: pointer;
+    font-family: inherit;
+
+    &:hover {
+      background: var(--surface-2);
+    }
+    .name {
+      font-size: 12.5px;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .path {
+      grid-column: 1 / -1;
+      font-size: 10.5px;
+      color: var(--text-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10.5px;
+      color: var(--accent);
+      font-weight: 700;
     }
   }
   .apps-grid {
