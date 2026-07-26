@@ -42,8 +42,8 @@
 
 .dot-wrap {
   position: relative;
-  width: 18px;
-  height: 18px;
+  width: var(--space-9);
+  height: var(--space-9);
   flex-shrink: 0;
 }
 

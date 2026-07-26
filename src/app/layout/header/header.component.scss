@@ -1,5 +1,11 @@
 @use '../../../styles/breakpoints' as bp;
 
+// One-off layout widths specific to this component — named rather than bare
+// literals, but not promoted to global tokens since nothing else reuses them.
+$search-max-width: 560px;
+$dropdown-min-width: 190px;
+$favorite-list-max-height: 320px;
+
 :host {
   display: block;
 }
@@ -12,7 +18,7 @@
 }
 
 header {
-  height: 58px;
+  height: var(--header-height);
   position: relative; // anchors the mobile search overlay row below it
   background: var(--chrome-bg);
   color: var(--chrome-text);
@@ -31,13 +37,13 @@ header {
   display: flex;
   align-items: center;
   gap: var(--space-5);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-md);
   flex-shrink: 0;
 
   small {
     display: block;
-    font-weight: 400;
+    font-weight: var(--font-weight-normal);
     color: var(--chrome-text-muted);
     font-size: var(--font-size-xs);
     text-transform: uppercase;
@@ -45,23 +51,23 @@ header {
   }
 }
 .brand-logo {
-  width: 32px;
-  height: 32px;
+  width: var(--space-16);
+  height: var(--space-16);
   border-radius: var(--radius-md);
   background: var(--accent);
-  box-shadow: 0 1px 2px rgba(18, 24, 33, 0.14);
+  box-shadow: var(--shadow-sm);
   display: block;
   flex-shrink: 0;
 
   .logo-panel {
-    fill: rgba(255, 255, 255, 0.14);
-    stroke: rgba(255, 255, 255, 0.72);
+    fill: var(--on-accent-soft);
+    stroke: var(--on-accent-strong);
   }
   .logo-path {
-    stroke: #fff;
+    stroke: var(--on-accent);
   }
   .logo-node {
-    fill: #fff;
+    fill: var(--on-accent);
   }
 }
 header.icon-view .brand-text {
@@ -82,9 +88,9 @@ header.icon-view .brand-text {
   background: var(--chrome-search-bg);
   border: 1px solid var(--chrome-search-border);
   border-radius: var(--radius-md);
-  height: 38px;
+  height: var(--control-height);
   width: 100%;
-  max-width: 560px;
+  max-width: #{$search-max-width};
   padding-inline-start: var(--space-6);
 
   select {
@@ -92,7 +98,7 @@ header.icon-view .brand-text {
     border: none;
     color: var(--chrome-icon);
     font-size: var(--font-size-sm);
-    height: 38px;
+    height: var(--control-height);
     border-inline-end: 1px solid var(--chrome-search-border);
     padding-inline-end: var(--space-5);
   }
@@ -111,8 +117,8 @@ header.icon-view .brand-text {
     }
   }
   .go {
-    width: 32px;
-    height: 32px;
+    width: var(--space-16);
+    height: var(--space-16);
     margin-inline-end: var(--space-2);
     border: none;
     border-radius: var(--radius);
@@ -130,7 +136,7 @@ header.icon-view .brand-text {
   }
 }
 header.icon-view .global-search {
-  max-width: 38px;
+  max-width: var(--control-height);
   padding-inline-start: 0;
   justify-content: center;
   background: transparent;
@@ -157,7 +163,7 @@ header.icon-view .global-search {
   cursor: pointer;
   color: var(--chrome-icon);
   border-radius: var(--radius-md);
-  height: 36px;
+  height: var(--control-height-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,13 +174,13 @@ header.icon-view .global-search {
   }
 }
 .hdr-btn {
-  width: 36px;
+  width: var(--control-height-sm);
 }
 .hdr-pill {
   gap: var(--space-3);
   padding: 0 var(--space-5);
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
 
   .chev {
@@ -182,7 +188,7 @@ header.icon-view .global-search {
   }
 }
 header.icon-view .hdr-pill {
-  width: 36px;
+  width: var(--control-height-sm);
   padding: 0;
   justify-content: center;
 
@@ -199,8 +205,8 @@ header.icon-view .hdr-pill {
   justify-content: center;
 }
 .swatch {
-  width: 14px;
-  height: 14px;
+  width: var(--space-7);
+  height: var(--space-7);
   border-radius: 50%;
   box-shadow:
     0 0 0 2px var(--chrome-bg),
@@ -210,12 +216,12 @@ header.icon-view .hdr-pill {
   position: absolute;
   top: -5px;
   inset-inline-end: -7px;
-  min-width: 15px;
-  height: 15px;
+  min-width: var(--space-8);
+  height: var(--space-8);
   background: var(--red);
-  color: #fff;
+  color: var(--on-red);
   font-size: var(--font-size-3xs);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
@@ -227,12 +233,12 @@ header.icon-view .hdr-pill {
   position: absolute;
   top: -4px;
   inset-inline-end: -6px;
-  min-width: 15px;
-  height: 15px;
+  min-width: var(--space-8);
+  height: var(--space-8);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   font-size: var(--font-size-3xs);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
@@ -243,14 +249,14 @@ header.icon-view .hdr-pill {
 }
 
 .avatar {
-  width: 30px;
-  height: 30px;
+  width: var(--space-15);
+  height: var(--space-15);
   border-radius: 50%;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   border: none;
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
 }
 
@@ -273,7 +279,7 @@ header.icon-view .hdr-pill {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow);
-  min-width: 190px;
+  min-width: #{$dropdown-min-width};
   overflow: hidden;
 
   .dd-head {
@@ -281,14 +287,14 @@ header.icon-view .hdr-pill {
     font-size: var(--font-size-xs);
     text-transform: uppercase;
     color: var(--text-muted);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
 
     .sso-tag {
       margin-inline-start: var(--space-4);
       background: var(--accent-soft);
       color: var(--accent);
       font-size: var(--font-size-3xs);
-      font-weight: 700;
+      font-weight: var(--font-weight-bold);
       padding: 1px var(--space-3);
       border-radius: var(--radius-pill);
       text-transform: none;
@@ -308,7 +314,7 @@ header.icon-view .hdr-pill {
     }
     &.active {
       color: var(--accent);
-      font-weight: 600;
+      font-weight: var(--font-weight-semibold);
     }
     &.static {
       cursor: default;
@@ -320,7 +326,7 @@ header.icon-view .hdr-pill {
       margin-inline-start: auto;
       font-size: var(--font-size-xs);
       color: var(--text-muted);
-      font-weight: 400;
+      font-weight: var(--font-weight-normal);
     }
   }
   .empty {
@@ -330,7 +336,7 @@ header.icon-view .hdr-pill {
     text-align: center;
   }
   .favorite-list {
-    max-height: 320px;
+    max-height: #{$favorite-list-max-height};
     overflow: auto;
     padding-bottom: var(--space-3);
   }
@@ -352,7 +358,7 @@ header.icon-view .hdr-pill {
     }
     .name {
       font-size: var(--font-size-sm);
-      font-weight: 600;
+      font-weight: var(--font-weight-semibold);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -369,7 +375,7 @@ header.icon-view .hdr-pill {
       font-family: 'IBM Plex Mono', monospace;
       font-size: var(--font-size-xs);
       color: var(--accent);
-      font-weight: 700;
+      font-weight: var(--font-weight-bold);
     }
   }
   .apps-grid {
@@ -394,8 +400,8 @@ header.icon-view .hdr-pill {
       background: var(--surface-2);
     }
     .tile-icon {
-      width: 34px;
-      height: 34px;
+      width: var(--space-17);
+      height: var(--space-17);
       border-radius: var(--radius-md);
       background: var(--accent-soft);
       color: var(--accent);
@@ -405,7 +411,7 @@ header.icon-view .hdr-pill {
     }
     .name {
       font-size: var(--font-size-xs);
-      font-weight: 500;
+      font-weight: var(--font-weight-medium);
       line-height: 1.25;
     }
   }
@@ -425,7 +431,7 @@ header.icon-view .hdr-pill {
     display: none;
   }
   .hdr-pill {
-    width: 36px;
+    width: var(--control-height-sm);
     padding: 0;
     justify-content: center;
 

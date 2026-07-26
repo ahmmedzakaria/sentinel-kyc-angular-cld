@@ -1,5 +1,10 @@
 @use '../field-shell' as shell;
 
+// How tall an empty textarea should look before the user types anything —
+// a deliberate one-off design choice, not a reusable size, so it's named
+// rather than promoted to a global token.
+$min-height: 60px;
+
 :host {
   display: block;
 }
@@ -20,7 +25,7 @@
   textarea {
     @include shell.control-reset;
     resize: vertical;
-    min-height: 60px;
+    min-height: #{$min-height};
     line-height: 1.5;
   }
 }

@@ -17,8 +17,8 @@
 
 .box-wrap {
   position: relative;
-  width: 18px;
-  height: 18px;
+  width: var(--space-9);
+  height: var(--space-9);
   flex-shrink: 0;
 }
 
@@ -44,7 +44,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
   transition:
     background 0.12s,
     border-color 0.12s;
@@ -53,11 +52,14 @@
   &.indeterminate {
     background: var(--accent);
     border-color: var(--accent);
+    // Only actually visible once filled with --accent — matches it instead
+    // of assuming white, same reasoning as the header logo badge.
+    color: var(--on-accent);
   }
   .dash {
     width: var(--space-4);
     height: var(--space-1);
-    background: #fff;
+    background: var(--on-accent);
     border-radius: 1px;
   }
 }

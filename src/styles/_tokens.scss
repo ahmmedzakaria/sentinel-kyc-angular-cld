@@ -16,6 +16,7 @@
 // mold when a theme deliberately wants to look different.
 
 @use 'sass:color';
+@use 'sass:math';
 
 // ---------------------------------------------------------------------------
 // SIZE PRIMITIVES — tune these three and every spacing/radius/type token
@@ -62,6 +63,23 @@ $shadow-tint: #121821;
   @return color.mix($paper, $card, 50%);
 }
 
+// The correct foreground to draw ON TOP of a saturated/branded background
+// (the logo badge, a colored pill) — picked by perceived brightness (ITU-R
+// BT.601 luma) rather than assumed to always be white. This matters for
+// Navy's gold accent specifically: white on a light-ish gold has much weaker
+// contrast than this app's ink tone does, unlike every other theme's darker
+// accent hues, where white genuinely is the right answer.
+@function on-color($bg) {
+  $luma: math.div(
+    color.channel($bg, 'red') * 299 + color.channel($bg, 'green') * 587 + color.channel($bg, 'blue') * 114,
+    1000
+  );
+  @if $luma > 150 {
+    @return $shadow-tint;
+  }
+  @return white;
+}
+
 // A stronger divider — mixes toward black rather than toward $text, since
 // "stronger" means more contrast against $paper in *both* directions: in a
 // light theme that's the same direction as $text (dark), but in a dark theme
@@ -93,10 +111,17 @@ $shadow-tint: #121821;
 
   --accent: #{$accent};
   --accent-soft: #{soft-tone($accent, $card)};
+  // The logo badge (and anything else drawn directly on an --accent fill)
+  // reads these instead of hardcoding white — see on-color() above.
+  --on-accent: #{on-color($accent)};
+  --on-accent-soft: #{rgba(on-color($accent), 0.14)};
+  --on-accent-strong: #{rgba(on-color($accent), 0.72)};
   --amber: #{$amber};
   --amber-soft: #{soft-tone($amber, $card)};
   --red: #{$red};
   --red-soft: #{soft-tone($red, $card)};
+  // $red never varies by theme, so this only ever needs computing once here.
+  --on-red: #{on-color($red)};
   --success: #{$success};
   --success-soft: #{soft-tone($success, $card)};
   --info: #{$info};
@@ -105,6 +130,24 @@ $shadow-tint: #121821;
 
   --shadow:
     0 calc(var(--space-unit) * 2) calc(var(--space-unit) * 6) #{rgba($shadow-tint, 0.14)};
+  // A tighter shadow for small elements (icon badges, chips) — same tint as
+  // --shadow, just less spread. Reference this instead of hand-writing
+  // rgba($shadow-tint, ...) again wherever a smaller drop shadow is needed.
+  --shadow-sm: 0 calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1) #{rgba($shadow-tint, 0.14)};
+
+  // The dim scrim behind a hand-rolled backdrop (rail drawer, mega-panel
+  // bottom sheet) — not themed, same across all 7 themes, same reasoning as
+  // --shadow. CDK's own overlay backdrops (Modal, dropdowns) use its
+  // `cdk-overlay-dark-backdrop`/`cdk-overlay-transparent-backdrop` classes
+  // instead, so this token is only for backdrops this app renders itself.
+  --overlay-backdrop: rgba(0, 0, 0, 0.4);
+
+  // Fixed chrome dimensions shared across header/rail/status-bar — kept as
+  // tokens (not per-component literals) specifically because rail-nav's
+  // off-canvas drawer needs to offset itself by *both* of these to sit
+  // between the header and status bar without covering either.
+  --header-height: 58px;
+  --statusbar-height: 28px;
 
   // chrome = header, rail, status bar
   --chrome-bg: var(--card);
@@ -137,7 +180,26 @@ $shadow-tint: #121821;
   --space-12: calc(var(--space-unit) * 12); // 24px
   --space-13: calc(var(--space-unit) * 13); // 26px
   --space-14: calc(var(--space-unit) * 14); // 28px
+  --space-15: calc(var(--space-unit) * 15); // 30px
   --space-16: calc(var(--space-unit) * 16); // 32px
+  --space-17: calc(var(--space-unit) * 17); // 34px
+  --space-18: calc(var(--space-unit) * 18); // 36px
+  --space-19: calc(var(--space-unit) * 19); // 38px
+  --space-22: calc(var(--space-unit) * 22); // 44px
+  --space-32: calc(var(--space-unit) * 32); // 64px
+
+  // Semantic aliases for this app's two recurring fixed control heights —
+  // same 2px-unit scale as --space-*, just named for what they mean at the
+  // call site (`height: var(--control-height)` reads better in a button/
+  // input than `height: var(--space-19)` would).
+  --control-height: var(--space-19); // 38px — Button, Textbox, Password-group, header search/select
+  --control-height-sm: var(--space-18); // 36px — header chrome icon buttons/pills
+
+  // Typography weight scale — a primitive, not derived from anything else.
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
   --radius: #{$radius-base};
   --radius-sm: calc(var(--radius) * 0.75); // 6px
@@ -202,26 +264,41 @@ body[data-theme='blue'] {
   $accent: #2c5aa0;
   --accent: #{$accent};
   --accent-soft: #{soft-tone($accent, #ffffff)};
+  --on-accent: #{on-color($accent)};
+  --on-accent-soft: #{rgba(on-color($accent), 0.14)};
+  --on-accent-strong: #{rgba(on-color($accent), 0.72)};
 }
 body[data-theme='green'] {
   $accent: #1c7a4c;
   --accent: #{$accent};
   --accent-soft: #{soft-tone($accent, #ffffff)};
+  --on-accent: #{on-color($accent)};
+  --on-accent-soft: #{rgba(on-color($accent), 0.14)};
+  --on-accent-strong: #{rgba(on-color($accent), 0.72)};
 }
 body[data-theme='purple'] {
   $accent: #6b3fa0;
   --accent: #{$accent};
   --accent-soft: #{soft-tone($accent, #ffffff)};
+  --on-accent: #{on-color($accent)};
+  --on-accent-soft: #{rgba(on-color($accent), 0.14)};
+  --on-accent-strong: #{rgba(on-color($accent), 0.72)};
 }
 body[data-theme='gray'] {
   $accent: #3f4a54;
   --accent: #{$accent};
   --accent-soft: #{soft-tone($accent, #ffffff)};
+  --on-accent: #{on-color($accent)};
+  --on-accent-soft: #{rgba(on-color($accent), 0.14)};
+  --on-accent-strong: #{rgba(on-color($accent), 0.72)};
 }
 body.dark[data-theme='dark'] {
   $accent: #1f6f5c;
   --accent: #{$accent};
   --accent-soft: #{soft-tone($accent, #161d26)};
+  --on-accent: #{on-color($accent)};
+  --on-accent-soft: #{rgba(on-color($accent), 0.14)};
+  --on-accent-strong: #{rgba(on-color($accent), 0.72)};
 }
 
 // Navy Banking — its own dark palette, distinct from generic Dark. Neutrals/
@@ -248,6 +325,13 @@ body.dark[data-theme='navy'] {
   // reasoning as the chrome-* overrides below.
   --accent: #{$accent};
   --accent-soft: #2e2510;
+  // Gold is the one accent in this app where on-color() actually picks
+  // something other than white — #c99a3b reads as "light" by perceived
+  // brightness, so white text/lines on it have noticeably weaker contrast
+  // than this app's ink tone does.
+  --on-accent: #{on-color($accent)};
+  --on-accent-soft: #{rgba(on-color($accent), 0.14)};
+  --on-accent-strong: #{rgba(on-color($accent), 0.72)};
 
   --chrome-bg: #0b1a33;
   --chrome-border: #1c2f4d;

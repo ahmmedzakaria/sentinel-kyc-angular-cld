@@ -1,5 +1,12 @@
 @use '../../../styles/breakpoints' as bp;
 
+// One-off widths specific to this component — named rather than bare
+// literals, but not promoted to global tokens since nothing else reuses them.
+// (The collapsed rail width is common enough elsewhere to already have one:
+// var(--space-32), 64px.)
+$rail-width-expanded: 230px; // desktop .exp
+$rail-drawer-width: 260px; // mobile/tablet off-canvas drawer
+
 :host {
   display: block;
 }
@@ -15,7 +22,7 @@
 .mega-panel-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--overlay-backdrop);
   z-index: 47;
 }
 .mega-panel-sheet {
@@ -29,7 +36,7 @@
 }
 
 .rail {
-  width: 64px;
+  width: var(--space-32);
   background: var(--chrome-bg);
   color: var(--chrome-text);
   border-inline-end: 1px solid var(--chrome-border);
@@ -42,7 +49,7 @@
     color 0.2s;
 
   &.exp {
-    width: 230px;
+    width: #{$rail-width-expanded};
   }
 }
 
@@ -54,30 +61,30 @@
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--overlay-backdrop);
     z-index: 44; // just below .rail
   }
 
   .rail {
     position: fixed;
-    top: 58px; // header height
-    bottom: 28px; // status bar height
+    top: var(--header-height);
+    bottom: var(--statusbar-height);
     left: 0;
     z-index: 46;
-    width: 260px;
+    width: #{$rail-drawer-width};
     transform: translateX(-100%);
     box-shadow: var(--shadow);
     transition: transform 0.2s ease;
 
     &.exp {
-      width: 260px;
+      width: #{$rail-drawer-width};
       transform: translateX(0);
     }
   }
 }
 
 .toggle {
-  height: 44px;
+  height: var(--space-22);
   border: none;
   background: transparent;
   display: flex;
@@ -114,7 +121,7 @@
 
   .lbl {
     font-size: var(--font-size-base);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     opacity: 0;
     transition: opacity 0.15s;
     overflow: hidden;
@@ -134,9 +141,9 @@
 }
 
 .row.lvl-1 {
-  height: 44px;
+  height: var(--space-22);
   padding-inline: var(--space-5);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 
   .emoji-icon {
     font-size: var(--font-size-md);
@@ -150,7 +157,7 @@
 }
 
 .row.lvl-2 {
-  height: 38px;
+  height: var(--control-height);
   padding-inline-start: var(--space-13);
   padding-inline-end: var(--space-5);
   font-size: var(--font-size-base);
@@ -162,7 +169,7 @@
 }
 
 .row.lvl-3 {
-  height: 34px;
+  height: var(--space-17);
   padding-inline-start: 44px;
   padding-inline-end: var(--space-5);
   font-size: var(--font-size-sm);
@@ -209,7 +216,7 @@
   background: transparent;
   color: var(--chrome-text-muted);
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
 
   &:hover {

@@ -1,7 +1,7 @@
 @use '../../../styles/breakpoints' as bp;
 
 .statusbar {
-  height: 28px;
+  height: var(--statusbar-height);
   background: var(--chrome-bg);
   color: var(--chrome-text-muted);
   display: flex;
@@ -48,7 +48,7 @@
   padding: 1px var(--space-4);
   border-radius: var(--radius-pill);
   font-size: var(--font-size-2xs);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .sb-div {
   width: 1px;
@@ -60,7 +60,7 @@
   color: var(--chrome-icon);
 }
 .status-favorite {
-  height: 22px;
+  height: var(--space-11);
   border: none;
   background: transparent;
   color: var(--chrome-text-muted);

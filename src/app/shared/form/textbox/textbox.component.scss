@@ -14,7 +14,7 @@
 }
 .control-frame {
   @include shell.control-frame;
-  height: 38px;
+  height: var(--control-height);
   padding: 0 var(--space-6);
 
   .prefix {

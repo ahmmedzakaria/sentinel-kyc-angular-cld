@@ -160,22 +160,66 @@ Security, Reporting.
   token-driven components. Per-theme colors are themselves derived from a
   handful of primaries (neutrals + hues) via mixing functions
   (`soft-tone()`, `muted-tone()`, `border-tone()`, `surface-tone()`,
-  `deepen-tone()`) rather than hand-picked per shade — retune a theme by
-  changing its primaries, not by hand-tuning individual derived shades.
+  `deepen-tone()`, `on-color()`) rather than hand-picked per shade — retune a
+  theme by changing its primaries, not by hand-tuning individual derived
+  shades.
+- Never hardcode white/black text or icon color on a saturated background
+  (a colored badge, the logo mark, a filled checkbox) — use `--on-accent`/
+  `--on-accent-soft`/`--on-accent-strong` (foreground for content drawn on
+  `--accent`) or `--on-red` (foreground on `--red`), derived by `on-color()`
+  from perceived brightness (ITU-R BT.601 luma), not assumed to always be
+  white. This isn't cosmetic: Navy's gold accent (`#c99a3b`) reads as "light"
+  by this measure, so `on-color()` picks the app's dark ink tone there
+  instead of white — genuinely better contrast than the white every other
+  theme's darker accent hues correctly get. If a new saturated background
+  color is introduced, give it an `--on-<name>` token the same way rather
+  than hardcoding `#fff` against it.
 - Size scale, also in `_tokens.scss`, driven by three primitives
   (`--space-unit: 2px`, `--radius: 8px`, `--font-size-base: 13.5px`), all
   wired through `calc()` so they stay live if a primitive is ever changed at
   runtime:
-  - Spacing/padding/margin/gap → `--space-1` (2px) through `--space-16`
-    (32px), in 2px steps.
+  - Spacing/padding/margin/gap, and any element width/height/max-height that
+    lands on the scale → `--space-1` (2px) through `--space-19` (38px), then
+    `--space-22` (44px) and `--space-32` (64px) for the larger chrome
+    dimensions (rail width, mega-panel subitem row height, etc.) — in 2px
+    steps up to 38px, then named steps for the handful of larger recurring
+    sizes. Don't assume the scale is dense above 38px; check `_tokens.scss`
+    for the actual defined step before adding a new one.
   - Border-radius → `--radius-sm` (6px), `--radius` (8px), `--radius-md`
     (9px — the recurring "slightly more than base" chrome radius),
     `--radius-lg` (12px), `--radius-pill` (999px, for pill/circle shapes).
   - Font-size → `--font-size-3xs` (~9px) through `--font-size-2xl` (~26px).
+  - Font-weight → `--font-weight-normal` (400), `--font-weight-medium` (500),
+    `--font-weight-semibold` (600), `--font-weight-bold` (700). Never hardcode
+    a numeric `font-weight` — the four steps cover every weight this app
+    actually uses.
+  - `--control-height` (38px, i.e. `var(--space-19)`) and `--control-height-sm`
+    (36px, `var(--space-18)`) are semantic aliases for the two recurring
+    interactive-control heights (inputs, buttons, header pills/icon-buttons) —
+    prefer these over the raw `--space-*` step when sizing a control, so
+    intent (a control height) reads separately from an incidental spacing
+    match.
   - The unit is 2px (not a rounder 4px) because this app's real paddings/gaps
     were hand-picked on a fine, often-odd grid (3, 5, 7, 9, 15…) — expect ~1px
     rounding drift on odd legacy values when migrating more of the app onto
     these tokens; that's expected, not a bug to chase down.
+  - A genuinely one-off dimension (not reused elsewhere, and not a natural
+    fit for the scale — e.g. the mega-panel's 790px desktop width, the
+    header's 560px search max-width) gets named as a local SCSS `$variable`
+    in that component's own stylesheet instead of promoted to a global token
+    — see `header.component.scss`, `mega-panel.component.scss`, and
+    `rail-nav.component.scss` for the pattern. Promote it to a global token
+    only once a second component needs the same value.
+  - A handful of one-off tokens exist alongside the scale for values that
+    recur across components and would otherwise drift out of sync as
+    separate literals: `--shadow-sm` (a tighter version of `--shadow` for
+    small elements like the header's logo badge), `--overlay-backdrop` (the
+    dim scrim behind a hand-rolled backdrop — rail drawer, mega-panel bottom
+    sheet; CDK's own overlay backdrops use its own classes instead),
+    `--header-height`/`--statusbar-height` (the header and status bar's own
+    fixed heights, also read by `RailNavComponent` to offset its mobile/
+    tablet drawer between them). Add a token like these when a literal is
+    genuinely shared across components, not per-component.
 - Responsive breakpoints live in `src/styles/_breakpoints.scss`:
   `@include bp.mobile { }` (<768px) and `@include bp.tablet-down { }`
   (<1024px). Use these mixins, not ad hoc `@media` queries, so every

@@ -7,11 +7,11 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-4);
-  height: 38px;
+  height: var(--control-height);
   padding: 0 var(--space-8);
   border-radius: var(--radius);
   font-size: var(--font-size-base);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-family: inherit;
   cursor: pointer;
   border: 1px solid transparent;
@@ -33,7 +33,7 @@
 
 .btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 
   &:hover:not(:disabled) {
     filter: brightness(1.08);
@@ -52,7 +52,7 @@
 
 .btn-danger {
   background: var(--red);
-  color: #fff;
+  color: var(--on-red);
 
   &:hover:not(:disabled) {
     filter: brightness(1.08);
@@ -69,13 +69,20 @@
   &::after {
     content: '';
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: var(--space-7);
+    height: var(--space-7);
     border-radius: 50%;
     border: 2px solid currentColor;
     border-top-color: transparent;
-    color: #fff;
+    // Spinner ring color needs to contrast against whichever variant's own
+    // background it's spinning on top of — --on-accent covers .btn-primary
+    // (the default), .btn-danger gets its own override below, .btn-ghost's
+    // transparent background gets --text same as its resting label color.
+    color: var(--on-accent);
     animation: btn-spin 0.6s linear infinite;
+  }
+  &.btn-danger::after {
+    color: var(--on-red);
   }
   &.btn-ghost::after {
     color: var(--text);
