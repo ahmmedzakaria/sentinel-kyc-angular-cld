@@ -9,6 +9,7 @@ import { RailStateService } from '../../core/services/rail-state.service';
 import { NavTreeStateService } from '../../core/services/nav-tree-state.service';
 import { MegaPanelService } from '../../core/services/mega-panel.service';
 import { BreadcrumbService } from '../../core/services/breadcrumb.service';
+import { ViewportService } from '../../core/services/viewport.service';
 
 interface RailRow {
   path: number[];
@@ -28,6 +29,7 @@ export class RailNavComponent {
   protected readonly rail = inject(RailStateService);
   protected readonly treeState = inject(NavTreeStateService);
   protected readonly megaPanel = inject(MegaPanelService);
+  protected readonly viewport = inject(ViewportService);
   private readonly breadcrumb = inject(BreadcrumbService);
   private readonly router = inject(Router);
 

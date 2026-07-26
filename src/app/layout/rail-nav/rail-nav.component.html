@@ -64,16 +64,28 @@
   }
 </nav>
 
-@if (megaPanel.origin(); as origin) {
-  <ng-template
-    cdkConnectedOverlay
-    [cdkConnectedOverlayOrigin]="origin"
-    [cdkConnectedOverlayOpen]="!!megaPanel.content()"
-    [cdkConnectedOverlayPositions]="[
-      { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 0 },
-      { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetX: 8, offsetY: 4 }
-    ]"
-  >
+@if (viewport.isDesktop()) {
+  <!--
+    Desktop: anchored beside the triggering category row. Below desktop this
+    breaks down — the row can be scrolled anywhere in a long, tall drawer
+    list, including right at the bottom of the viewport, leaving no room for
+    a row-anchored panel to drop into (see the bottom-sheet branch below).
+  -->
+  @if (megaPanel.origin(); as origin) {
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="origin"
+      [cdkConnectedOverlayOpen]="!!megaPanel.content()"
+      [cdkConnectedOverlayPositions]="[{ originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 0 }]"
+    >
+      <app-mega-panel />
+    </ng-template>
+  }
+} @else if (megaPanel.content()) {
+  <!-- Mobile/tablet: a viewport-anchored bottom sheet instead — completely
+       independent of where the triggering row happens to be scrolled to. -->
+  <div class="mega-panel-backdrop" aria-hidden="true" (click)="megaPanel.close()"></div>
+  <div class="mega-panel-sheet">
     <app-mega-panel />
-  </ng-template>
+  </div>
 }

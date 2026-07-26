@@ -8,6 +8,26 @@
   display: none;
 }
 
+// Mobile/tablet mega-panel — see rail-nav.component.html for why this is a
+// separate viewport-anchored bottom sheet instead of the desktop
+// row-anchored connected-overlay. Sits above the rail drawer (z-index 46)
+// since opening it is the user drilling further into the drawer's content.
+.mega-panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 47;
+}
+.mega-panel-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--space-4);
+  z-index: 48;
+  display: flex;
+  justify-content: center;
+}
+
 .rail {
   width: 64px;
   background: var(--chrome-bg);

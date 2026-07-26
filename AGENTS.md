@@ -9,6 +9,45 @@ libraries, no monorepo path aliases. Treat `KYC_Overlay_Menu_POC.html` in this
 same directory as the source of truth when porting more of the POC's behavior;
 diff against it rather than guessing at intent.
 
+## Non-Negotiable Rules
+
+These apply to every change in this app, regardless of what area of the code
+it touches:
+
+- **Never hardcode a size, color, or font value that already has a token.**
+  Colors go through `src/styles/_tokens.scss`'s custom properties (`--accent`,
+  `--text-muted`, `--border`, etc.); spacing/padding/margin/gap goes through
+  `--space-1`…`--space-16`; border-radius goes through `--radius-sm`/
+  `--radius`/`--radius-md`/`--radius-lg`/`--radius-pill`; font-size goes
+  through `--font-size-3xs`…`--font-size-2xl`. If a real value doesn't land on
+  an existing token, that's a signal to add one (see the mixing
+  functions/scale in `_tokens.scss`) — not to drop back to a bare literal. The
+  only accepted exception is a genuinely bespoke, one-off element dimension
+  (a specific icon's width/height, the header's fixed 58px height) — a
+  deliberate size for one specific element, not a reusable spacing/type
+  relationship. See "Styling And UI" below for the full token list and the
+  rounding tradeoffs already made when the existing app was migrated onto it.
+- **Every new or touched UI must work at mobile, tablet, and desktop.** Use
+  the shared breakpoints in `src/styles/_breakpoints.scss`
+  (`@include bp.mobile { }` / `@include bp.tablet-down { }`) rather than
+  inventing ad hoc `@media` queries. If a component needs fundamentally
+  different markup per breakpoint (not just different CSS), branch on
+  `ViewportService.isDesktop()` in the component — see `RailNavComponent`'s
+  mega-panel rendering for the pattern. Verify all three sizes before calling
+  a UI change done, including realistic content (a long scrolled list, not
+  just the empty/default state) — a change that only looks right at your
+  current viewport, or only in the state you happened to test, is not
+  finished. See "Testing And Verification" for a concrete case this bit:
+  row-anchored overlay content breaks below desktop once the trigger is
+  scrolled near the viewport edge.
+- **Keep this file current.** When you introduce a new convention, service,
+  or pattern other work in this app should follow (a new token, a new
+  responsive pattern, a new testing gotcha), add it here in the same change —
+  don't let this file drift behind what the codebase actually does. And never
+  contradict an existing rule here without updating the rule itself; needing
+  to break one is a signal the rule needs to change, not that this one
+  instance is exempt.
+
 ## Project Shape
 
 - Angular 21, standalone components only — no NgModules
@@ -45,7 +84,9 @@ npm run build
   `NavTreeStateService` (activePath/expandedPaths + tree helpers),
   `MegaPanelService`, `HeaderMenuService`, `DirectionService`,
   `BreadcrumbService`, `AuthService`, `QuickNavService` (T-code index),
-  `FavoriteNavService` (favorited nav shortcuts)
+  `FavoriteNavService` (favorited nav shortcuts), `ViewportService`
+  (reactive `isDesktop()`, for components that need different markup, not
+  just different CSS, per breakpoint)
 - `shared/icon`, `shared/toast`, `shared/modal`, `shared/avatar-upload`,
   `shared/breadcrumb` — small standalone building blocks used app-wide
 - `shared/form/*` — Tier 1/2 form controls (CVA-based, extend
@@ -116,7 +157,35 @@ Security, Reporting.
   `--border`, `--text-muted`, etc.) — never hardcode a color that already has
   a token, and check all 7 themes (light, dark, blue, navy, green, purple,
   gray) still look right when touching chrome (header/rail/status bar) or
-  token-driven components.
+  token-driven components. Per-theme colors are themselves derived from a
+  handful of primaries (neutrals + hues) via mixing functions
+  (`soft-tone()`, `muted-tone()`, `border-tone()`, `surface-tone()`,
+  `deepen-tone()`) rather than hand-picked per shade — retune a theme by
+  changing its primaries, not by hand-tuning individual derived shades.
+- Size scale, also in `_tokens.scss`, driven by three primitives
+  (`--space-unit: 2px`, `--radius: 8px`, `--font-size-base: 13.5px`), all
+  wired through `calc()` so they stay live if a primitive is ever changed at
+  runtime:
+  - Spacing/padding/margin/gap → `--space-1` (2px) through `--space-16`
+    (32px), in 2px steps.
+  - Border-radius → `--radius-sm` (6px), `--radius` (8px), `--radius-md`
+    (9px — the recurring "slightly more than base" chrome radius),
+    `--radius-lg` (12px), `--radius-pill` (999px, for pill/circle shapes).
+  - Font-size → `--font-size-3xs` (~9px) through `--font-size-2xl` (~26px).
+  - The unit is 2px (not a rounder 4px) because this app's real paddings/gaps
+    were hand-picked on a fine, often-odd grid (3, 5, 7, 9, 15…) — expect ~1px
+    rounding drift on odd legacy values when migrating more of the app onto
+    these tokens; that's expected, not a bug to chase down.
+- Responsive breakpoints live in `src/styles/_breakpoints.scss`:
+  `@include bp.mobile { }` (<768px) and `@include bp.tablet-down { }`
+  (<1024px). Use these mixins, not ad hoc `@media` queries, so every
+  component's responsive behavior stays pinned to the same breakpoints. For
+  TypeScript-side branching (a component needs different markup, not just
+  different CSS, per breakpoint), inject `ViewportService` and read
+  `isDesktop()` — see `RailNavComponent`'s mega-panel rendering, which uses a
+  CDK connected-overlay anchored to the trigger row on desktop, but a
+  viewport-anchored bottom sheet (`ViewportService`-gated, ignores the
+  trigger's position entirely) below desktop.
 - `IconComponent` supports a `filled` input (`fill="currentColor"` vs `none`)
   for toggle-style glyphs like the favorite star — don't reach for a second
   icon variant when a fill toggle will do.
@@ -125,6 +194,13 @@ Security, Reporting.
   appended to `<body>` — it is **not** a DOM descendant of the host component
   anymore. Styling it requires a genuinely global rule (`::ng-deep` without
   `:host`, as `header.component.scss` already does), not scoped component CSS.
+- CDK connected-overlay content anchored to a *row inside a scrollable list*
+  (e.g. a drawer) breaks once that row can be scrolled near the viewport
+  edge — there may be no room in the anchored direction to render into.
+  Below desktop, prefer a viewport-anchored strategy (fixed position, ignores
+  the trigger element) over adding more `cdkConnectedOverlayPositions`
+  fallbacks; see the mega panel's mobile/tablet bottom sheet for the pattern
+  this app settled on after hitting exactly this bug.
 
 ## Testing And Verification
 
@@ -148,6 +224,13 @@ Security, Reporting.
   bypass the access-modifier check — TypeScript permits string-literal
   bracket access to `protected`/`private` members even though dot-notation is
   blocked. Don't widen a field's visibility just to make a test compile.
+- **jsdom (this project's test environment) does not implement
+  `window.matchMedia` at all** — it's not just unmocked, the property is
+  genuinely absent. Any service/component that reads it (`ViewportService`)
+  must guard `typeof window.matchMedia === 'function'`, not just
+  `typeof window !== 'undefined'`. Specs that need it stub it directly
+  (`window.matchMedia = vi.fn(...)`) rather than `vi.spyOn(window,
+  'matchMedia')`, which requires the property to already exist as a function.
 - `TestBed.createComponent(SomeGenericComponent)` does **not** pick up a
   generic class's default type parameter — you get `SomeGenericComponent<unknown>`
   unless you write `TestBed.createComponent<SomeGenericComponent<string>>(SomeGenericComponent)`.
