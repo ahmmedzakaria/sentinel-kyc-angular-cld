@@ -27,7 +27,7 @@ describe('DropdownComponent', () => {
   });
 
   it('writeValue() displays the matching option label', () => {
-    const fixture = TestBed.createComponent(DropdownComponent);
+    const fixture = TestBed.createComponent<DropdownComponent<string>>(DropdownComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     fixture.componentInstance.writeValue('Female');
@@ -37,7 +37,7 @@ describe('DropdownComponent', () => {
   });
 
   it('selecting an option calls the registered onChange with its value', () => {
-    const fixture = TestBed.createComponent(DropdownComponent);
+    const fixture = TestBed.createComponent<DropdownComponent<string>>(DropdownComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
 
@@ -48,11 +48,11 @@ describe('DropdownComponent', () => {
     fixture.componentInstance.selectOption(OPTIONS[0]);
 
     expect(emitted).toBe('Male');
-    expect(fixture.componentInstance.open()).toBe(false);
+    expect(fixture.componentInstance['open']()).toBe(false);
   });
 
   it('does not select a disabled option', () => {
-    const fixture = TestBed.createComponent(DropdownComponent);
+    const fixture = TestBed.createComponent<DropdownComponent<string>>(DropdownComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
 
@@ -64,34 +64,34 @@ describe('DropdownComponent', () => {
   });
 
   it('ArrowDown from closed opens the panel and syncs the active index to the current value', () => {
-    const fixture = TestBed.createComponent(DropdownComponent);
+    const fixture = TestBed.createComponent<DropdownComponent<string>>(DropdownComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     fixture.componentInstance.writeValue('Female');
 
     fixture.componentInstance.onTriggerKeydown(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
 
-    expect(fixture.componentInstance.open()).toBe(true);
-    expect(fixture.componentInstance.activeIndex()).toBe(1); // Female
+    expect(fixture.componentInstance['open']()).toBe(true);
+    expect(fixture.componentInstance['activeIndex']()).toBe(1); // Female
   });
 
   it('Escape closes an open panel', () => {
-    const fixture = TestBed.createComponent(DropdownComponent);
+    const fixture = TestBed.createComponent<DropdownComponent<string>>(DropdownComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     fixture.componentInstance.toggle();
-    expect(fixture.componentInstance.open()).toBe(true);
+    expect(fixture.componentInstance['open']()).toBe(true);
 
     fixture.componentInstance.onTriggerKeydown(new KeyboardEvent('keydown', { key: 'Escape' }));
-    expect(fixture.componentInstance.open()).toBe(false);
+    expect(fixture.componentInstance['open']()).toBe(false);
   });
 
   it('setDisabledState() prevents toggle()', () => {
-    const fixture = TestBed.createComponent(DropdownComponent);
+    const fixture = TestBed.createComponent<DropdownComponent<string>>(DropdownComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     fixture.componentInstance.setDisabledState(true);
     fixture.componentInstance.toggle();
-    expect(fixture.componentInstance.open()).toBe(false);
+    expect(fixture.componentInstance['open']()).toBe(false);
   });
 });

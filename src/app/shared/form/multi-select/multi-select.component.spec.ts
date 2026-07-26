@@ -11,7 +11,7 @@ const OPTIONS: DropdownOption<string>[] = [
 
 describe('MultiSelectComponent', () => {
   it('toggling an unselected option adds it to the emitted array', () => {
-    const fixture = TestBed.createComponent(MultiSelectComponent);
+    const fixture = TestBed.createComponent<MultiSelectComponent<string>>(MultiSelectComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     let emitted: string[] | null = null;
@@ -23,7 +23,7 @@ describe('MultiSelectComponent', () => {
   });
 
   it('toggling an already-selected option removes it', () => {
-    const fixture = TestBed.createComponent(MultiSelectComponent);
+    const fixture = TestBed.createComponent<MultiSelectComponent<string>>(MultiSelectComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.componentInstance.writeValue(['read', 'write']);
     fixture.detectChanges();
@@ -36,7 +36,7 @@ describe('MultiSelectComponent', () => {
   });
 
   it('does not toggle a disabled option', () => {
-    const fixture = TestBed.createComponent(MultiSelectComponent);
+    const fixture = TestBed.createComponent<MultiSelectComponent<string>>(MultiSelectComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     let emitted: string[] | null = null;
@@ -48,22 +48,22 @@ describe('MultiSelectComponent', () => {
   });
 
   it('selecting an option does not close the panel', () => {
-    const fixture = TestBed.createComponent(MultiSelectComponent);
+    const fixture = TestBed.createComponent<MultiSelectComponent<string>>(MultiSelectComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     fixture.componentInstance.toggle();
 
     fixture.componentInstance.toggleOption(OPTIONS[0]);
 
-    expect(fixture.componentInstance.open()).toBe(true);
+    expect(fixture.componentInstance['open']()).toBe(true);
   });
 
   it('selectedOptions() derives the full option objects from the value array', () => {
-    const fixture = TestBed.createComponent(MultiSelectComponent);
+    const fixture = TestBed.createComponent<MultiSelectComponent<string>>(MultiSelectComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.componentInstance.writeValue(['write']);
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.selectedOptions()).toEqual([{ label: 'Write', value: 'write' }]);
+    expect(fixture.componentInstance['selectedOptions']()).toEqual([{ label: 'Write', value: 'write' }]);
   });
 });

@@ -9,11 +9,11 @@ describe('TagInputComponent', () => {
     let emitted: string[] | null = null;
     fixture.componentInstance.registerOnChange((v) => (emitted = v));
 
-    fixture.componentInstance.draft.set('urgent');
+    fixture.componentInstance['draft'].set('urgent');
     fixture.componentInstance.onKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
 
     expect(emitted).toEqual(['urgent']);
-    expect(fixture.componentInstance.draft()).toBe('');
+    expect(fixture.componentInstance['draft']()).toBe('');
   });
 
   it('comma also commits the draft', () => {
@@ -22,7 +22,7 @@ describe('TagInputComponent', () => {
     let emitted: string[] | null = null;
     fixture.componentInstance.registerOnChange((v) => (emitted = v));
 
-    fixture.componentInstance.draft.set('vip');
+    fixture.componentInstance['draft'].set('vip');
     fixture.componentInstance.onKeydown(new KeyboardEvent('keydown', { key: ',' }));
 
     expect(emitted).toEqual(['vip']);
@@ -35,7 +35,7 @@ describe('TagInputComponent', () => {
     let emitted: string[] | null = null;
     fixture.componentInstance.registerOnChange((v) => (emitted = v));
 
-    fixture.componentInstance.draft.set('urgent');
+    fixture.componentInstance['draft'].set('urgent');
     fixture.componentInstance.commitDraft();
 
     expect(emitted).toBeNull();
@@ -47,7 +47,7 @@ describe('TagInputComponent', () => {
     let emitted: string[] | null = null;
     fixture.componentInstance.registerOnChange((v) => (emitted = v));
 
-    fixture.componentInstance.draft.set('   ');
+    fixture.componentInstance['draft'].set('   ');
     fixture.componentInstance.commitDraft();
 
     expect(emitted).toBeNull();
@@ -74,9 +74,9 @@ describe('TagInputComponent', () => {
     fixture.componentInstance.writeValue(['tag-0']);
     fixture.detectChanges();
 
-    fixture.componentInstance.draft.set('tag');
-    expect(fixture.componentInstance.filteredSuggestions().length).toBe(8);
-    expect(fixture.componentInstance.filteredSuggestions()).not.toContain('tag-0');
+    fixture.componentInstance['draft'].set('tag');
+    expect(fixture.componentInstance['filteredSuggestions']().length).toBe(8);
+    expect(fixture.componentInstance['filteredSuggestions']()).not.toContain('tag-0');
   });
 
   it('addSuggestion() adds the tag and clears the draft', () => {
@@ -84,11 +84,11 @@ describe('TagInputComponent', () => {
     fixture.detectChanges();
     let emitted: string[] | null = null;
     fixture.componentInstance.registerOnChange((v) => (emitted = v));
-    fixture.componentInstance.draft.set('u');
+    fixture.componentInstance['draft'].set('u');
 
     fixture.componentInstance.addSuggestion('urgent');
 
     expect(emitted).toEqual(['urgent']);
-    expect(fixture.componentInstance.draft()).toBe('');
+    expect(fixture.componentInstance['draft']()).toBe('');
   });
 });

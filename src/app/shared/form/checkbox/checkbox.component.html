@@ -7,7 +7,7 @@
       [checked]="value() ?? false"
       [indeterminate]="indeterminate()"
       [disabled]="disabled()"
-      (change)="onChange($event)"
+      (change)="handleChange($event)"
       (blur)="markTouched()"
     />
     <span class="box" [class.checked]="!!value()" [class.indeterminate]="indeterminate()">

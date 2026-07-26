@@ -13,7 +13,7 @@ describe('DateRangePickerComponent', () => {
     fixture.componentInstance.selectDate(new Date(2026, 6, 10));
 
     expect(emitted).toEqual({ start: new Date(2026, 6, 10), end: null });
-    expect(fixture.componentInstance.open()).toBe(true);
+    expect(fixture.componentInstance['open']()).toBe(true);
   });
 
   it('second click (later date) sets end and closes the panel', () => {
@@ -27,7 +27,7 @@ describe('DateRangePickerComponent', () => {
     fixture.componentInstance.selectDate(new Date(2026, 6, 20));
 
     expect(emitted).toEqual({ start: new Date(2026, 6, 10), end: new Date(2026, 6, 20) });
-    expect(fixture.componentInstance.open()).toBe(false);
+    expect(fixture.componentInstance['open']()).toBe(false);
   });
 
   it('second click on an earlier date swaps start/end instead of producing an invalid range', () => {

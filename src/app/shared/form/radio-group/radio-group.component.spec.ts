@@ -10,7 +10,7 @@ const OPTIONS: RadioOption<string>[] = [
 
 describe('RadioGroupComponent', () => {
   it('writeValue() checks the matching native radio', () => {
-    const fixture = TestBed.createComponent(RadioGroupComponent);
+    const fixture = TestBed.createComponent<RadioGroupComponent<string>>(RadioGroupComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.componentInstance.writeValue('no');
     fixture.detectChanges();
@@ -20,7 +20,7 @@ describe('RadioGroupComponent', () => {
   });
 
   it('selecting an option emits its value', () => {
-    const fixture = TestBed.createComponent(RadioGroupComponent);
+    const fixture = TestBed.createComponent<RadioGroupComponent<string>>(RadioGroupComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     let emitted: string | null = null;
@@ -32,7 +32,7 @@ describe('RadioGroupComponent', () => {
   });
 
   it('does not select a disabled option', () => {
-    const fixture = TestBed.createComponent(RadioGroupComponent);
+    const fixture = TestBed.createComponent<RadioGroupComponent<string>>(RadioGroupComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     let emitted: string | null = null;
@@ -44,7 +44,7 @@ describe('RadioGroupComponent', () => {
   });
 
   it('all native radios in the group share the same name attribute', () => {
-    const fixture = TestBed.createComponent(RadioGroupComponent);
+    const fixture = TestBed.createComponent<RadioGroupComponent<string>>(RadioGroupComponent);
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
     const inputs: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll('input');

@@ -21,7 +21,7 @@ export class CheckboxComponent extends BaseValueAccessor<boolean> {
 
   protected readonly uid = `cb-${nextUid++}`;
 
-  onChange(event: Event): void {
+  handleChange(event: Event): void {
     this.emitValue((event.target as HTMLInputElement).checked);
   }
 }

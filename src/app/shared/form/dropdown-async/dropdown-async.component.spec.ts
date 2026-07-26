@@ -1,6 +1,6 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DropdownAsyncComponent } from './dropdown-async.component';
 import { DropdownOption } from '../dropdown/dropdown.component';
 
@@ -15,40 +15,52 @@ function search(query: string): DropdownOption<string>[] {
 }
 
 describe('DropdownAsyncComponent', () => {
-  it('opening triggers an initial load with an empty query', fakeAsync(() => {
+  // RxJS's asyncScheduler (used by debounceTime) schedules via the global
+  // setTimeout/setInterval that vi.useFakeTimers() intercepts — this app is
+  // zoneless (see README), so fakeAsync()/tick() (which require zone.js)
+  // aren't available or appropriate here.
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('opening triggers an initial load with an empty query', () => {
     const loadOptions = vi.fn((q: string) => of(search(q)));
-    const fixture = TestBed.createComponent(DropdownAsyncComponent);
+    const fixture = TestBed.createComponent<DropdownAsyncComponent<string>>(DropdownAsyncComponent);
     fixture.componentRef.setInput('loadOptions', loadOptions);
     fixture.detectChanges();
 
     fixture.componentInstance.toggle();
-    tick(400);
+    vi.advanceTimersByTime(400);
 
     expect(loadOptions).toHaveBeenCalledWith('');
-    expect(fixture.componentInstance.options().length).toBe(3);
-  }));
+    expect(fixture.componentInstance['options']().length).toBe(3);
+  });
 
-  it('typing debounces before calling loadOptions again', fakeAsync(() => {
+  it('typing debounces before calling loadOptions again', () => {
     const loadOptions = vi.fn((q: string) => of(search(q)));
-    const fixture = TestBed.createComponent(DropdownAsyncComponent);
+    const fixture = TestBed.createComponent<DropdownAsyncComponent<string>>(DropdownAsyncComponent);
     fixture.componentRef.setInput('loadOptions', loadOptions);
     fixture.detectChanges();
     fixture.componentInstance.toggle();
-    tick(400);
+    vi.advanceTimersByTime(400);
     loadOptions.mockClear();
 
     fixture.componentInstance.onQueryInput({ target: { value: 'a' } } as unknown as Event);
     fixture.componentInstance.onQueryInput({ target: { value: 'al' } } as unknown as Event);
-    tick(100); // still within debounce window
+    vi.advanceTimersByTime(100); // still within debounce window
     expect(loadOptions).not.toHaveBeenCalled();
 
-    tick(300); // debounce elapses
+    vi.advanceTimersByTime(300); // debounce elapses
     expect(loadOptions).toHaveBeenCalledTimes(1);
     expect(loadOptions).toHaveBeenCalledWith('al');
-  }));
+  });
 
-  it('selecting an option emits its value and sets the display label', fakeAsync(() => {
-    const fixture = TestBed.createComponent(DropdownAsyncComponent);
+  it('selecting an option emits its value and sets the display label', () => {
+    const fixture = TestBed.createComponent<DropdownAsyncComponent<string>>(DropdownAsyncComponent);
     fixture.componentRef.setInput('loadOptions', (q: string) => of(search(q)));
     fixture.detectChanges();
     let emitted: string | null = null;
@@ -57,12 +69,12 @@ describe('DropdownAsyncComponent', () => {
     fixture.componentInstance.selectOption(ALL[1]);
 
     expect(emitted).toBe('bob');
-    expect(fixture.componentInstance.selectedLabel()).toBe('Bob');
-    expect(fixture.componentInstance.open()).toBe(false);
-  }));
+    expect(fixture.componentInstance['selectedLabel']()).toBe('Bob');
+    expect(fixture.componentInstance['open']()).toBe(false);
+  });
 
-  it('a loadOptions() that throws synchronously resolves to an empty list instead of crashing', fakeAsync(() => {
-    const fixture = TestBed.createComponent(DropdownAsyncComponent);
+  it('a loadOptions() that throws synchronously resolves to an empty list instead of crashing', () => {
+    const fixture = TestBed.createComponent<DropdownAsyncComponent<string>>(DropdownAsyncComponent);
     fixture.componentRef.setInput('loadOptions', () => {
       throw new Error('network error');
     });
@@ -70,20 +82,20 @@ describe('DropdownAsyncComponent', () => {
 
     expect(() => {
       fixture.componentInstance.toggle();
-      tick(400);
+      vi.advanceTimersByTime(400);
     }).not.toThrow();
 
-    expect(fixture.componentInstance.options()).toEqual([]);
-    expect(fixture.componentInstance.loading()).toBe(false);
-  }));
+    expect(fixture.componentInstance['options']()).toEqual([]);
+    expect(fixture.componentInstance['loading']()).toBe(false);
+  });
 
   it('initialOption pre-fills the display label without calling loadOptions', () => {
-    const fixture = TestBed.createComponent(DropdownAsyncComponent);
+    const fixture = TestBed.createComponent<DropdownAsyncComponent<string>>(DropdownAsyncComponent);
     fixture.componentRef.setInput('loadOptions', (q: string) => of(search(q)));
     fixture.componentRef.setInput('initialOption', { label: 'Carol', value: 'carol' });
     fixture.componentInstance.writeValue('carol');
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.selectedLabel()).toBe('Carol');
+    expect(fixture.componentInstance['selectedLabel']()).toBe('Carol');
   });
 });

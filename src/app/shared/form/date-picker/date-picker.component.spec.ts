@@ -14,7 +14,7 @@ describe('DatePickerComponent', () => {
     fixture.componentInstance.selectDate(d);
 
     expect(emitted).toEqual(d);
-    expect(fixture.componentInstance.open()).toBe(false);
+    expect(fixture.componentInstance['open']()).toBe(false);
   });
 
   it('does not select a date before min', () => {
