@@ -6,19 +6,19 @@
   width: min(790px, calc(100vw - 330px));
   max-height: 92vh;
   overflow-y: auto;
-  padding: 22px;
+  padding: var(--space-11);
 }
 
 .mega-layout {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
-  gap: 22px;
+  gap: var(--space-11);
   align-items: start;
 }
 
 .mega-context {
   border-inline-end: 1px solid var(--border);
-  padding-inline-end: 20px;
+  padding-inline-end: var(--space-10);
 }
 .mega-context-art {
   height: 140px;
@@ -27,8 +27,8 @@
   justify-content: center;
   color: var(--accent);
   background: var(--accent-soft);
-  border-radius: 8px;
-  margin-bottom: 15px;
+  border-radius: var(--radius);
+  margin-bottom: var(--space-8);
 
   .group-icon {
     font-size: 48px;
@@ -36,13 +36,13 @@
   }
 }
 .mega-context-title {
-  font-size: 13.5px;
+  font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 5px;
+  margin-bottom: var(--space-3);
 }
 .mega-context-note {
-  font-size: 12.5px;
+  font-size: var(--font-size-sm);
   line-height: 1.45;
   color: var(--text-muted);
 }
@@ -50,14 +50,14 @@
 .mega-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
-  gap: 22px 26px;
+  gap: var(--space-11) var(--space-13);
   align-content: start;
 }
 .mega-list-title {
-  font-size: 14px;
+  font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 9px;
+  margin-bottom: var(--space-5);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -66,10 +66,10 @@
   min-height: 32px;
   display: flex;
   align-items: center;
-  padding: 7px 9px;
-  border-radius: 7px;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius);
   color: var(--text-muted);
-  font-size: 13.5px;
+  font-size: var(--font-size-base);
   cursor: pointer;
 
   &:hover,
@@ -80,7 +80,7 @@
 }
 
 .nav-empty {
-  padding: 14px;
+  padding: var(--space-7);
   color: var(--text-muted);
-  font-size: 12.5px;
+  font-size: var(--font-size-sm);
 }

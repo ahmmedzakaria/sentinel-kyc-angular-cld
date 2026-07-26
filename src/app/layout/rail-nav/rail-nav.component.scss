@@ -26,7 +26,7 @@
   background: transparent;
   display: flex;
   align-items: center;
-  padding-inline-start: 20px;
+  padding-inline-start: var(--space-10);
   cursor: pointer;
   border-bottom: 1px solid var(--chrome-border);
   color: var(--chrome-text-muted);
@@ -46,7 +46,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-4);
   border: none;
   background: transparent;
   cursor: pointer;
@@ -57,7 +57,7 @@
   border-inline-start: 3px solid transparent;
 
   .lbl {
-    font-size: 13.5px;
+    font-size: var(--font-size-base);
     font-weight: 500;
     opacity: 0;
     transition: opacity 0.15s;
@@ -79,11 +79,11 @@
 
 .row.lvl-1 {
   height: 44px;
-  padding-inline: 10px;
+  padding-inline: var(--space-5);
   font-weight: 600;
 
   .emoji-icon {
-    font-size: 16px;
+    font-size: var(--font-size-md);
     line-height: 1;
     flex-shrink: 0;
   }
@@ -95,9 +95,9 @@
 
 .row.lvl-2 {
   height: 38px;
-  padding-inline-start: 26px;
-  padding-inline-end: 10px;
-  font-size: 13px;
+  padding-inline-start: var(--space-13);
+  padding-inline-end: var(--space-5);
+  font-size: var(--font-size-base);
 
   &.open,
   &.active {
@@ -108,8 +108,8 @@
 .row.lvl-3 {
   height: 34px;
   padding-inline-start: 44px;
-  padding-inline-end: 10px;
-  font-size: 12.5px;
+  padding-inline-end: var(--space-5);
+  font-size: var(--font-size-sm);
   color: var(--chrome-text-muted);
 
   &.active {
@@ -120,7 +120,7 @@
 
 .arrow,
 .arrow-spacer {
-  width: 12px;
+  width: var(--space-6);
   flex-shrink: 0;
   display: flex;
   color: var(--chrome-text-muted);
@@ -145,14 +145,14 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 7px;
-  margin: 8px 10px 10px;
-  padding: 8px 10px;
-  border-radius: 7px;
+  gap: var(--space-4);
+  margin: var(--space-4) var(--space-5) var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius);
   border: 1px dashed var(--chrome-border);
   background: transparent;
   color: var(--chrome-text-muted);
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
 

@@ -8,9 +8,9 @@ header {
   color: var(--chrome-text);
   display: flex;
   align-items: center;
-  padding: 0 18px;
+  padding: 0 var(--space-9);
   border-bottom: 1px solid var(--chrome-border-strong);
-  gap: 20px;
+  gap: var(--space-10);
   transition:
     background 0.2s,
     color 0.2s,
@@ -20,16 +20,16 @@ header {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-5);
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--font-size-md);
   flex-shrink: 0;
 
   small {
     display: block;
     font-weight: 400;
     color: var(--chrome-text-muted);
-    font-size: 11px;
+    font-size: var(--font-size-xs);
     text-transform: uppercase;
     margin-top: 1px;
   }
@@ -37,7 +37,7 @@ header {
 .brand-logo {
   width: 32px;
   height: 32px;
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   background: var(--accent);
   box-shadow: 0 1px 2px rgba(18, 24, 33, 0.14);
   display: block;
@@ -68,23 +68,23 @@ header.icon-view .brand-text {
 .global-search {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-1);
   background: var(--chrome-search-bg);
   border: 1px solid var(--chrome-search-border);
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   height: 38px;
   width: 100%;
   max-width: 560px;
-  padding-inline-start: 12px;
+  padding-inline-start: var(--space-6);
 
   select {
     background: transparent;
     border: none;
     color: var(--chrome-icon);
-    font-size: 12px;
+    font-size: var(--font-size-sm);
     height: 38px;
     border-inline-end: 1px solid var(--chrome-search-border);
-    padding-inline-end: 10px;
+    padding-inline-end: var(--space-5);
   }
   input {
     flex: 1;
@@ -93,8 +93,8 @@ header.icon-view .brand-text {
     border: none;
     outline: none;
     color: var(--chrome-search-text);
-    font-size: 13.5px;
-    padding: 0 10px;
+    font-size: var(--font-size-base);
+    padding: 0 var(--space-5);
 
     &::placeholder {
       color: var(--chrome-search-placeholder);
@@ -103,9 +103,9 @@ header.icon-view .brand-text {
   .go {
     width: 32px;
     height: 32px;
-    margin-inline-end: 3px;
+    margin-inline-end: var(--space-2);
     border: none;
-    border-radius: 7px;
+    border-radius: var(--radius);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -135,7 +135,7 @@ header.icon-view .global-search {
 .hdr-right {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-2);
   flex-shrink: 0;
 }
 
@@ -146,7 +146,7 @@ header.icon-view .global-search {
   font-family: inherit;
   cursor: pointer;
   color: var(--chrome-icon);
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   height: 36px;
   display: flex;
   align-items: center;
@@ -161,9 +161,9 @@ header.icon-view .global-search {
   width: 36px;
 }
 .hdr-pill {
-  gap: 5px;
-  padding: 0 9px;
-  font-size: 12px;
+  gap: var(--space-3);
+  padding: 0 var(--space-5);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   white-space: nowrap;
 
@@ -204,13 +204,13 @@ header.icon-view .hdr-pill {
   height: 15px;
   background: var(--red);
   color: #fff;
-  font-size: 9px;
+  font-size: var(--font-size-3xs);
   font-weight: 700;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 3px;
+  padding: 0 var(--space-2);
   border: 2px solid var(--chrome-bg);
 }
 .favorite-count {
@@ -221,13 +221,13 @@ header.icon-view .hdr-pill {
   height: 15px;
   background: var(--accent);
   color: #fff;
-  font-size: 9px;
+  font-size: var(--font-size-3xs);
   font-weight: 700;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 3px;
+  padding: 0 var(--space-2);
   border: 2px solid var(--chrome-bg);
   line-height: 1;
 }
@@ -239,16 +239,16 @@ header.icon-view .hdr-pill {
   background: var(--accent);
   color: #fff;
   border: none;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
 }
 
 .divider {
   width: 1px;
-  height: 24px;
+  height: var(--space-12);
   background: var(--chrome-border);
-  margin: 0 4px;
+  margin: 0 var(--space-2);
 }
 
 // Dropdown panel content (rendered inside HeaderDropdownComponent's overlay)
@@ -261,37 +261,37 @@ header.icon-view .hdr-pill {
 ::ng-deep .hdr-dropdown {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow);
   min-width: 190px;
   overflow: hidden;
 
   .dd-head {
-    padding: 10px 14px 6px;
-    font-size: 11px;
+    padding: var(--space-5) var(--space-7) var(--space-3);
+    font-size: var(--font-size-xs);
     text-transform: uppercase;
     color: var(--text-muted);
     font-weight: 600;
 
     .sso-tag {
-      margin-inline-start: 7px;
+      margin-inline-start: var(--space-4);
       background: var(--accent-soft);
       color: var(--accent);
-      font-size: 9px;
+      font-size: var(--font-size-3xs);
       font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 99px;
+      padding: 1px var(--space-3);
+      border-radius: var(--radius-pill);
       text-transform: none;
     }
   }
   .opt {
-    padding: 9px 14px;
-    font-size: 13px;
+    padding: var(--space-5) var(--space-7);
+    font-size: var(--font-size-base);
     color: var(--text);
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: var(--space-5);
 
     &:hover {
       background: var(--surface-2);
@@ -308,21 +308,21 @@ header.icon-view .hdr-pill {
     }
     .meta {
       margin-inline-start: auto;
-      font-size: 11px;
+      font-size: var(--font-size-xs);
       color: var(--text-muted);
       font-weight: 400;
     }
   }
   .empty {
-    padding: 16px 14px;
-    font-size: 12.5px;
+    padding: var(--space-8) var(--space-7);
+    font-size: var(--font-size-sm);
     color: var(--text-muted);
     text-align: center;
   }
   .favorite-list {
     max-height: 320px;
     overflow: auto;
-    padding-bottom: 6px;
+    padding-bottom: var(--space-3);
   }
   .favorite-row {
     width: 100%;
@@ -330,10 +330,10 @@ header.icon-view .hdr-pill {
     background: transparent;
     text-align: start;
     color: var(--text);
-    padding: 9px 12px;
+    padding: var(--space-5) var(--space-6);
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 6px;
+    gap: var(--space-3);
     cursor: pointer;
     font-family: inherit;
 
@@ -341,7 +341,7 @@ header.icon-view .hdr-pill {
       background: var(--surface-2);
     }
     .name {
-      font-size: 12.5px;
+      font-size: var(--font-size-sm);
       font-weight: 600;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -349,7 +349,7 @@ header.icon-view .hdr-pill {
     }
     .path {
       grid-column: 1 / -1;
-      font-size: 10.5px;
+      font-size: var(--font-size-xs);
       color: var(--text-muted);
       overflow: hidden;
       text-overflow: ellipsis;
@@ -357,7 +357,7 @@ header.icon-view .hdr-pill {
     }
     .code {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 10.5px;
+      font-size: var(--font-size-xs);
       color: var(--accent);
       font-weight: 700;
     }
@@ -365,18 +365,18 @@ header.icon-view .hdr-pill {
   .apps-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    padding: 6px;
+    gap: var(--space-1);
+    padding: var(--space-3);
   }
   .app-tile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 7px;
-    padding: 12px 4px;
+    gap: var(--space-4);
+    padding: var(--space-6) var(--space-2);
     border: none;
     background: transparent;
-    border-radius: 9px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     color: var(--text);
 
@@ -386,7 +386,7 @@ header.icon-view .hdr-pill {
     .tile-icon {
       width: 34px;
       height: 34px;
-      border-radius: 9px;
+      border-radius: var(--radius-md);
       background: var(--accent-soft);
       color: var(--accent);
       display: flex;
@@ -394,7 +394,7 @@ header.icon-view .hdr-pill {
       justify-content: center;
     }
     .name {
-      font-size: 10.5px;
+      font-size: var(--font-size-xs);
       font-weight: 500;
       line-height: 1.25;
     }

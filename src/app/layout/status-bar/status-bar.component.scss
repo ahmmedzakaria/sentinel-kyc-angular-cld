@@ -5,10 +5,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  font-size: 11px;
+  padding: 0 var(--space-8);
+  font-size: var(--font-size-xs);
   border-top: 1px solid var(--chrome-border);
-  gap: 12px;
+  gap: var(--space-6);
   transition:
     background 0.2s,
     color 0.2s,
@@ -17,7 +17,7 @@
 .sb-group {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-7);
   min-width: 0;
 }
 .sb-mid {
@@ -30,7 +30,7 @@
 .sb-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-3);
   white-space: nowrap;
 }
 .sb-dot {
@@ -43,14 +43,14 @@
 .sb-tag {
   background: var(--chrome-hover-bg);
   color: var(--chrome-icon);
-  padding: 1px 7px;
-  border-radius: 99px;
-  font-size: 10px;
+  padding: 1px var(--space-4);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-2xs);
   font-weight: 600;
 }
 .sb-div {
   width: 1px;
-  height: 12px;
+  height: var(--space-6);
   background: var(--chrome-border);
 }
 .sb-mono {
@@ -62,11 +62,11 @@
   border: none;
   background: transparent;
   color: var(--chrome-text-muted);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 0 6px;
+  gap: var(--space-3);
+  padding: 0 var(--space-3);
   font: inherit;
   cursor: pointer;
 

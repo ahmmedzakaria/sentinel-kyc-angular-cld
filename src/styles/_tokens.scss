@@ -22,7 +22,11 @@
 // below recalculates from them (all as `calc()`, so they stay live if a
 // primitive is ever overridden at runtime, e.g. a future density toggle).
 // ---------------------------------------------------------------------------
-$space-unit: 4px;
+// 2px rather than a rounder 4px: this app's actual paddings/gaps/radii were
+// hand-picked on a fine, often-odd grid (3, 5, 7, 9, 15...), not a clean 4px
+// rhythm — 2px keeps the scale within 1px of nearly every real value in the
+// layout components instead of forcing a coarser, more visibly-off snap.
+$space-unit: 2px;
 $radius-base: 8px;
 $font-size-base: 13.5px;
 
@@ -119,21 +123,30 @@ $shadow-tint: #121821;
   // ---- Size scale — tune --space-unit/--radius/--font-size-base; every
   // other size token here is `calc()`-derived from one of the three. ----
   --space-unit: #{$space-unit};
-  --space-1: calc(var(--space-unit) * 1);
-  --space-2: calc(var(--space-unit) * 2);
-  --space-3: calc(var(--space-unit) * 3);
-  --space-4: calc(var(--space-unit) * 4);
-  --space-5: calc(var(--space-unit) * 5);
-  --space-6: calc(var(--space-unit) * 6);
-  --space-8: calc(var(--space-unit) * 8);
-  --space-10: calc(var(--space-unit) * 10);
+  --space-1: calc(var(--space-unit) * 1); // 2px
+  --space-2: calc(var(--space-unit) * 2); // 4px
+  --space-3: calc(var(--space-unit) * 3); // 6px
+  --space-4: calc(var(--space-unit) * 4); // 8px
+  --space-5: calc(var(--space-unit) * 5); // 10px
+  --space-6: calc(var(--space-unit) * 6); // 12px
+  --space-7: calc(var(--space-unit) * 7); // 14px
+  --space-8: calc(var(--space-unit) * 8); // 16px
+  --space-9: calc(var(--space-unit) * 9); // 18px
+  --space-10: calc(var(--space-unit) * 10); // 20px
+  --space-11: calc(var(--space-unit) * 11); // 22px
+  --space-12: calc(var(--space-unit) * 12); // 24px
+  --space-13: calc(var(--space-unit) * 13); // 26px
+  --space-14: calc(var(--space-unit) * 14); // 28px
+  --space-16: calc(var(--space-unit) * 16); // 32px
 
   --radius: #{$radius-base};
-  --radius-sm: calc(var(--radius) * 0.75);
-  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-sm: calc(var(--radius) * 0.75); // 6px
+  --radius-md: calc(var(--radius) * 1.125); // 9px — the header/rail chrome's recurring "slightly more than base" radius
+  --radius-lg: calc(var(--radius) * 1.5); // 12px
   --radius-pill: 999px;
 
   --font-size-base: #{$font-size-base};
+  --font-size-3xs: calc(var(--font-size-base) * 0.67); // ~9px
   --font-size-2xs: calc(var(--font-size-base) * 0.74); // ~10px
   --font-size-xs: calc(var(--font-size-base) * 0.815); // ~11px
   --font-size-sm: calc(var(--font-size-base) * 0.89); // ~12px
