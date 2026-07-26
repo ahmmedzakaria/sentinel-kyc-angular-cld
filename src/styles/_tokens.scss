@@ -1,104 +1,240 @@
-// Design tokens — same variable names and values as the original HTML POC's
-// CSS custom properties, just organized as an SCSS partial. Kept as native
-// CSS custom properties (not SCSS variables) so ThemeService can flip them
-// at runtime via the `data-theme` attribute / `.dark` class on <body>.
+// Design tokens. Kept as native CSS custom properties (not SCSS variables) so
+// ThemeService can flip them at runtime via the `data-theme` attribute/`.dark`
+// class on <body>, and so a primary (e.g. --space-unit) can still be tuned
+// live from devtools and have everything computed from it update with it.
+//
+// Every custom property below is either a PRIMARY (a literal color or size
+// picked by hand, one per theme/concept) or DERIVED (computed from one or
+// two primaries via the functions/formulas just below). Retuning the look of
+// a theme, or the whole app's density/type scale, means changing a primary —
+// not hand-picking two dozen shades or paddings to match.
+//
+// The exceptions are noted inline: Navy's chrome surfaces are genuinely
+// bespoke art direction (a distinct blue-black, not a tint of its card
+// color), so a few of its chrome-* tokens are still literal primaries rather
+// than derived — the formulas below don't force every theme through the same
+// mold when a theme deliberately wants to look different.
+
+@use 'sass:color';
+
+// ---------------------------------------------------------------------------
+// SIZE PRIMITIVES — tune these three and every spacing/radius/type token
+// below recalculates from them (all as `calc()`, so they stay live if a
+// primitive is ever overridden at runtime, e.g. a future density toggle).
+// ---------------------------------------------------------------------------
+$space-unit: 4px;
+$radius-base: 8px;
+$font-size-base: 13.5px;
+
+// Shadow color never varies per theme in this app — one shared tint.
+$shadow-tint: #121821;
+
+// ---------------------------------------------------------------------------
+// COLOR DERIVATION — every formula below takes a theme's own primaries
+// (its neutrals: $text/$paper/$card, and its hues: accent/amber/red/success/
+// info) and computes a shade from them. The mix weights are shared constants
+// so every theme derives the same *kind* of relationship (e.g. "soft" is
+// always a 12% tint of the hue over the card color) rather than each shade
+// being hand-tuned to a different intensity per theme.
+// ---------------------------------------------------------------------------
+
+// A low-emphasis tinted background for a status/brand color, e.g. --accent-soft.
+@function soft-tone($hue, $card) {
+  @return color.mix($hue, $card, 12%);
+}
+
+// A muted text/icon tone — $weight of $text mixed into $paper.
+@function muted-tone($text, $paper, $weight: 60%) {
+  @return color.mix($text, $paper, $weight);
+}
+
+// A border/divider shade — a light touch of $text mixed into $paper.
+@function border-tone($text, $paper, $weight: 10%) {
+  @return color.mix($text, $paper, $weight);
+}
+
+// The "raised surface" step between the page background and the card surface.
+@function surface-tone($paper, $card) {
+  @return color.mix($paper, $card, 50%);
+}
+
+// A stronger divider — mixes toward black rather than toward $text, since
+// "stronger" means more contrast against $paper in *both* directions: in a
+// light theme that's the same direction as $text (dark), but in a dark theme
+// mixing $text in would make it *lighter*, the wrong way. Used by dark-base
+// themes only; light-base themes get their "strong" border via border-tone()
+// with a bigger weight instead, since there $text already is the dark end.
+@function deepen-tone($paper, $weight) {
+  @return color.mix(black, $paper, $weight);
+}
 
 :root {
-  --ink: #121821;
-  --paper: #f3f5f7;
-  --card: #ffffff;
-  --surface-2: #f8f9fb;
-  --border: #e2e6ea;
-  --text: #1a222c;
-  --text-muted: #5c6672;
-  --accent: #1f6f5c;
-  --accent-soft: #e4f1ed;
-  --amber: #a8630b;
-  --amber-soft: #fbeed9;
-  --red: #9f2b2b;
-  --red-soft: #faeaea;
-  --success: #1c7a4c;
-  --success-soft: #e1f2e8;
-  --info: #2f7dd1;
-  --info-soft: #e5eefa;
-  --focus: #2f7dd1;
-  --radius: 8px;
-  --shadow: 0 8px 24px rgba(18, 24, 33, 0.14);
+  // ---- Primaries (Light) ----
+  $text: #1a222c;
+  $paper: #f3f5f7;
+  $card: #ffffff;
+  $accent: #1f6f5c;
+  $amber: #a8630b;
+  $red: #9f2b2b;
+  $success: #1c7a4c;
+  $info: #2f7dd1;
+
+  --ink: #{$shadow-tint};
+  --text: #{$text};
+  --text-muted: #{muted-tone($text, $paper)};
+  --paper: #{$paper};
+  --card: #{$card};
+  --surface-2: #{surface-tone($paper, $card)};
+  --border: #{border-tone($text, $paper)};
+
+  --accent: #{$accent};
+  --accent-soft: #{soft-tone($accent, $card)};
+  --amber: #{$amber};
+  --amber-soft: #{soft-tone($amber, $card)};
+  --red: #{$red};
+  --red-soft: #{soft-tone($red, $card)};
+  --success: #{$success};
+  --success-soft: #{soft-tone($success, $card)};
+  --info: #{$info};
+  --info-soft: #{soft-tone($info, $card)};
+  --focus: var(--info);
+
+  --shadow:
+    0 calc(var(--space-unit) * 2) calc(var(--space-unit) * 6) #{rgba($shadow-tint, 0.14)};
 
   // chrome = header, rail, status bar
-  --chrome-bg: #ffffff;
-  --chrome-border: #e2e6ea;
-  --chrome-border-strong: #d7dce1;
-  --chrome-text: #1a222c;
-  --chrome-text-muted: #7d8794;
-  --chrome-icon: #5c6672;
-  --chrome-hover-bg: #eef1f4;
+  --chrome-bg: var(--card);
+  --chrome-border: var(--border);
+  --chrome-border-strong: #{border-tone($text, $paper, 16%)};
+  --chrome-text: var(--text);
+  --chrome-text-muted: #{muted-tone($text, $paper, 45%)};
+  --chrome-icon: var(--text-muted);
+  --chrome-hover-bg: #{border-tone($text, $paper, 5%)};
   --chrome-active-bg: var(--accent-soft);
-  --chrome-search-bg: #f3f5f7;
-  --chrome-search-border: #dde2e7;
-  --chrome-search-text: #1a222c;
-  --chrome-search-placeholder: #97a1ab;
+  --chrome-search-bg: var(--paper);
+  --chrome-search-border: var(--border);
+  --chrome-search-text: var(--text);
+  --chrome-search-placeholder: #{muted-tone($text, $paper, 40%)};
+
+  // ---- Size scale — tune --space-unit/--radius/--font-size-base; every
+  // other size token here is `calc()`-derived from one of the three. ----
+  --space-unit: #{$space-unit};
+  --space-1: calc(var(--space-unit) * 1);
+  --space-2: calc(var(--space-unit) * 2);
+  --space-3: calc(var(--space-unit) * 3);
+  --space-4: calc(var(--space-unit) * 4);
+  --space-5: calc(var(--space-unit) * 5);
+  --space-6: calc(var(--space-unit) * 6);
+  --space-8: calc(var(--space-unit) * 8);
+  --space-10: calc(var(--space-unit) * 10);
+
+  --radius: #{$radius-base};
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-pill: 999px;
+
+  --font-size-base: #{$font-size-base};
+  --font-size-2xs: calc(var(--font-size-base) * 0.74); // ~10px
+  --font-size-xs: calc(var(--font-size-base) * 0.815); // ~11px
+  --font-size-sm: calc(var(--font-size-base) * 0.89); // ~12px
+  --font-size-md: calc(var(--font-size-base) * 1.11); // ~15px
+  --font-size-lg: calc(var(--font-size-base) * 1.33); // ~18px
+  --font-size-xl: calc(var(--font-size-base) * 1.63); // ~22px
+  --font-size-2xl: calc(var(--font-size-base) * 1.93); // ~26px
 }
 
 body.dark {
-  --paper: #0d1218;
-  --card: #161d26;
-  --surface-2: #1b2330;
-  --border: #2a323d;
-  --text: #e7ebef;
-  --text-muted: #8b96a3;
-  --accent-soft: #173430;
-  --amber-soft: #2c2110;
-  --red-soft: #2b1616;
-  --success-soft: #163224;
-  --info-soft: #172a3d;
+  // ---- Primaries (Dark) — only the neutrals change; accent/amber/red/
+  // success/info hues are shared with Light, so only their *-soft tint
+  // (which depends on --card) needs recomputing here. ----
+  $text: #e7ebef;
+  $paper: #0d1218;
+  $card: #161d26;
+  $accent: #1f6f5c;
+  $amber: #a8630b;
+  $red: #9f2b2b;
+  $success: #1c7a4c;
+  $info: #2f7dd1;
 
-  --chrome-bg: #121821;
-  --chrome-border: #232d3a;
-  --chrome-border-strong: #0a0e13;
-  --chrome-text: #ffffff;
-  --chrome-text-muted: #9aa5b1;
-  --chrome-icon: #c7cfd8;
-  --chrome-hover-bg: #1c2531;
-  --chrome-active-bg: #1c2531;
-  --chrome-search-bg: #1b2430;
-  --chrome-search-border: #2a3542;
-  --chrome-search-text: #ffffff;
-  --chrome-search-placeholder: #69707c;
+  --text: #{$text};
+  --text-muted: #{muted-tone($text, $paper)};
+  --paper: #{$paper};
+  --card: #{$card};
+  --surface-2: #{surface-tone($paper, $card)};
+  --border: #{border-tone($text, $paper)};
+
+  --accent-soft: #{soft-tone($accent, $card)};
+  --amber-soft: #{soft-tone($amber, $card)};
+  --red-soft: #{soft-tone($red, $card)};
+  --success-soft: #{soft-tone($success, $card)};
+  --info-soft: #{soft-tone($info, $card)};
+
+  --chrome-bg: var(--ink);
+  --chrome-border: #{border-tone($text, $paper, 13%)};
+  --chrome-border-strong: #{deepen-tone($paper, 22%)};
+  --chrome-text: #fff;
+  --chrome-text-muted: #{muted-tone($text, $paper, 45%)};
+  --chrome-icon: #{muted-tone($text, $paper, 87%)};
+  --chrome-hover-bg: #{border-tone($text, $paper, 9%)};
+  --chrome-active-bg: var(--chrome-hover-bg);
+  --chrome-search-bg: #{border-tone($text, $paper, 8%)};
+  --chrome-search-border: #{border-tone($text, $paper, 16%)};
+  --chrome-search-text: #fff;
+  --chrome-search-placeholder: #{muted-tone($text, $paper, 44%)};
 }
 
-// Accent-only theme variants (light structural base)
+// Accent-only theme variants (light structural base) — only the hue changes,
+// every neutral/chrome token is inherited from :root untouched.
 body[data-theme='blue'] {
-  --accent: #2c5aa0;
-  --accent-soft: #e4ebf5;
+  $accent: #2c5aa0;
+  --accent: #{$accent};
+  --accent-soft: #{soft-tone($accent, #ffffff)};
 }
 body[data-theme='green'] {
-  --accent: #1c7a4c;
-  --accent-soft: #e1f2e8;
+  $accent: #1c7a4c;
+  --accent: #{$accent};
+  --accent-soft: #{soft-tone($accent, #ffffff)};
 }
 body[data-theme='purple'] {
-  --accent: #6b3fa0;
-  --accent-soft: #ede4f5;
+  $accent: #6b3fa0;
+  --accent: #{$accent};
+  --accent-soft: #{soft-tone($accent, #ffffff)};
 }
 body[data-theme='gray'] {
-  --accent: #3f4a54;
-  --accent-soft: #e7eaed;
+  $accent: #3f4a54;
+  --accent: #{$accent};
+  --accent-soft: #{soft-tone($accent, #ffffff)};
 }
 body.dark[data-theme='dark'] {
-  --accent: #1f6f5c;
-  --accent-soft: #173430;
+  $accent: #1f6f5c;
+  --accent: #{$accent};
+  --accent-soft: #{soft-tone($accent, #161d26)};
 }
 
-// Navy Banking — its own dark palette, distinct from generic Dark
+// Navy Banking — its own dark palette, distinct from generic Dark. Neutrals/
+// soft tints/border still derive from primaries like every other theme; the
+// chrome-bg/hover/active/search-bg surfaces are deliberately bespoke (a
+// distinct blue-black "banking" family, not a tint of --card), so those stay
+// hand-picked primaries rather than forcing them through border-tone().
 body.dark[data-theme='navy'] {
-  --accent: #c99a3b;
+  $text: #e9edf3;
+  $paper: #0b1420;
+  $card: #101d30;
+  $accent: #c99a3b;
+
+  --text: #{$text};
+  --text-muted: #{muted-tone($text, $paper)};
+  --paper: #{$paper};
+  --card: #{$card};
+  --surface-2: #{surface-tone($paper, $card)};
+  --border: #{border-tone($text, $paper, 16%)};
+
+  // Gold-on-near-black doesn't land where soft-tone()'s formula expects (its
+  // usual "hue tinted onto a light-ish card" assumption doesn't hold against
+  // navy's very dark card) — kept as the original bespoke value, same
+  // reasoning as the chrome-* overrides below.
+  --accent: #{$accent};
   --accent-soft: #2e2510;
-  --paper: #0b1420;
-  --card: #101d30;
-  --surface-2: #16233a;
-  --border: #1f2f47;
-  --text: #e9edf3;
-  --text-muted: #8b9bb0;
 
   --chrome-bg: #0b1a33;
   --chrome-border: #1c2f4d;
