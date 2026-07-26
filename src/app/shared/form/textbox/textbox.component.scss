@@ -7,7 +7,7 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--space-3);
 }
 .lbl {
   @include shell.field-label;
@@ -15,7 +15,7 @@
 .control-frame {
   @include shell.control-frame;
   height: 38px;
-  padding: 0 11px;
+  padding: 0 var(--space-6);
 
   .prefix {
     color: var(--text-muted);

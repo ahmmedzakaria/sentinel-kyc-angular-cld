@@ -5,7 +5,7 @@
 .checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-4);
   cursor: pointer;
   user-select: none;
 
@@ -38,7 +38,7 @@
 .box {
   position: absolute;
   inset: 0;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   border: 1.5px solid var(--border);
   background: var(--card);
   display: flex;
@@ -55,14 +55,14 @@
     border-color: var(--accent);
   }
   .dash {
-    width: 8px;
-    height: 2px;
+    width: var(--space-4);
+    height: var(--space-1);
     background: #fff;
     border-radius: 1px;
   }
 }
 
 .lbl {
-  font-size: 13.5px;
+  font-size: var(--font-size-base);
   color: var(--text);
 }

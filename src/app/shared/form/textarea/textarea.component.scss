@@ -7,14 +7,14 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--space-3);
 }
 .lbl {
   @include shell.field-label;
 }
 .control-frame {
   @include shell.control-frame;
-  padding: 9px 11px;
+  padding: var(--space-5) var(--space-6);
   align-items: stretch;
 
   textarea {
@@ -28,13 +28,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 14px;
+  min-height: var(--space-7);
 }
 .error {
   @include shell.field-error;
 }
 .counter {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: var(--text-muted);
   margin-inline-start: auto;
 }

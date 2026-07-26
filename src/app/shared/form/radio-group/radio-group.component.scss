@@ -7,7 +7,7 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: var(--space-4);
 }
 .lbl {
   @include shell.field-label;
@@ -16,22 +16,22 @@
 .options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-4);
 
   &.row {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 18px;
+    gap: var(--space-9);
   }
 }
 
 .option {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-4);
   cursor: pointer;
   user-select: none;
-  font-size: 13.5px;
+  font-size: var(--font-size-base);
   color: var(--text);
 
   &.disabled {
