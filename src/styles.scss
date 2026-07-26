@@ -1,0 +1,34 @@
+@use './styles/tokens';
+@use './styles/button';
+
+@import '@angular/cdk/overlay-prebuilt.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Public Sans', Arial, sans-serif;
+  background: var(--paper);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+// Focus ring used across interactive elements — see shared/a11y.scss usage in components.
+.focus-ring:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}

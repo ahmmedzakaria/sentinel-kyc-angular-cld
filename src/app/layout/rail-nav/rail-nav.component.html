@@ -1,0 +1,69 @@
+<nav class="rail" [class.exp]="rail.expanded()">
+  <button type="button" class="toggle focus-ring" (click)="toggleWidth()" aria-label="Toggle navigation width">
+    <app-icon name="hamburger" />
+  </button>
+
+  <div class="rail-body">
+    <button type="button" class="row lvl-1 focus-ring" [class.active]="isHomeActive()" (click)="goHome()">
+      <span class="arrow-spacer"></span>
+      <app-icon name="home" />
+      <span class="lbl">Dashboard</span>
+    </button>
+
+    @for (row of visibleRows(); track row.path.join('.')) {
+      @if (row.level < 3) {
+        <button
+          type="button"
+          [class]="'row lvl-' + row.level"
+          [class.open]="treeState.isExpanded(row.path)"
+          [class.active]="treeState.isActive(row.path)"
+          (click)="onRowClick(row)"
+        >
+          <span class="arrow"><app-icon name="chevron-right" [size]="10" /></span>
+          @if (row.level === 1) {
+            <span class="emoji-icon">{{ row.node.icon }}</span>
+          } @else {
+            <app-icon [name]="moduleIcon(row.node.label)" [size]="15" />
+          }
+          <span class="lbl">{{ row.node.label }}</span>
+        </button>
+      } @else {
+        <div
+          class="row lvl-3"
+          [class.active]="treeState.isActive(row.path)"
+          cdkOverlayOrigin
+          #catOrigin="cdkOverlayOrigin"
+          tabindex="0"
+          (mouseenter)="onCategoryHover(row, catOrigin)"
+          (mouseleave)="megaPanel.scheduleClose()"
+          (click)="onCategoryClick(row, catOrigin)"
+          (keydown.enter)="onCategoryClick(row, catOrigin)"
+        >
+          <span class="arrow-spacer"></span>
+          <app-icon [name]="categoryIcon(row.node.label)" [size]="13" />
+          <span class="lbl">{{ row.node.label }}</span>
+        </div>
+      }
+    }
+  </div>
+
+  @if (rail.expanded()) {
+    <button type="button" class="nav-toggle-btn focus-ring" (click)="toggleExpandAll()">
+      <app-icon [name]="treeState.isExpandedToLevel3() ? 'collapse-all' : 'expand-all'" [size]="13" />
+      {{ treeState.isExpandedToLevel3() ? 'Collapse' : 'Expand' }} to level 3
+    </button>
+  }
+</nav>
+
+@if (megaPanel.origin(); as origin) {
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="!!megaPanel.content()"
+    [cdkConnectedOverlayPositions]="[
+      { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 0 }
+    ]"
+  >
+    <app-mega-panel />
+  </ng-template>
+}

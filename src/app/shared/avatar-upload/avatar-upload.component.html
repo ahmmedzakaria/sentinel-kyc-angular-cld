@@ -1,0 +1,20 @@
+<div class="avatar-upload">
+  <div class="preview">
+    @if (photoUrl(); as url) {
+      <img [src]="url" alt="" />
+    } @else {
+      <span class="initials">{{ initials() || '?' }}</span>
+    }
+  </div>
+
+  <div class="controls">
+    <label class="btn focus-ring" tabindex="0">
+      <app-icon name="camera" [size]="14" />
+      {{ photoUrl() ? 'Change' : 'Upload' }} photo
+      <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+    </label>
+    @if (photoUrl()) {
+      <button type="button" class="btn ghost focus-ring" (click)="remove()">Remove</button>
+    }
+  </div>
+</div>

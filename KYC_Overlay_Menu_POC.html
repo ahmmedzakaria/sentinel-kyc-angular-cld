@@ -1,0 +1,1393 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NexaCore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#121821;
+  --paper:#f3f5f7;
+  --card:#ffffff;
+  --surface-2:#f8f9fb;
+  --border:#e2e6ea;
+  --text:#1a222c;
+  --text-muted:#5c6672;
+  --accent:#1f6f5c;
+  --accent-soft:#e4f1ed;
+  --amber:#a8630b;
+  --amber-soft:#fbeed9;
+  --red:#9f2b2b;
+  --red-soft:#faeaea;
+  --focus:#2f7dd1;
+  --radius:8px;
+  --shadow:0 8px 24px rgba(18,24,33,.14);
+
+  /* chrome = header, rail, status bar */
+  --chrome-bg:#ffffff;
+  --chrome-border:#e2e6ea;
+  --chrome-border-strong:#d7dce1;
+  --chrome-text:#1a222c;
+  --chrome-text-muted:#7d8794;
+  --chrome-icon:#5c6672;
+  --chrome-hover-bg:#eef1f4;
+  --chrome-active-bg:var(--accent-soft);
+  --chrome-search-bg:#f3f5f7;
+  --chrome-search-border:#dde2e7;
+  --chrome-search-text:#1a222c;
+  --chrome-search-placeholder:#97a1ab;
+}
+body.dark{
+  --paper:#0d1218;
+  --card:#161d26;
+  --surface-2:#1b2330;
+  --border:#2a323d;
+  --text:#e7ebef;
+  --text-muted:#8b96a3;
+  --accent-soft:#173430;
+  --amber-soft:#2c2110;
+  --red-soft:#2b1616;
+
+  --chrome-bg:#121821;
+  --chrome-border:#232d3a;
+  --chrome-border-strong:#0a0e13;
+  --chrome-text:#ffffff;
+  --chrome-text-muted:#9aa5b1;
+  --chrome-icon:#c7cfd8;
+  --chrome-hover-bg:#1c2531;
+  --chrome-active-bg:#1c2531;
+  --chrome-search-bg:#1b2430;
+  --chrome-search-border:#2a3542;
+  --chrome-search-text:#ffffff;
+  --chrome-search-placeholder:#69707c;
+}
+
+/* accent-only theme variants (light structural base) */
+body[data-theme="blue"]{ --accent:#2c5aa0; --accent-soft:#e4ebf5; }
+body[data-theme="green"]{ --accent:#1c7a4c; --accent-soft:#e1f2e8; }
+body[data-theme="purple"]{ --accent:#6b3fa0; --accent-soft:#ede4f5; }
+body[data-theme="gray"]{ --accent:#3f4a54; --accent-soft:#e7eaed; }
+body.dark[data-theme="dark"]{ --accent:#1f6f5c; --accent-soft:#173430; }
+
+/* Navy Banking — its own dark palette, distinct from generic Dark */
+body.dark[data-theme="navy"]{
+  --accent:#c99a3b;
+  --accent-soft:#2e2510;
+  --paper:#0b1420;
+  --card:#101d30;
+  --surface-2:#16233a;
+  --border:#1f2f47;
+  --text:#e9edf3;
+  --text-muted:#8b9bb0;
+
+  --chrome-bg:#0b1a33;
+  --chrome-border:#1c2f4d;
+  --chrome-border-strong:#081527;
+  --chrome-hover-bg:#142848;
+  --chrome-active-bg:#142848;
+  --chrome-search-bg:#0f2140;
+  --chrome-search-border:#1c2f4d;
+  --chrome-search-text:#ffffff;
+  --chrome-search-placeholder:#7488a8;
+}
+
+*{box-sizing:border-box}
+body{margin:0;font-family:"Public Sans",Arial,sans-serif;background:var(--paper);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
+.mono{font-family:"IBM Plex Mono",monospace}
+
+header{height:58px;background:var(--chrome-bg);color:var(--chrome-text);display:flex;align-items:center;padding:0 18px;border-bottom:1px solid var(--chrome-border-strong);flex-shrink:0;gap:20px;transition:background .2s,color .2s,border-color .2s}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;letter-spacing:.2px;flex-shrink:0}
+.brand svg{flex-shrink:0;stroke:var(--chrome-text)}
+.brand-logo{width:32px;height:32px;border-radius:9px;background:var(--accent);box-shadow:0 1px 2px rgba(18,24,33,.14);display:block}
+.brand-logo .logo-panel{fill:rgba(255,255,255,.14);stroke:rgba(255,255,255,.72)}
+.brand-logo .logo-path{stroke:#fff}
+.brand-logo .logo-node{fill:#fff}
+.brand small{display:block;font-weight:400;color:var(--chrome-text-muted);font-size:11px;letter-spacing:.4px;text-transform:uppercase;margin-top:1px}
+
+.hdr-center{flex:1;display:flex;justify-content:center;align-items:center;gap:8px;min-width:0}
+.global-search{display:flex;align-items:center;gap:2px;background:var(--chrome-search-bg);border:1px solid var(--chrome-search-border);border-radius:9px;height:38px;width:100%;max-width:560px;padding-left:12px}
+.global-search select{background:transparent;border:none;color:var(--chrome-icon);font-size:12px;font-family:inherit;padding-right:10px;border-right:1px solid var(--chrome-search-border);height:38px;cursor:pointer;outline:none;flex-shrink:0}
+.global-search select option{background:var(--chrome-search-bg);color:var(--chrome-search-text)}
+.global-search input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:var(--chrome-search-text);font-size:13.5px;font-family:inherit;padding:0 10px}
+.global-search input::placeholder{color:var(--chrome-search-placeholder)}
+.global-search .go{width:32px;height:32px;margin-right:3px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--chrome-icon);cursor:pointer;flex-shrink:0;transition:background .15s,color .15s}
+.global-search .go:hover{background:var(--chrome-hover-bg);color:var(--chrome-text)}
+.hdr-right{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.hdr-item{position:relative}
+.hdr-btn{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--chrome-icon);transition:background .15s,color .15s;position:relative}
+.hdr-btn:hover{background:var(--chrome-hover-bg);color:var(--chrome-text)}
+.hdr-pill{display:flex;align-items:center;gap:5px;height:36px;padding:0 9px;border-radius:9px;color:var(--chrome-icon);cursor:pointer;font-size:12px;font-weight:600;transition:background .15s,color .15s,width .18s,padding .18s;white-space:nowrap}
+.hdr-pill:hover{background:var(--chrome-hover-bg);color:var(--chrome-text)}
+.hdr-pill .chev{color:var(--chrome-text-muted);transition:transform .15s}
+.hdr-item.open .hdr-pill .chev,.hdr-item.open .hdr-btn{color:var(--chrome-text)}
+.hdr-item.open .hdr-pill .chev{transform:rotate(180deg)}
+
+/* header icon view — mirrors the collapsed rail state */
+header.icon-view{transition:background .2s,color .2s,border-color .2s}
+header.icon-view .brand .brand-text{display:none}
+header.icon-view .hdr-pill{width:36px;padding:0;justify-content:center}
+header.icon-view .hdr-pill .lbl-text,
+header.icon-view .hdr-pill .chev{display:none}
+header:not(.icon-view) .global-search{cursor:default}
+.badge{position:absolute;top:-5px;right:-7px;min-width:15px;height:15px;background:var(--red);color:#fff;font-size:9px;font-weight:700;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--chrome-bg);line-height:1}
+.icon-wrap{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.swatch{width:14px;height:14px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 2px var(--chrome-bg),0 0 0 3px var(--chrome-border)}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0}
+.divider{width:1px;height:24px;background:var(--chrome-border);margin:0 4px;flex-shrink:0}
+
+.hdr-dropdown{position:absolute;top:46px;right:0;background:var(--card);border:1px solid var(--border);border-radius:9px;box-shadow:var(--shadow);min-width:190px;display:none;z-index:40;overflow:hidden}
+.hdr-item.open .hdr-dropdown{display:block}
+.hdr-dropdown .dd-head{padding:10px 14px 6px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);font-weight:600}
+.hdr-dropdown .opt{padding:9px 14px;font-size:13px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:9px}
+.hdr-dropdown .opt:hover{background:var(--surface-2)}
+.hdr-dropdown .opt.active{color:var(--accent);font-weight:600}
+.hdr-dropdown .opt .meta{margin-left:auto;font-size:11px;color:var(--text-muted);font-weight:400}
+.hdr-dropdown .empty{padding:16px 14px;font-size:12.5px;color:var(--text-muted);text-align:center}
+.favorite-count{position:absolute;top:-4px;right:-6px;min-width:15px;height:15px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--chrome-bg);line-height:1}
+.favorite-list{max-height:320px;overflow:auto;padding-bottom:6px}
+.favorite-row{width:100%;border:none;background:transparent;text-align:left;color:var(--text);padding:9px 12px;display:grid;grid-template-columns:1fr auto;gap:6px;cursor:pointer;font-family:inherit}
+.favorite-row:hover{background:var(--surface-2)}
+.favorite-row .name{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.favorite-row .path{grid-column:1 / -1;font-size:10.5px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.favorite-row .code{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--accent);font-weight:700}
+
+.hdr-dropdown.apps-panel{min-width:260px}
+.hdr-dropdown .dd-head .sso-tag{margin-left:7px;background:var(--accent-soft);color:var(--accent);font-size:9px;font-weight:700;letter-spacing:.4px;padding:1px 6px;border-radius:99px;text-transform:none;vertical-align:1px}
+.apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:6px}
+.app-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:12px 4px;border-radius:9px;cursor:pointer;text-align:center;color:var(--text)}
+.app-tile:hover{background:var(--surface-2)}
+.app-tile .tile-icon{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.app-tile .name{font-size:10.5px;font-weight:500;line-height:1.25}
+
+.app{display:flex;height:calc(100vh - 58px - 28px)}
+
+.rail{width:64px;background:var(--chrome-bg);color:var(--chrome-text);transition:width .18s ease,background .2s,color .2s;position:relative;z-index:45;display:flex;flex-direction:column;flex-shrink:0;border-right:1px solid var(--chrome-border)}
+.rail.detail{width:286px}
+.toggle{height:44px;display:flex;align-items:center;gap:12px;padding:0 20px;cursor:pointer;border-bottom:1px solid var(--chrome-border);color:var(--chrome-text-muted);flex-shrink:0}
+.toggle svg{flex-shrink:0}
+.toggle:hover{color:var(--chrome-text)}
+.nav-toggle-btn{margin-left:auto;height:28px;color:var(--chrome-text-muted);display:none;align-items:center;gap:6px;padding:0;font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;cursor:pointer}
+.rail.detail .nav-toggle-btn{display:flex}
+.nav-toggle-btn:hover{color:var(--chrome-text)}
+.nav-toggle-btn svg{width:16px;height:16px}
+.rail:not(.detail) .toggle{justify-content:center;padding:0;gap:0}
+
+.rail-scroll{flex:1;min-height:0;height:100%;overflow-y:auto;overflow-x:hidden;padding:4px 0 10px;overscroll-behavior:contain}
+.module-row{min-height:42px;display:flex;align-items:center;gap:9px;padding:0 10px;cursor:pointer;white-space:nowrap;color:var(--chrome-icon);border-left:3px solid transparent;transition:background .15s,border-color .15s,color .15s}
+.module-row svg{flex-shrink:0}
+.module-row .lbl{font-size:13.5px;font-weight:500;opacity:0;transition:opacity .15s;overflow:hidden;text-overflow:ellipsis}
+.rail.detail .module-row .lbl{opacity:1}
+.module-row:hover{background:var(--chrome-hover-bg);color:var(--chrome-text)}
+.module-row.active{background:var(--chrome-active-bg);color:var(--chrome-text);border-left-color:var(--accent)}
+.module-row .rail-code{margin-left:auto;font-size:10px;font-weight:700;color:var(--chrome-text-muted);opacity:0}
+.rail.detail .module-row .rail-code{opacity:1}
+.module-row .rail-caret{width:13px;display:none;align-items:center;justify-content:center;color:var(--chrome-text-muted);transition:transform .15s}
+.rail.detail .module-row .rail-caret{display:flex}
+.rail-node-icon{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--chrome-text-muted)}
+.rail-node-icon svg{width:15px;height:15px}
+.module-row.active .rail-node-icon,.module-row:hover .rail-node-icon{color:var(--accent)}
+.module-row.expanded .rail-caret{transform:rotate(90deg)}
+.module-row.lvl-1{min-height:44px}
+.module-row.lvl-2{min-height:36px;padding-left:30px;font-size:12.5px}
+.module-row.lvl-3{min-height:34px;padding-left:52px;font-size:12px}
+.module-row.lvl-2 .lbl,.module-row.lvl-3 .lbl{font-size:12.5px}
+.module-row.lvl-3 .lbl{font-weight:600}
+.rail:not(.detail) .module-row.lvl-2,.rail:not(.detail) .module-row.lvl-3{display:none}
+.rail:not(.detail) .module-row{justify-content:center;padding-left:0;padding-right:0}
+.rail:not(.detail) .module-row .rail-code{display:none}
+#icons{flex:1;min-height:0}
+
+.main{flex:1;min-width:0;padding:22px 28px;position:relative;overflow:auto}
+#bc{font-size:12.5px;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+#bc .sep{color:#c3c9cf}
+h2#ttl{margin:4px 0 20px;font-size:22px;font-weight:700;letter-spacing:-.2px}
+
+.cards{display:flex;gap:14px;margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;flex:1;border-left:3px solid var(--accent);box-shadow:0 1px 2px rgba(18,24,33,.04)}
+.card.warn{border-left-color:var(--amber)}
+.card.risk{border-left-color:var(--red)}
+.card .lbl{font-size:12px;color:var(--text-muted);font-weight:500;text-transform:uppercase;letter-spacing:.4px}
+.card .val{font-size:26px;font-weight:700;margin-top:4px;font-family:"IBM Plex Mono",monospace}
+
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.panel-head h3{font-size:14px;font-weight:600;margin:0}
+
+table{width:100%;background:var(--card);border-collapse:collapse;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);font-weight:600;background:var(--surface-2);padding:10px 14px;border-bottom:1px solid var(--border)}
+td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13.5px}
+tr:last-child td{border-bottom:none}
+td.id{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--text-muted)}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%}
+.pill.pending{background:var(--amber-soft);color:var(--amber)}
+.pill.pending::before{background:var(--amber)}
+.pill.approved{background:var(--accent-soft);color:var(--accent)}
+.pill.approved::before{background:var(--accent)}
+.pill.risk{background:var(--red-soft);color:var(--red)}
+.pill.risk::before{background:var(--red)}
+
+.nav-overlay{position:fixed;left:0;top:58px;z-index:42;pointer-events:none}
+.nav-overlay.open{pointer-events:auto}
+.nav-panel{position:fixed;width:232px;max-height:70vh;height:auto;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);display:none}
+.nav-panel.open{display:block}
+.nav-panel.wide{width:292px}
+.nav-panel.mega{width:min(790px,calc(100vw - 330px));padding:22px;max-height:92vh}
+.nav-panel-head{position:sticky;top:0;z-index:1;background:var(--surface-2);border-bottom:1px solid var(--border);padding:11px 14px}
+.nav-panel-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);font-weight:700;margin-bottom:2px}
+.nav-panel-title{font-size:13.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-item{min-height:38px;padding:9px 12px 9px 14px;display:flex;align-items:center;gap:9px;color:var(--text);font-size:13px;cursor:pointer;border-left:3px solid transparent}
+.nav-item:hover,.nav-item.active{background:var(--accent-soft);color:var(--accent);border-left-color:var(--accent)}
+.nav-item .nav-icon{width:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-item .nav-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-item .nav-arrow{color:var(--text-muted);font-size:15px;line-height:1}
+.nav-empty{padding:14px;color:var(--text-muted);font-size:12.5px}
+.mega-layout{display:grid;grid-template-columns:290px minmax(0,1fr);gap:22px;align-items:start}
+.mega-context{border-right:1px solid var(--border);padding-right:20px;min-height:370px}
+.mega-context-art{height:290px;display:flex;align-items:center;justify-content:center;color:var(--accent);background:var(--accent-soft);border-radius:8px;margin-bottom:15px}
+.mega-context-art svg{width:260px;height:208px}
+.mega-context-title{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:5px}
+.mega-context-note{font-size:12.5px;line-height:1.45;color:var(--text-muted)}
+.mega-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:22px 26px;align-content:start}
+.mega-list-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mega-subitem{min-height:32px;display:flex;align-items:center;padding:7px 9px;border-radius:7px;color:var(--text-muted);font-size:13.5px;cursor:pointer}
+.mega-subitem:hover,.mega-subitem.active{background:var(--surface-2);color:var(--text)}
+.mega-subitem .feature-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.module-row:focus-visible,.nav-item:focus-visible,.mega-subitem:focus-visible,.status-favorite:focus-visible,.hdr-btn:focus-visible,.hdr-pill:focus-visible,.avatar:focus-visible,.global-search .go:focus-visible,.toggle:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+
+/* status bar */
+.statusbar{height:28px;flex-shrink:0;background:var(--chrome-bg);color:var(--chrome-text-muted);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:11px;border-top:1px solid var(--chrome-border);gap:12px;transition:background .2s,color .2s,border-color .2s}
+.sb-group{display:flex;align-items:center;gap:14px;min-width:0}
+.sb-mid{flex:1;justify-content:center}
+.sb-right{justify-content:flex-end}
+.sb-item{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sb-item svg{flex-shrink:0}
+.sb-dot{width:7px;height:7px;border-radius:50%;background:#2fae6e;flex-shrink:0;box-shadow:0 0 0 3px rgba(47,174,110,.18)}
+.sb-tag{background:var(--chrome-hover-bg);color:var(--chrome-icon);padding:1px 7px;border-radius:99px;font-size:10px;font-weight:600;letter-spacing:.3px}
+.sb-div{width:1px;height:12px;background:var(--chrome-border);flex-shrink:0}
+.sb-mono{font-family:"IBM Plex Mono",monospace;color:var(--chrome-icon)}
+.status-favorite{height:22px;border:none;background:transparent;color:var(--chrome-text-muted);border-radius:6px;display:flex;align-items:center;gap:5px;padding:0 6px;font:inherit;cursor:pointer}
+.status-favorite:hover,.status-favorite.active{background:var(--chrome-hover-bg);color:var(--accent)}
+.status-favorite svg{width:13px;height:13px}
+</style></head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg class="brand-logo" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect class="logo-panel" x="6.5" y="6.5" width="19" height="19" rx="5" stroke-width="1.4"/>
+      <path class="logo-path" d="M10 22V10l12 12V10" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path class="logo-path" d="M10 10h12M10 22h12" stroke-width="1.6" stroke-linecap="round"/>
+      <circle class="logo-node" cx="10" cy="10" r="2"/>
+      <circle class="logo-node" cx="22" cy="22" r="2"/>
+      <circle class="logo-node" cx="22" cy="10" r="1.6"/>
+    </svg>
+    <div class="brand-text">NexaCore<small>Navigation Workspace</small></div>
+  </div>
+
+  <div class="hdr-center">
+    <div class="global-search">
+      <select id="searchType" aria-label="Search by">
+        <option>Customer Name</option>
+        <option>National ID</option>
+        <option>Passport</option>
+        <option>Phone</option>
+        <option>Case Number</option>
+        <option>T Code</option>
+      </select>
+      <input id="searchInput" type="text" placeholder="Search by customer name…" onkeydown="if(event.key==='Enter')runSearch()">
+      <datalist id="tcodeList"></datalist>
+      <div class="go" tabindex="0" aria-label="Search" onclick="runSearch()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="hdr-right">
+    <div class="hdr-item" id="ddFav">
+      <div class="hdr-pill" tabindex="0" onclick="toggleDD('ddFav')">
+        <span class="icon-wrap">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17.4l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3.5z" stroke-linejoin="round"/></svg>
+          <span id="favoriteCount" class="favorite-count">0</span>
+        </span>
+        <span class="lbl-text">Favorites</span>
+        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="hdr-dropdown">
+        <div class="dd-head">Favorite Navigation</div>
+        <div id="favoriteList" class="favorite-list"></div>
+      </div>
+    </div>
+
+    <div class="hdr-item" id="ddApps">
+      <div class="hdr-pill" tabindex="0" onclick="toggleDD('ddApps')">
+        <span class="icon-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="5" r="1.6"/><circle cx="12" cy="5" r="1.6"/><circle cx="19" cy="5" r="1.6"/><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/><circle cx="5" cy="19" r="1.6"/><circle cx="12" cy="19" r="1.6"/><circle cx="19" cy="19" r="1.6"/></svg></span>
+        <span class="lbl-text">Apps</span>
+        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="hdr-dropdown apps-panel">
+        <div class="dd-head">Your Apps <span class="sso-tag">SSO</span></div>
+        <div class="apps-grid">
+          <div class="app-tile" onclick="launchApp('Case Management')"><span class="tile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke-linejoin="round"/></svg></span><span class="name">Case Management</span></div>
+          <div class="app-tile" onclick="launchApp('Document Vault')"><span class="tile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z" stroke-linejoin="round"/><path d="M14 2v5h5" stroke-linejoin="round"/></svg></span><span class="name">Document Vault</span></div>
+          <div class="app-tile" onclick="launchApp('Risk Analytics')"><span class="tile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V11M10 20V4M16 20v-7" stroke-linecap="round"/></svg></span><span class="name">Risk Analytics</span></div>
+          <div class="app-tile" onclick="launchApp('HR Portal')"><span class="tile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3.5 20c.5-3.5 2.8-5.5 5.5-5.5s5 2 5.5 5.5" stroke-linecap="round"/><circle cx="17" cy="9" r="2.3"/><path d="M15.8 14.2c2.2.4 3.6 2 4 5.3" stroke-linecap="round"/></svg></span><span class="name">HR Portal</span></div>
+          <div class="app-tile" onclick="launchApp('Loan Origination')"><span class="tile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="2.3"/><circle cx="17" cy="17" r="2.3"/><path d="M18 6L6 18" stroke-linecap="round"/></svg></span><span class="name">Loan Origination</span></div>
+          <div class="app-tile" onclick="launchApp('Audit Console')"><span class="tile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg></span><span class="name">Audit Console</span></div>
+          <div class="app-tile" onclick="launchApp('Reporting Suite')"><span class="tile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l5-5 4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="name">Reporting Suite</span></div>
+          <div class="app-tile" onclick="launchApp('Admin Portal')"><span class="tile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5c.1-.5.1-1 0-1.5l1.7-1.3-1.5-2.6-2 .6a6.4 6.4 0 00-1.3-.8l-.3-2.1H10l-.3 2.1c-.5.2-.9.5-1.3.8l-2-.6-1.5 2.6 1.7 1.3c-.1.5-.1 1 0 1.5L5 14.8l1.5 2.6 2-.6c.4.3.8.6 1.3.8l.3 2.1h4l.3-2.1c.5-.2.9-.5 1.3-.8l2 .6 1.5-2.6-1.7-1.3z" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="name">Admin Portal</span></div>
+          <div class="app-tile" onclick="launchApp('Helpdesk')"><span class="tile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2 1.8-2 3.3" stroke-linecap="round"/><circle cx="12" cy="17.3" r=".9" fill="currentColor" stroke="none"/></svg></span><span class="name">Helpdesk</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hdr-item" id="ddNotif">
+      <div class="hdr-pill" tabindex="0" onclick="toggleDD('ddNotif')">
+        <span class="icon-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 01-3.4 0" stroke-linecap="round"/></svg>
+          <span class="badge">3</span>
+        </span>
+        <span class="lbl-text">Alerts</span>
+        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="hdr-dropdown">
+        <div class="dd-head">Notifications</div>
+        <div class="opt"><span>⚠️</span> High-risk match flagged — K-10432</div>
+        <div class="opt"><span>📄</span> Document expiring — K-10391</div>
+        <div class="opt"><span>✅</span> KYC approved — K-10439</div>
+      </div>
+    </div>
+
+    <div class="hdr-item" id="ddTasks">
+      <div class="hdr-pill" tabindex="0" onclick="toggleDD('ddTasks')">
+        <span class="icon-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="3" width="10" height="4" rx="1"/><path d="M7 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 13l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="badge">7</span>
+        </span>
+        <span class="lbl-text">Tasks</span>
+        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="hdr-dropdown">
+        <div class="dd-head">Pending Tasks</div>
+        <div class="opt">Review K-10441 <span class="meta">Today</span></div>
+        <div class="opt">Approve K-10432 <span class="meta">Today</span></div>
+        <div class="opt">Verify document set <span class="meta">Tomorrow</span></div>
+      </div>
+    </div>
+
+    <div class="hdr-item" id="ddLang">
+      <div class="hdr-pill" tabindex="0" onclick="toggleDD('ddLang')">
+        <span class="icon-wrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" stroke-linecap="round"/></svg></span>
+        <span id="langLabel" class="lbl-text">English</span>
+        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="hdr-dropdown">
+        <div class="opt active" onclick="selectLang('EN','English')">English <span class="meta">EN</span></div>
+        <div class="opt" onclick="selectLang('BN','বাংলা')">বাংলা <span class="meta">BN</span></div>
+        <div class="opt" onclick="selectLang('AR','العربية')">العربية <span class="meta">AR</span></div>
+      </div>
+    </div>
+
+    <div class="hdr-item" id="ddTheme">
+      <div class="hdr-pill" tabindex="0" onclick="toggleDD('ddTheme')">
+        <span class="icon-wrap" id="themeIcon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19" stroke-linecap="round"/></svg></span>
+        <span id="themeLabel" class="lbl-text">Light</span>
+        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="hdr-dropdown">
+        <div class="dd-head">Theme</div>
+        <div class="opt active" data-theme="light" onclick="selectTheme('light')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19" stroke-linecap="round"/></svg> Light</div>
+        <div class="opt" data-theme="dark" onclick="selectTheme('dark')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5A9 9 0 1111.5 3a7 7 0 009.5 9.5z" stroke-linecap="round" stroke-linejoin="round"/></svg> Dark</div>
+        <div class="opt" data-theme="blue" onclick="selectTheme('blue')"><span class="swatch" style="background:#2c5aa0"></span> Blue Enterprise</div>
+        <div class="opt" data-theme="navy" onclick="selectTheme('navy')"><span class="swatch" style="background:#0b1a33;box-shadow:0 0 0 2px var(--chrome-bg),0 0 0 3px var(--chrome-border),inset 0 0 0 5px #c99a3b"></span> Navy Banking</div>
+        <div class="opt" data-theme="green" onclick="selectTheme('green')"><span class="swatch" style="background:#1c7a4c"></span> Green Compliance</div>
+        <div class="opt" data-theme="purple" onclick="selectTheme('purple')"><span class="swatch" style="background:#6b3fa0"></span> Purple Corporate</div>
+        <div class="opt" data-theme="gray" onclick="selectTheme('gray')"><span class="swatch" style="background:#3f4a54"></span> Gray Professional</div>
+      </div>
+    </div>
+
+
+    <div class="hdr-item" id="ddTenant">
+      <div class="hdr-pill" tabindex="0" onclick="toggleDD('ddTenant')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V6a1 1 0 011-1h6a1 1 0 011 1v15M4 21h16M12 21v-6h4a1 1 0 011 1v5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 9h.01M8 12.5h.01M8 16h.01" stroke-linecap="round"/></svg>
+        <span id="tenantLabel" class="lbl-text">Prime Bank Ltd.</span>
+        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="hdr-dropdown">
+        <div class="dd-head">Switch Tenant</div>
+        <div class="opt active" onclick="selectTenant('Prime Bank Ltd.')">Prime Bank Ltd.</div>
+        <div class="opt" onclick="selectTenant('Northgate Finance')">Northgate Finance</div>
+        <div class="opt" onclick="selectTenant('Meridian Trust Co.')">Meridian Trust Co.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="hdr-item" id="ddProfile">
+      <div class="avatar" tabindex="0" aria-label="User Profile" onclick="toggleDD('ddProfile')">AO</div>
+      <div class="hdr-dropdown">
+        <div class="dd-head">Signed in as</div>
+        <div class="opt" style="cursor:default"><b>Amina Osei</b></div>
+        <div class="opt" style="cursor:default;color:var(--text-muted)">Compliance Officer</div>
+        <div class="opt" onclick="closeAllDD()">View Profile</div>
+        <div class="opt" onclick="closeAllDD()">Account Settings</div>
+        <div class="opt" onclick="logout()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 17l5-5-5-5M21 12H9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sign out
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <div id="rail" class="rail detail">
+    <div class="toggle" tabindex="0" onclick="tg()" onkeydown="if(event.key==='Enter')tg()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      <span id="navToggleBtn" class="nav-toggle-btn" role="button" tabindex="0" aria-label="Expand navigation" onclick="event.stopPropagation();toggleEnterpriseNavigation()" onkeydown="event.stopPropagation();if(event.key==='Enter')toggleEnterpriseNavigation()">
+        <span id="navToggleIcon"></span>
+      </span>
+    </div>
+    <div id="icons"></div>
+  </div>
+  <div id="navOverlay" class="nav-overlay"></div>
+
+  <div class="main" id="main">
+    <div id="bc">🏠 <span>Home</span></div>
+    <h2 id="ttl">Dashboard</h2>
+
+    <div class="cards">
+      <div class="card"><div class="lbl">Customers</div><div class="val mono">15,240</div></div>
+      <div class="card warn"><div class="lbl">Pending Review</div><div class="val mono">124</div></div>
+      <div class="card risk"><div class="lbl">Elevated Risk</div><div class="val mono">18</div></div>
+    </div>
+
+    <div class="panel-head"><h3>Recent Records</h3></div>
+    <div id="content">
+      <table>
+        <tr><th>ID</th><th>Name</th><th>Status</th></tr>
+        <tr><td class="id">K-10441</td><td>John Ferreira</td><td><span class="pill pending">Pending</span></td></tr>
+        <tr><td class="id">K-10439</td><td>Maria Chen</td><td><span class="pill approved">Approved</span></td></tr>
+        <tr><td class="id">K-10432</td><td>Ahsan Karim</td><td><span class="pill risk">Elevated Risk</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <div class="sb-group sb-left">
+    <div class="sb-item"><span class="sb-dot"></span> System Operational</div>
+    <div class="sb-div"></div>
+    <div class="sb-item">Env: <span class="sb-tag">Production</span></div>
+  </div>
+
+  <div class="sb-group sb-mid" id="statusNavInfo">
+    <div class="sb-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 10-2.7 6M20 6v6h-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Last synced <span id="syncTime" class="sb-mono">just now</span>
+    </div>
+    <div class="sb-div"></div>
+    <div class="sb-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 10h8M8 14h5" stroke-linecap="round"/></svg>
+      Audit Logging Active
+    </div>
+  </div>
+
+  <div class="sb-group sb-right">
+    <div class="sb-item">Session expires in <span class="sb-mono">14:52</span></div>
+    <div class="sb-div"></div>
+    <div class="sb-item sb-mono" id="clock">--:--:--</div>
+    <div class="sb-div"></div>
+    <div class="sb-item">v2.4.1</div>
+  </div>
+</div>
+
+<script>
+let detailView = true;
+let activePath = [];
+let expandedPaths = new Set();
+let closeTimer = null;
+let panelTopByLevel = {};
+
+const icon = {
+  home: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11l8-7 8 7v9a1 1 0 01-1 1h-4v-6H9v6H5a1 1 0 01-1-1z" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  nav: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h16" stroke-linecap="round"/><path d="M8 5v14M16 5v14" stroke-linecap="round" opacity=".55"/></svg>',
+  bank: '<span>🏦</span>',
+  survey: '<span>📋</span>',
+  admin: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5c.1-.5.1-1 0-1.5l1.7-1.3-1.5-2.6-2 .6a6.4 6.4 0 00-1.3-.8l-.3-2.1H10l-.3 2.1c-.5.2-.9.5-1.3.8l-2-.6-1.5 2.6 1.7 1.3c-.1.5-.1 1 0 1.5L5 14.8l1.5 2.6 2-.6c.4.3.8.6 1.3.8l.3 2.1h4l.3-2.1c.5-.2.9-.5 1.3-.8l2 .6 1.5-2.6-1.7-1.3z" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  report: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V11M10 20V4M16 20v-7" stroke-linecap="round"/></svg>',
+  shield: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 3.5v6c0 5-3.4 8.7-8 10.5-4.6-1.8-8-5.5-8-10.5v-6L12 2z"/><path d="M8.5 12l2.3 2.3L15.5 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+
+const categories = (operationGroups, setupGroups, reportGroups) => [
+  { label: 'Operation', type: 'Feature Category', children: operationGroups },
+  { label: 'Report', type: 'Feature Category', children: reportGroups || [
+    group('Operational Reports', ['Daily Summary','Exception Report','Activity Register','Pending Items']),
+    group('Management Reports', ['Performance Dashboard','Compliance Summary','Aging Analysis','Audit Trail'])
+  ] },
+  { label: 'Setup', type: 'Feature Category', children: setupGroups || [
+    group('Configuration', ['General Setup','Approval Matrix','Limit Setup','Document Rules','Notification Rules']),
+    group('Reference Data', ['Product Setup','Branch Setup','Code Maintenance','Holiday Calendar'])
+  ] }
+];
+
+function group(label, features) {
+  return { label, type: 'Feature Group', children: features.map(f => ({ label: f, type: 'Feature' })) };
+}
+
+const navigationTree = [
+  { label: 'Banking', type: 'Module Group', icon: '🏦', children: [
+    { label: 'Core Banking', type: 'Module', children: categories([
+      group('Customer Management', ['Customer Registration','Customer Search','Customer Update','Customer Merge','Blacklist Customer','Customer Status','Customer Timeline']),
+      group('Account Management', ['Open Account','Account Search','Account Update','Account Hold','Close Account','Account Statement']),
+      group('Loan Management', ['Loan Application','Loan Appraisal','Loan Approval','Disbursement','Repayment Schedule','Loan Restructure']),
+      group('Transaction', ['Cash Deposit','Cash Withdrawal','Fund Transfer','Transaction Reversal','Transaction Authorization']),
+      group('Cheque', ['Cheque Book Request','Cheque Issue','Stop Cheque','Cheque Clearing','Cheque Status']),
+      group('Remittance', ['New Remittance','Remittance Search','Payout','Cancel Remittance','Remittance Register']),
+      group('Deposit Products', ['Term Deposit Open','Deposit Renewal','Premature Encashment','Interest Instruction','Maturity Calendar','Lien Marking']),
+      group('Card Services', ['Card Request','Card Activation','Card Limit Change','PIN Reset','Card Block','Card Replacement']),
+      group('Standing Instruction', ['Instruction Create','Instruction Search','Instruction Update','Instruction Suspend','Execution History']),
+      group('Clearing House', ['Inward Clearing','Outward Clearing','Return Instrument','Clearing Batch','Settlement Review']),
+      group('Cash Vault', ['Vault Open','Vault Transfer','Cash Requisition','Cash Position','Vault Close','Cash Insurance']),
+      group('Branch Operations', ['Branch Cash Summary','Teller Assignment','Service Desk Queue','End of Day','Branch Exceptions']),
+      group('Compliance Review', ['KYC Exception','AML Screening','Sanction Hit Review','EDD Request','Risk Override','Review History']),
+      group('Limit Management', ['Customer Limit','Account Limit','Transaction Limit','Temporary Limit','Limit Approval','Limit Audit']),
+      group('Fee & Charge', ['Charge Assessment','Charge Waiver','Fee Reversal','Tax Calculation','Fee Register']),
+      group('Document Service', ['Document Upload','Document Checklist','Document Verification','Document Expiry','Document Archive']),
+      group('Notification Service', ['SMS Advice','Email Advice','Statement Alert','Failed Notification','Notification Preference']),
+      group('Service Request', ['New Request','Request Search','Request Assignment','Request Escalation','Request Closure']),
+      group('Dispute Management', ['Dispute Create','Dispute Search','Dispute Investigation','Provisional Credit','Dispute Resolution']),
+      group('Relationship Management', ['RM Assignment','Portfolio View','Customer Notes','Follow-up Task','Opportunity Register']),
+      group('Operational Approval', ['Pending Approval','Bulk Approval','Approval Delegation','Approval History','Rejected Items'])
+    ]) },
+    { label: 'Agent Banking', type: 'Module', children: categories([
+      group('Agent Operations', ['Agent Onboarding','Agent Search','Agent Limit Update','Agent Settlement','Agent Commission']),
+      group('Outlet Management', ['Outlet Registration','Outlet Search','Outlet Cash Position','Outlet Status'])
+    ]) },
+    { label: 'Mobile Banking', type: 'Module', children: categories([
+      group('Wallet Management', ['Wallet Registration','Wallet Search','Wallet Update','Wallet Freeze','Wallet Statement']),
+      group('Mobile Transactions', ['Cash In','Cash Out','Merchant Payment','Bill Payment','Transaction Dispute'])
+    ]) },
+    { label: 'Internet Banking', type: 'Module', children: categories([
+      group('User Enrollment', ['Enroll Customer','Credential Reset','Device Approval','Access Review']),
+      group('Digital Services', ['Beneficiary Setup','Transfer Approval','Service Request','Session Review'])
+    ]) },
+    { label: 'Merchant Banking', type: 'Module', children: categories([
+      group('Merchant Management', ['Merchant Registration','Merchant Search','Merchant Update','Settlement Profile']),
+      group('Settlement', ['Batch Settlement','Settlement Review','Fee Adjustment','Dispute Handling'])
+    ]) }
+  ] },
+  { label: 'Compliance', type: 'Module Group', icon: '🛡️', children: [
+    { label: 'KYC', type: 'Module', children: categories([
+      group('Person KYC', ['Customer Registration','KYC Profile','Document Capture','Identity Verification','Risk Classification','Approval Review']),
+      group('Business Verification', ['Business Profile','Owner Information','Trade License Check','Address Verification','Business Risk Rating']),
+      group('KYC Review', ['Pending Review','Send Back','Approve KYC','Reject KYC','Review History'])
+    ], [
+      group('KYC Configuration', ['Document Type Setup','Risk Rule Setup','Review Frequency','Approval Matrix']),
+      group('Verification Setup', ['Provider Mapping','Required Field Setup','Checklist Setup'])
+    ], [
+      group('KYC Reports', ['Customer Register','Pending KYC','Rejected KYC','High Risk Customers','Verification Aging'])
+    ]) },
+    { label: 'KYB', type: 'Module', children: categories([
+      group('Business Onboarding', ['Business Registration','Beneficial Owner Capture','Ownership Structure','Entity Verification','KYB Approval']),
+      group('Legal Document Review', ['Registration Certificate','Tax Document','Trade License','Board Resolution','Document Exception'])
+    ]) },
+    { label: 'AML Screening', type: 'Module', children: categories([
+      group('Watchlist Screening', ['Sanction Screening','PEP Screening','Adverse Media Search','Watchlist Match Review','False Positive Marking']),
+      group('Screening Queue', ['Pending Matches','Escalated Matches','Batch Screening','Screening History'])
+    ]) },
+    { label: 'Customer Due Diligence', type: 'Module', children: categories([
+      group('CDD Review', ['CDD Checklist','Customer Risk Review','Profile Refresh','Source of Fund Review','Review Approval']),
+      group('Enhanced Due Diligence', ['EDD Request','EDD Investigation','Senior Approval','EDD Closure'])
+    ]) },
+    { label: 'Transaction Monitoring', type: 'Module', children: categories([
+      group('Monitoring Alerts', ['Alert Queue','Alert Assignment','Alert Investigation','Alert Disposition','Alert Escalation']),
+      group('Scenario Review', ['Threshold Breach','Velocity Pattern','Structuring Alert','Unusual Activity'])
+    ]) },
+    { label: 'Compliance Case Management', type: 'Module', children: categories([
+      group('Case Operations', ['Create Case','Case Search','Case Assignment','Investigation Notes','Case Escalation','Case Closure']),
+      group('Evidence Management', ['Evidence Upload','Evidence Review','Linked Alerts','Case Timeline'])
+    ]) },
+    { label: 'Regulatory Reporting', type: 'Module', children: categories([
+      group('Regulatory Submissions', ['STR Draft','SAR Draft','CTR Register','Submission Review','Regulator Response']),
+      group('Compliance Registers', ['High Risk Register','PEP Register','Rejected Customer Register','Screening Register'])
+    ]) },
+    { label: 'Compliance Policy & Setup', type: 'Module', children: categories([
+      group('Policy Configuration', ['Risk Policy','Screening Policy','CDD Policy','EDD Policy','Retention Policy']),
+      group('Rule Configuration', ['Risk Score Rule','Alert Threshold','Escalation Rule','Review Calendar'])
+    ]) }
+  ] },
+  { label: 'Survey', type: 'Module Group', icon: '📋', children: [
+    { label: 'Land Survey', type: 'Module', children: categories([
+      group('Land Information', ['New Survey','Search Survey','Update Survey','GIS Map','Boundary Verification','Owner History']),
+      group('Plot Management', ['Plot Registration','Plot Mutation','Plot Merge','Plot Split','Encumbrance Check'])
+    ]) },
+    { label: 'IT Equipment Survey', type: 'Module', children: categories([
+      group('Asset Inspection', ['New Inspection','Asset Search','Condition Update','Photo Evidence','Warranty Check']),
+      group('Inventory Reconciliation', ['Scan Asset','Missing Asset','Transfer Request','Disposal Request'])
+    ]) },
+    { label: 'Vehicle Survey', type: 'Module', children: categories([
+      group('Vehicle Inspection', ['New Vehicle Survey','Chassis Verification','Fitness Check','Ownership History','Valuation']),
+      group('Route Assessment', ['Route Map','Mileage Review','Permit Check','Risk Notes'])
+    ]) },
+    { label: 'Building Survey', type: 'Module', children: categories([
+      group('Building Information', ['New Building Survey','Floor Details','Occupancy Review','Safety Checklist','Valuation']),
+      group('Utility Review', ['Power Connection','Water Supply','Fire Safety','Maintenance History'])
+    ]) },
+    { label: 'Agricultural Survey', type: 'Module', children: categories([
+      group('Farm Information', ['New Farm Survey','Crop Profile','Yield Estimate','Irrigation Review','Owner History']),
+      group('Field Verification', ['Boundary Walk','Soil Notes','Photo Capture','Seasonal Risk'])
+    ]) }
+  ] },
+  { label: 'POS', type: 'Module Group', icon: '🧾', children: [
+    { label: 'Retail POS', type: 'Module', children: categories([group('Sales Operation', ['New Sale','Return Sale','Hold Sale','Discount Approval','Receipt Reprint']), group('Cash Desk', ['Cash Open','Cash Close','Cash Transfer','Drawer Audit'])]) },
+    { label: 'Inventory POS', type: 'Module', children: categories([group('Stock Operation', ['Stock Receive','Stock Transfer','Stock Adjustment','Stock Count','Reorder Review'])]) }
+  ] },
+  { label: 'Health & Medical', type: 'Module Group', icon: '⚕️', children: [
+    { label: 'Clinic Management', type: 'Module', children: categories([group('Patient Management', ['Patient Registration','Patient Search','Visit Update','Medical Timeline','Referral']), group('Appointment', ['Book Appointment','Queue Board','Reschedule','Cancel Appointment'])]) },
+    { label: 'Pharmacy', type: 'Module', children: categories([group('Prescription', ['New Prescription','Prescription Search','Dispense Medicine','Return Medicine'])]) }
+  ] },
+  { label: 'Education', type: 'Module Group', icon: '🎓', children: [
+    { label: 'Student Administration', type: 'Module', children: categories([group('Student Management', ['Student Admission','Student Search','Student Update','Guardian Profile','Student Timeline']), group('Academic Operation', ['Class Assignment','Attendance Entry','Exam Marks','Promotion'])]) },
+    { label: 'Fee Management', type: 'Module', children: categories([group('Collection', ['Fee Invoice','Payment Entry','Waiver Approval','Due Follow-up'])]) }
+  ] },
+  { label: 'E-Commerce', type: 'Module Group', icon: '🛒', children: [
+    { label: 'Marketplace', type: 'Module', children: categories([group('Order Management', ['Order Search','Order Review','Order Update','Cancellation','Return Request']), group('Catalog Management', ['Product Setup','Price Update','Stock Sync','Promotion Setup'])]) },
+    { label: 'Delivery', type: 'Module', children: categories([group('Fulfillment', ['Assign Rider','Dispatch Order','Delivery Update','Failed Delivery','Proof of Delivery'])]) }
+  ] },
+  { label: 'Finance', type: 'Module Group', icon: '💼', children: [
+    { label: 'General Ledger', type: 'Module', children: categories([
+      group('Journal Management', ['Journal Entry','Journal Search','Journal Approval','Journal Reversal','Recurring Journal']),
+      group('Ledger Operation', ['Chart of Accounts','Ledger Posting','Trial Balance','Opening Balance','Period Close'])
+    ], [
+      group('Ledger Setup', ['Account Group Setup','Fiscal Year Setup','Posting Rule Setup','Currency Setup'])
+    ], [
+      group('Ledger Reports', ['General Ledger','Trial Balance','Journal Register','Account Statement'])
+    ]) },
+    { label: 'Accounts Payable', type: 'Module', children: categories([
+      group('Vendor Invoice', ['Invoice Entry','Invoice Search','Invoice Approval','Invoice Hold','Payment Request']),
+      group('Vendor Payment', ['Payment Voucher','Payment Review','Payment Release','Advance Adjustment'])
+    ], [
+      group('Payable Setup', ['Vendor Setup','Payment Term Setup','Tax Rule Setup','Approval Matrix'])
+    ], [
+      group('Payable Reports', ['Vendor Ledger','Aging Payable','Payment Register','Outstanding Invoice'])
+    ]) },
+    { label: 'Accounts Receivable', type: 'Module', children: categories([
+      group('Customer Invoice', ['Invoice Create','Invoice Search','Invoice Approval','Credit Note','Receipt Allocation']),
+      group('Collection', ['Receipt Entry','Collection Review','Deposit Slip','Bad Debt Proposal'])
+    ], [
+      group('Receivable Setup', ['Customer Setup','Collection Rule Setup','Credit Term Setup'])
+    ], [
+      group('Receivable Reports', ['Customer Ledger','Aging Receivable','Collection Register','Outstanding Bill'])
+    ]) },
+    { label: 'Budget & Cost Control', type: 'Module', children: categories([
+      group('Budget Operation', ['Budget Create','Budget Revision','Budget Approval','Budget Transfer','Budget Utilization']),
+      group('Cost Center Control', ['Cost Center Allocation','Expense Review','Variance Analysis','Commitment Tracking'])
+    ]) },
+    { label: 'Treasury Management', type: 'Module', children: categories([
+      group('Cash & Bank', ['Bank Account Setup','Bank Reconciliation','Cash Forecast','Fund Transfer','Liquidity Position']),
+      group('Investment & Borrowing', ['Investment Register','Maturity Review','Borrowing Register','Interest Accrual'])
+    ]) }
+  ] },
+  { label: 'Administration', type: 'Module Group', icon: '⚙️', children: [
+    { label: 'System Administration', type: 'Module', children: categories([group('User Administration', ['User Create','User Search','User Update','Deactivate User','Password Reset']), group('Role Administration', ['Role Create','Role Search','Permission Matrix','Role Assignment'])]) },
+    { label: 'Tenant Administration', type: 'Module', children: categories([group('Tenant Management', ['Tenant Create','Tenant Search','Tenant Settings','Tenant Status']), group('Branch Management', ['Branch Create','Branch Search','Branch Update','Branch Status'])]) },
+    { label: 'Human Resource Management', type: 'Module', children: categories([
+      group('Employee Management', ['Employee Onboarding','Employee Search','Employee Profile','Employment Status','Employee Transfer']),
+      group('Attendance & Leave', ['Attendance Entry','Attendance Review','Leave Application','Leave Approval','Roster Management'])
+    ], [
+      group('HR Setup', ['Department Setup','Designation Setup','Leave Type Setup','Shift Setup','Holiday Calendar'])
+    ], [
+      group('HR Reports', ['Employee Register','Attendance Summary','Leave Balance','Headcount Report'])
+    ]) },
+    { label: 'Payroll Management', type: 'Module', children: categories([
+      group('Payroll Processing', ['Salary Structure','Payroll Run','Payroll Review','Payroll Approval','Salary Disbursement']),
+      group('Payroll Adjustment', ['Allowance Entry','Deduction Entry','Overtime Calculation','Bonus Processing','Tax Adjustment'])
+    ], [
+      group('Payroll Setup', ['Pay Grade Setup','Allowance Setup','Deduction Setup','Tax Slab Setup','Bank Advice Setup'])
+    ], [
+      group('Payroll Reports', ['Payslip','Salary Register','Tax Statement','Payroll Summary'])
+    ]) },
+    { label: 'Fixed Asset Management', type: 'Module', children: categories([
+      group('Asset Lifecycle', ['Asset Registration','Asset Search','Asset Transfer','Asset Maintenance','Asset Disposal']),
+      group('Asset Accounting', ['Asset Capitalization','Depreciation Run','Depreciation Review','Asset Revaluation'])
+    ], [
+      group('Asset Setup', ['Asset Category Setup','Location Setup','Depreciation Method','Custodian Setup'])
+    ], [
+      group('Asset Reports', ['Asset Register','Depreciation Schedule','Asset Movement','Disposal Register'])
+    ]) }
+  ] },
+  { label: 'Security', type: 'Module Group', icon: '🔐', children: [
+    { label: 'Access Control', type: 'Module', children: categories([group('Privilege Management', ['Menu Privilege','API Privilege','Data Scope','Approval Rule','Access Review']), group('Session Security', ['Active Sessions','Force Logout','Device Trust','Login History'])]) },
+    { label: 'Audit Security', type: 'Module', children: categories([group('Audit Review', ['Audit Search','Sensitive Action Review','Exception Review','Export Audit'])]) }
+  ] },
+  { label: 'Reporting', type: 'Module Group', icon: '📊', children: [
+    { label: 'Enterprise Reports', type: 'Module', children: categories([group('KYC Reports', ['Customer Register','Pending KYC','Rejected KYC','High Risk Customers','Verification Aging']), group('Security Reports', ['User Access Report','Role Matrix','Login Report','Privilege Changes'])]) },
+    { label: 'Analytics', type: 'Module', children: categories([group('Dashboards', ['Executive Dashboard','Branch Dashboard','Risk Dashboard','Operational KPI'])]) }
+  ] }
+];
+
+const icons = document.getElementById('icons');
+const navOverlay = document.getElementById('navOverlay');
+const favoriteStorageKey = 'nexacore.favorite.navigation';
+const tcodeMinSearchChars = 2;
+let quickNavItems = [];
+let quickNavByCode = new Map();
+let quickNavByPath = new Map();
+let favoritePaths = new Set();
+let currentFeaturePathKey = '';
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+function normalizeCode(code) {
+  return String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+function codePart(label, maxLength) {
+  const words = String(label || '').match(/[A-Za-z0-9]+/g) || [];
+  const value = words.length > 1 ? words.map(word => word[0]).join('') : (words[0] || 'NAV');
+  return value.toUpperCase().slice(0, maxLength);
+}
+
+function makeTCode(labels, usedCodes) {
+  const moduleGroup = codePart(labels[0], 3);
+  const module = codePart(labels[1], 3);
+  const feature = codePart(labels[4], 4);
+  const base = moduleGroup + '-' + module + '-' + feature;
+  let code = base;
+  let index = 2;
+  while (usedCodes.has(normalizeCode(code))) {
+    code = base + index;
+    index += 1;
+  }
+  usedCodes.add(normalizeCode(code));
+  return code;
+}
+
+function initQuickNavigation() {
+  const usedCodes = new Set();
+  quickNavItems = [];
+  navigationTree.forEach((groupNode, groupIndex) => {
+    (groupNode.children || []).forEach((moduleNode, moduleIndex) => {
+      (moduleNode.children || []).forEach((categoryNode, categoryIndex) => {
+        (categoryNode.children || []).forEach((featureGroupNode, featureGroupIndex) => {
+          (featureGroupNode.children || []).forEach((featureNode, featureIndex) => {
+            const path = [groupIndex, moduleIndex, categoryIndex, featureGroupIndex, featureIndex];
+            const labels = [groupNode.label, moduleNode.label, categoryNode.label, featureGroupNode.label, featureNode.label];
+            const code = makeTCode(labels, usedCodes);
+            quickNavItems.push({ code, path, pathKey: path.join('.'), label: featureNode.label, labels });
+          });
+        });
+      });
+    });
+  });
+  quickNavByCode = new Map(quickNavItems.map(item => [normalizeCode(item.code), item]));
+  quickNavByPath = new Map(quickNavItems.map(item => [item.pathKey, item]));
+  searchInput.addEventListener('input', updateTCodeListForSearch);
+  searchType.addEventListener('change', updateSearchMode);
+  updateSearchMode();
+  loadFavorites();
+  renderFavorites();
+}
+
+function isTCodeSearch() {
+  return searchType.value === 'T Code';
+}
+
+function updateSearchMode() {
+  searchInput.placeholder = typePlaceholders[searchType.value];
+  searchInput.value = '';
+  if (isTCodeSearch()) {
+    searchInput.setAttribute('list', 'tcodeList');
+  } else {
+    searchInput.removeAttribute('list');
+  }
+  renderTCodeList('');
+}
+
+function updateTCodeListForSearch() {
+  if (!isTCodeSearch()) {
+    renderTCodeList('');
+    return;
+  }
+  const selectedItem = quickNavByCode.get(normalizeCode(searchInput.value));
+  if (selectedItem) {
+    selectTCodeItem(selectedItem);
+    return;
+  }
+  renderTCodeList(searchInput.value);
+}
+
+function renderTCodeList(query) {
+  const list = document.getElementById('tcodeList');
+  if (!list) return;
+  const value = String(query || '').trim();
+  const normalizedValue = normalizeCode(value);
+  if (normalizedValue.length < tcodeMinSearchChars) {
+    list.innerHTML = '';
+    return;
+  }
+  const textValue = value.toLowerCase();
+  const matchingItems = quickNavItems.filter(item =>
+    normalizeCode(item.code).includes(normalizedValue) ||
+    item.label.toLowerCase().includes(textValue) ||
+    item.labels.join(' ').toLowerCase().includes(textValue)
+  );
+  list.innerHTML = matchingItems.map(item =>
+    '<option value="' + esc(item.code) + '">' + esc(item.label) + ' · ' + esc(item.labels.slice(0, 4).join(' / ')) + '</option>'
+  ).join('');
+}
+
+function findTCodeItem(value) {
+  const normalizedValue = normalizeCode(value);
+  const textValue = String(value || '').trim().toLowerCase();
+  return quickNavByCode.get(normalizedValue) || quickNavItems.find(item =>
+    normalizeCode(item.code).includes(normalizedValue) ||
+    item.label.toLowerCase().includes(textValue) ||
+    item.labels.join(' ').toLowerCase().includes(textValue)
+  );
+}
+
+function runTCode() {
+  const input = searchInput;
+  const code = input.value.trim();
+  const item = findTCodeItem(code);
+  if (!item) {
+    input.value = '';
+    input.placeholder = 'Invalid T-code';
+    renderTCodeList('');
+    input.focus();
+    return;
+  }
+  selectTCodeItem(item);
+}
+
+function selectTCodeItem(item) {
+  selectFeature(item.path);
+  searchInput.value = item.code;
+  renderTCodeList('');
+}
+
+function loadFavorites() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(favoriteStorageKey) || '[]');
+    favoritePaths = new Set(Array.isArray(saved) ? saved.filter(path => quickNavByPath.has(path)) : []);
+  } catch (e) {
+    favoritePaths = new Set();
+  }
+}
+
+function saveFavorites() {
+  localStorage.setItem(favoriteStorageKey, JSON.stringify(Array.from(favoritePaths)));
+}
+
+function isFavorite(pathKeyValue) {
+  return favoritePaths.has(pathKeyValue);
+}
+
+function toggleFavorite(pathKeyValue) {
+  if (!quickNavByPath.has(pathKeyValue)) return;
+  favoritePaths.has(pathKeyValue) ? favoritePaths.delete(pathKeyValue) : favoritePaths.add(pathKeyValue);
+  saveFavorites();
+  renderFavorites();
+  renderPanels();
+  renderStatusNavInfo();
+}
+
+function renderFavorites() {
+  const countEl = document.getElementById('favoriteCount');
+  const listEl = document.getElementById('favoriteList');
+  const items = Array.from(favoritePaths).map(path => quickNavByPath.get(path)).filter(Boolean);
+  if (countEl) countEl.textContent = String(items.length);
+  if (!listEl) return;
+  listEl.innerHTML = items.length ? items.map(item =>
+    '<button type="button" class="favorite-row" onclick="openFavorite(\'' + item.pathKey + '\')">' +
+    '<span class="name">' + esc(item.label) + '</span>' +
+    '<span class="code">' + esc(item.code) + '</span>' +
+    '<span class="path">' + esc(item.labels.slice(0, 4).join(' / ')) + '</span>' +
+    '</button>'
+  ).join('') : '<div class="empty">No favorite navigation yet</div>';
+}
+
+function openFavorite(pathKeyValue) {
+  const item = quickNavByPath.get(pathKeyValue);
+  if (!item) return;
+  selectFeature(item.path);
+  closeAllDD();
+}
+
+function renderStatusNavInfo() {
+  const statusEl = document.getElementById('statusNavInfo');
+  if (!statusEl) return;
+  const item = quickNavByPath.get(currentFeaturePathKey);
+  if (!item) {
+    statusEl.innerHTML =
+      '<div class="sb-item">' +
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 10-2.7 6M20 6v6h-6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      'Last synced <span id="syncTime" class="sb-mono">just now</span>' +
+      '</div>' +
+      '<div class="sb-div"></div>' +
+      '<div class="sb-item">' +
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 10h8M8 14h5" stroke-linecap="round"/></svg>' +
+      'Audit Logging Active' +
+      '</div>';
+    return;
+  }
+  const favorite = isFavorite(item.pathKey);
+  statusEl.innerHTML =
+    '<div class="sb-item">T-code <span class="sb-tag sb-mono">' + esc(item.code) + '</span></div>' +
+    '<div class="sb-div"></div>' +
+    '<button type="button" class="status-favorite' + (favorite ? ' active' : '') + '" onclick="toggleFavorite(\'' + item.pathKey + '\')">' +
+    '<svg viewBox="0 0 24 24" fill="' + (favorite ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="1.9"><path d="M12 3.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17.4l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3.5z" stroke-linejoin="round"/></svg>' +
+    '<span>' + (favorite ? 'Favorite' : 'Add favorite') + '</span>' +
+    '</button>';
+}
+
+function renderRail() {
+  const previousRailScroll = icons.querySelector('.rail-scroll');
+  const previousScrollTop = previousRailScroll ? previousRailScroll.scrollTop : 0;
+  rail.className = 'rail' + (detailView ? ' detail' : '');
+  updateNavToggleButton();
+  const homeActive = !activePath.length;
+  const rows = [
+    '<div class="module-row lvl-1' + (homeActive ? ' active' : '') + '" tabindex="0" data-action="home">' +
+    icon.home + '<span class="lbl">Dashboard</span><span class="rail-code">HOME</span></div>'
+  ];
+  navigationTree.forEach((group, groupIndex) => {
+    const groupPath = [groupIndex];
+    const groupKey = pathKey(groupPath);
+    const groupExpanded = expandedPaths.has(groupKey);
+    rows.push(railNodeHtml(group, groupPath, 1, groupExpanded));
+    if (detailView && groupExpanded) {
+      group.children.forEach((module, moduleIndex) => {
+        const modulePath = groupPath.concat(moduleIndex);
+        const moduleKey = pathKey(modulePath);
+        const moduleExpanded = expandedPaths.has(moduleKey);
+        rows.push(railNodeHtml(module, modulePath, 2, moduleExpanded));
+        if (moduleExpanded) {
+          module.children.forEach((category, categoryIndex) => {
+            rows.push(railNodeHtml(category, modulePath.concat(categoryIndex), 3, false));
+          });
+        }
+      });
+    }
+  });
+  icons.innerHTML = '<div class="rail-scroll">' + rows.join('') + '</div>';
+  const nextRailScroll = icons.querySelector('.rail-scroll');
+  if (nextRailScroll) {
+    const maxScrollTop = Math.max(0, nextRailScroll.scrollHeight - nextRailScroll.clientHeight);
+    nextRailScroll.scrollTop = Math.min(previousScrollTop, maxScrollTop);
+  }
+  icons.querySelectorAll('.module-row').forEach(row => {
+    row.addEventListener('mouseenter', () => handleRailHover(row));
+    row.addEventListener('focus', () => handleRailHover(row));
+    row.addEventListener('click', () => handleRailClick(row));
+    row.addEventListener('keydown', e => { if (e.key === 'Enter') handleRailClick(row); });
+  });
+}
+
+function railNodeHtml(node, path, level, expanded) {
+  const hasChildren = node.children && node.children.length;
+  const active = activePath.slice(0, path.length).join('.') === path.join('.');
+  const nodeIcon = railNodeIcon(node, level);
+  return '<div class="module-row lvl-' + level + (active ? ' active' : '') + (expanded ? ' expanded' : '') + '" tabindex="0" data-path="' + path.join('.') + '">' +
+    (hasChildren ? '<span class="rail-caret">›</span>' : '<span class="rail-caret"></span>') +
+    nodeIcon + '<span class="lbl">' + esc(node.label) + '</span>' +
+    '</div>';
+}
+
+function railNodeIcon(node, level) {
+  if (level === 1 && node.icon) return '<span>' + node.icon + '</span>';
+  if (level === 2) return '<span class="rail-node-icon">' + moduleIcon(node.label) + '</span>';
+  if (level === 3) return '<span class="rail-node-icon">' + categoryIcon(node.label) + '</span>';
+  return '';
+}
+
+function moduleIcon(label) {
+  const key = label.toLowerCase();
+  if (key.includes('banking')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 10h18L12 4 3 10zM5 10v9M10 10v9M14 10v9M19 10v9M4 19h16" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('transaction monitoring') || key.includes('case management')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 6h16v12H4z" rx="2"/><path d="M7 14l3-3 3 2 4-5M7 18h10" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('regulatory') || key.includes('policy')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h4M10 12h5M10 16h5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('kyc') || key.includes('kyb') || key.includes('aml') || key.includes('diligence') || key.includes('compliance')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3l7 3v5c0 4.4-2.8 7.8-7 10-4.2-2.2-7-5.6-7-10V6l7-3z"/><path d="M8.5 12h7M8.5 15h4M9 9h6" stroke-linecap="round"/></svg>';
+  if (key.includes('survey')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3zM9 3v15M15 6v15" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('pos')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 13h5M8 17h.01M12 17h.01M16 17h.01" stroke-linecap="round"/></svg>';
+  if (key.includes('clinic') || key.includes('pharmacy')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 5v14M5 12h14" stroke-linecap="round"/><rect x="4" y="4" width="16" height="16" rx="4"/></svg>';
+  if (key.includes('student') || key.includes('fee')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 9l8-4 8 4-8 4-8-4z"/><path d="M7 12v4c2.8 2 7.2 2 10 0v-4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('marketplace') || key.includes('delivery')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M6 7h15l-2 8H8L6 4H3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>';
+  if (key.includes('ledger') || key.includes('payable') || key.includes('receivable') || key.includes('budget') || key.includes('treasury')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h3M15 15l1 1 2-3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('human resource') || key.includes('employee')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="9" cy="8" r="3"/><path d="M4 20c.6-3.3 2.4-5 5-5s4.4 1.7 5 5M16 8.5a2.5 2.5 0 110 5M18 20c-.3-1.8-1-3.1-2.2-4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('payroll')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 10h8M8 14h4M15 14h1.5M8 18h8" stroke-linecap="round"/><path d="M17 5V3M7 5V3" stroke-linecap="round"/></svg>';
+  if (key.includes('fixed asset') || key.includes('asset')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 9l8-5 8 5-8 5-8-5z"/><path d="M6 12l6 4 6-4M6 16l6 4 6-4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('administration')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5c.1-.5.1-1 0-1.5l1.7-1.3-1.5-2.6-2 .6a6.4 6.4 0 00-1.3-.8l-.3-2.1H10l-.3 2.1c-.5.2-.9.5-1.3.8l-2-.6-1.5 2.6 1.7 1.3c-.1.5-.1 1 0 1.5L5 14.8l1.5 2.6 2-.6c.4.3.8.6 1.3.8l.3 2.1h4l.3-2.1c.5-.2.9-.5 1.3-.8l2 .6 1.5-2.6-1.7-1.3z" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('security') || key.includes('control')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3l7 3v5c0 4.4-2.8 7.8-7 10-4.2-2.2-7-5.6-7-10V6l7-3z"/><path d="M9 12l2 2 4-5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (key.includes('report') || key.includes('analytics')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 20V11M10 20V4M16 20v-7M21 20H3" stroke-linecap="round"/></svg>';
+  if (key.includes('retail') || key.includes('inventory')) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 8h16l-1 12H5L4 8z"/><path d="M8 8a4 4 0 018 0" stroke-linecap="round"/></svg>';
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 13h5M16 17h.01" stroke-linecap="round"/></svg>';
+}
+
+function categoryIcon(label) {
+  const icons = {
+    Operation: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+    Setup: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="2.6"/><path d="M19.4 13.5c.1-.5.1-1 0-1.5l1.7-1.3-1.5-2.6-2 .6a6.4 6.4 0 00-1.3-.8l-.3-2.1H10l-.3 2.1c-.5.2-.9.5-1.3.8l-2-.6-1.5 2.6 1.7 1.3c-.1.5-.1 1 0 1.5L5 14.8l1.5 2.6 2-.6c.4.3.8.6 1.3.8l.3 2.1h4l.3-2.1c.5-.2.9-.5 1.3-.8l2 .6 1.5-2.6-1.7-1.3z" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    Report: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 20V11M10 20V4M16 20v-7" stroke-linecap="round"/></svg>'
+  };
+  return icons[label] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M5 7h14M5 12h14M5 17h14" stroke-linecap="round"/></svg>';
+}
+
+function tg() {
+  detailView = !detailView;
+  if (!detailView) closeNav();
+  renderRail();
+  document.querySelector('header').classList.toggle('icon-view', !detailView);
+  positionPanels();
+}
+
+function handleRailHover(row) {
+  clearTimeout(closeTimer);
+  const path = row.dataset.path;
+  if (path && path.split('.').length === 3) openCategoryPanel(path, row);
+}
+
+function handleRailClick(row) {
+  clearTimeout(closeTimer);
+  if (row.dataset.action === 'home') {
+    activePath = [];
+    currentFeaturePathKey = '';
+    expandedPaths.clear();
+    closePanelsOnly();
+    bc.innerHTML = '🏠 <span>Home</span>';
+    ttl.textContent = 'Dashboard';
+    renderStatusNavInfo();
+    renderRail();
+    return;
+  }
+  const path = row.dataset.path ? row.dataset.path.split('.').map(Number) : [];
+  if (!path.length) return;
+  activePath = path;
+  if (path.length < 3) {
+    detailView = true;
+    document.querySelector('header').classList.remove('icon-view');
+    const key = pathKey(path);
+    expandedPaths.has(key) ? expandedPaths.delete(key) : expandedPaths.add(key);
+    closePanelsOnly();
+  } else {
+    openCategoryPanel(row.dataset.path, row);
+  }
+  renderRail();
+}
+
+function pathKey(path) {
+  return path.join('.');
+}
+
+function toggleEnterpriseNavigation() {
+  detailView = true;
+  document.querySelector('header').classList.remove('icon-view');
+  if (isExpandedToLevel3()) {
+    expandedPaths.clear();
+  } else {
+    expandToLevel3();
+  }
+  activePath = [];
+  closePanelsOnly();
+  renderRail();
+}
+
+function updateNavToggleButton() {
+  const btn = document.getElementById('navToggleBtn');
+  const iconEl = document.getElementById('navToggleIcon');
+  if (!btn || !iconEl) return;
+  const expanded = isExpandedToLevel3();
+  btn.setAttribute('aria-label', expanded ? 'Collapse navigation' : 'Expand navigation');
+  iconEl.innerHTML = expanded ? collapseAllIcon() : expandAllIcon();
+}
+
+function expandAllIcon() {
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 17h16M8 12h8M12 8v8" stroke-linecap="round"/></svg>';
+}
+
+function collapseAllIcon() {
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 17h16M8 12h8" stroke-linecap="round"/></svg>';
+}
+
+function expandToLevel3() {
+  navigationTree.forEach((group, groupIndex) => {
+    const groupPath = [groupIndex];
+    expandedPaths.add(pathKey(groupPath));
+    group.children.forEach((_, moduleIndex) => {
+      expandedPaths.add(pathKey(groupPath.concat(moduleIndex)));
+    });
+  });
+}
+
+function isExpandedToLevel3() {
+  return navigationTree.every((group, groupIndex) => {
+    const groupPath = [groupIndex];
+    return expandedPaths.has(pathKey(groupPath)) &&
+      group.children.every((_, moduleIndex) => expandedPaths.has(pathKey(groupPath.concat(moduleIndex))));
+  });
+}
+
+function getNode(path) {
+  let list = navigationTree;
+  let node = null;
+  for (const index of path) {
+    node = list[index];
+    list = node && node.children ? node.children : [];
+  }
+  return node;
+}
+
+function getChildren(path) {
+  const node = path.length ? getNode(path) : null;
+  return node ? (node.children || []) : navigationTree;
+}
+
+function renderPanels() {
+  const panels = activePath.length >= 3 ? megaPanelHtml(activePath.slice(0, 3)) : '';
+  navOverlay.innerHTML = panels;
+  navOverlay.classList.toggle('open', !!panels);
+  navOverlay.querySelectorAll('.mega-subitem').forEach(item => {
+    item.addEventListener('click', () => selectFeature(item.dataset.path.split('.').map(Number)));
+    item.addEventListener('keydown', e => { if (e.key === 'Enter') selectFeature(item.dataset.path.split('.').map(Number)); });
+  });
+  positionPanels();
+}
+
+function megaPanelHtml(categoryPath) {
+  const groups = getChildren(categoryPath);
+  const context = megaContext(categoryPath);
+  return '<div class="nav-panel mega open" data-level="4">' +
+    '<div class="mega-layout">' +
+    '<div class="mega-context">' +
+    '<div class="mega-context-art">' + context.svg + '</div>' +
+    '<div class="mega-context-title">' + esc(context.title) + '</div>' +
+    '<div class="mega-context-note">' + esc(context.note) + '</div>' +
+    '</div>' +
+    '<div class="mega-grid">' +
+    (groups.length ? groups.map((groupNode, groupIndex) => megaColumnHtml(groupNode, categoryPath.concat(groupIndex))).join('') : '<div class="nav-empty">No items configured</div>') +
+    '</div>' +
+    '</div>' +
+    '</div>';
+}
+
+function megaContext(categoryPath) {
+  const moduleGroup = getNode(categoryPath.slice(0, 1));
+  const module = getNode(categoryPath.slice(0, 2));
+  const category = getNode(categoryPath);
+  const key = moduleGroup ? moduleGroup.label : '';
+  const notes = {
+    Banking: 'Work through customer, account, loan, transaction, cheque, and remittance tasks from one operational surface.',
+    Compliance: 'Manage KYC, KYB, AML screening, due diligence, monitoring, case investigation, and regulatory reporting workflows.',
+    Survey: 'Capture field information, verify boundaries or assets, and continue into GIS-backed survey workflows.',
+    POS: 'Move quickly through sales, cash desk, inventory, settlement, and retail service actions.',
+    'Health & Medical': 'Access patient, appointment, clinic, and pharmacy operations grouped for front-desk teams.',
+    Education: 'Manage student, academic, attendance, fee, and guardian workflows from the selected category.',
+    'E-Commerce': 'Review marketplace, catalog, order, fulfillment, and delivery actions in a single panel.',
+    Finance: 'Control ledger, payable, receivable, budgeting, treasury, and financial close workflows from one finance workspace.',
+    Administration: 'Configure users, tenants, branches, roles, and platform settings for controlled operations.',
+    Security: 'Review access, sessions, privileges, devices, and audit activity for secure administration.',
+    Reporting: 'Open operational, management, compliance, and analytics reports by business area.'
+  };
+  return {
+    title: (module ? module.label : key) + ' · ' + (category ? category.label : 'Navigation'),
+    note: notes[key] || 'Use these grouped actions to open the right workflow without leaving the current page context.',
+    svg: contextSvg(key)
+  };
+}
+
+function contextSvg(key) {
+  const label = key || 'Navigation';
+  const mark = {
+    Banking: 'BNK',
+    Survey: 'MAP',
+    POS: 'POS',
+    'Health & Medical': 'MED',
+    Education: 'EDU',
+    'E-Commerce': 'ECM',
+    Finance: 'FIN',
+    Administration: 'ADM',
+    Security: 'SEC',
+    Reporting: 'RPT'
+  }[label] || 'NAV';
+  return '<svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+    '<rect x="24" y="22" width="112" height="76" rx="12" fill="currentColor" opacity=".12"/>' +
+    '<rect x="37" y="35" width="86" height="50" rx="8" fill="var(--card)" stroke="currentColor" stroke-width="3"/>' +
+    '<path d="M50 50h40M50 63h58M50 76h28" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>' +
+    '<circle cx="116" cy="78" r="18" fill="var(--card)" stroke="currentColor" stroke-width="3"/>' +
+    '<path d="M108 78l5 5 11-13" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<text x="80" y="18" text-anchor="middle" fill="currentColor" font-size="13" font-weight="700" font-family="Public Sans, Arial, sans-serif">' + esc(mark) + '</text>' +
+    '</svg>';
+}
+
+function megaColumnHtml(groupNode, groupPath) {
+  const features = groupNode.children || [];
+  return '<div class="mega-list">' +
+    '<div class="mega-list-title">' + esc(groupNode.label) + '</div>' +
+    features.map((featureNode, featureIndex) => {
+      const path = groupPath.concat(featureIndex);
+      const pathValue = path.join('.');
+      return '<div class="mega-subitem" tabindex="0" data-path="' + pathValue + '">' +
+        '<span class="feature-label">' + esc(featureNode.label) + '</span>' +
+        '</div>';
+    }).join('') +
+    '</div>';
+}
+
+function openCategoryPanel(pathValue, anchorEl) {
+  detailView = true;
+  document.querySelector('header').classList.remove('icon-view');
+  activePath = pathValue.split('.').map(Number);
+  panelTopByLevel = { 4: anchorEl ? anchorEl.getBoundingClientRect().top : undefined };
+  renderRail();
+  renderPanels();
+}
+
+function selectFeature(path) {
+  const labels = path.map((_, i) => getNode(path.slice(0, i + 1)).label);
+  currentFeaturePathKey = path.join('.');
+  bc.innerHTML = '🏠 <span>Home</span> <span class="sep">/</span> <span>' + labels.map(esc).join('</span> <span class="sep">/</span> <span>') + '</span>';
+  ttl.textContent = labels[labels.length - 1];
+  renderStatusNavInfo();
+  closeNav();
+}
+
+function positionPanels() {
+  const panels = Array.from(navOverlay.querySelectorAll('.nav-panel'));
+  const railRight = rail.getBoundingClientRect().right;
+  const minTop = document.querySelector('header').offsetHeight + 8;
+  let left = railRight + 8;
+  panels.forEach(panel => {
+    const level = Number(panel.dataset.level);
+    const desiredTop = panelTopByLevel[level] || minTop;
+    const maxTop = Math.max(minTop, window.innerHeight - panel.offsetHeight - 8);
+    panel.style.top = Math.min(Math.max(desiredTop, minTop), maxTop) + 'px';
+    panel.style.left = left + 'px';
+    left += panel.getBoundingClientRect().width + 8;
+  });
+}
+
+function scheduleClose() {
+  clearTimeout(closeTimer);
+  closeTimer = setTimeout(closeNav, 220);
+}
+
+function closeNav() {
+  closePanelsOnly();
+  activePath = [];
+  renderRail();
+}
+
+function closePanelsOnly() {
+  navOverlay.classList.remove('open');
+  navOverlay.innerHTML = '';
+  panelTopByLevel = {};
+}
+
+icons.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+icons.addEventListener('mouseleave', scheduleClose);
+navOverlay.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+navOverlay.addEventListener('mouseleave', scheduleClose);
+window.addEventListener('resize', positionPanels);
+
+document.addEventListener('click', (e) => {
+  if (!navOverlay.contains(e.target) && !icons.contains(e.target) && !e.target.closest('.toggle')) closeNav();
+});
+
+/* ---------- header ---------- */
+
+function toggleDD(id) {
+  const el = document.getElementById(id);
+  const wasOpen = el.classList.contains('open');
+  closeAllDD();
+  if (!wasOpen) el.classList.add('open');
+}
+function closeAllDD() {
+  document.querySelectorAll('.hdr-right .hdr-item').forEach(el => el.classList.remove('open'));
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.hdr-item')) closeAllDD();
+});
+
+function selectLang(code, label) {
+  langLabel.textContent = label;
+  document.querySelectorAll('#ddLang .opt').forEach(o => o.classList.toggle('active', o.textContent.trim().startsWith(label)));
+  closeAllDD();
+}
+
+function selectTenant(name) {
+  tenantLabel.textContent = name;
+  document.querySelectorAll('#ddTenant .opt').forEach(o => o.classList.toggle('active', o.textContent.trim() === name));
+  closeAllDD();
+}
+
+const sunIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19" stroke-linecap="round"/></svg>';
+const moonIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5A9 9 0 1111.5 3a7 7 0 009.5 9.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const swatch = (hex) => '<span class="swatch" style="background:' + hex + '"></span>';
+
+const THEMES = {
+  light:  { icon: sunIcon, label: 'Light',            dark: false },
+  dark:   { icon: moonIcon, label: 'Dark',             dark: true  },
+  blue:   { icon: swatch('#2c5aa0'), label: 'Blue Enterprise',  dark: false },
+  navy:   { icon: '<span class="swatch" style="background:#0b1a33;box-shadow:0 0 0 2px var(--chrome-bg),0 0 0 3px var(--chrome-border),inset 0 0 0 5px #c99a3b"></span>', label: 'Navy Banking', dark: true },
+  green:  { icon: swatch('#1c7a4c'), label: 'Green Compliance', dark: false },
+  purple: { icon: swatch('#6b3fa0'), label: 'Purple Corporate', dark: false },
+  gray:   { icon: swatch('#3f4a54'), label: 'Gray Professional', dark: false }
+};
+
+function selectTheme(id) {
+  const t = THEMES[id];
+  document.body.dataset.theme = id;
+  document.body.classList.toggle('dark', t.dark);
+  themeIcon.innerHTML = t.icon;
+  themeLabel.textContent = t.label;
+  document.querySelectorAll('#ddTheme .opt').forEach(o => o.classList.toggle('active', o.dataset.theme === id));
+  closeAllDD();
+}
+
+const typePlaceholders = {
+  'Customer Name': 'Search by customer name…',
+  'National ID': 'Search by national ID…',
+  'Passport': 'Search by passport number…',
+  'Phone': 'Search by phone number…',
+  'Case Number': 'Search by case number…',
+  'T Code': 'Enter T-code…'
+};
+
+function runSearch() {
+  if (isTCodeSearch()) {
+    runTCode();
+    return;
+  }
+  const q = searchInput.value.trim();
+  if (!q) { searchInput.focus(); return; }
+  bc.innerHTML = '🏠 <span>Home</span> <span class="sep">/</span> <span>Search</span>';
+  ttl.textContent = 'Results for "' + q + '" — ' + searchType.value;
+}
+
+function launchApp(name) {
+  closeAllDD();
+  bc.innerHTML = '🏠 <span>Home</span> <span class="sep">/</span> <span>Apps</span>';
+  ttl.textContent = 'Redirecting to ' + name + ' via SSO…';
+}
+
+function logout() {
+  bc.innerHTML = '🏠 <span>Home</span>';
+  ttl.textContent = 'Signed out';
+  closeAllDD();
+}
+
+function updateClock() {
+  clock.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+initQuickNavigation();
+renderRail();
+</script>
+</body></html>

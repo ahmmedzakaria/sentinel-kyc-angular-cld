@@ -1,0 +1,24 @@
+<label class="checkbox" [class.disabled]="disabled()" [for]="uid">
+  <span class="box-wrap">
+    <input
+      [id]="uid"
+      type="checkbox"
+      class="native-input"
+      [checked]="value() ?? false"
+      [indeterminate]="indeterminate()"
+      [disabled]="disabled()"
+      (change)="onChange($event)"
+      (blur)="markTouched()"
+    />
+    <span class="box" [class.checked]="!!value()" [class.indeterminate]="indeterminate()">
+      @if (indeterminate()) {
+        <span class="dash"></span>
+      } @else if (value()) {
+        <app-icon name="check" [size]="12" />
+      }
+    </span>
+  </span>
+  @if (label()) {
+    <span class="lbl">{{ label() }}</span>
+  }
+</label>

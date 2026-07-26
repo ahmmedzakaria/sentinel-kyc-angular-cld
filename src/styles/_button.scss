@@ -1,0 +1,89 @@
+// Styles for the [appButton] directive (shared/form/button/button.directive.ts).
+// A directive can't own a styleUrl, so this lives here and is imported once
+// into styles.scss — same design tokens as every other component in the app.
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s,
+    opacity 0.15s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+
+  &:hover:not(:disabled) {
+    background: var(--surface-2);
+  }
+}
+
+.btn-danger {
+  background: var(--red);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+}
+
+// Loading state: fade the label instead of removing it (avoids layout shift),
+// and show a small spinner via a pseudo-element so the directive doesn't need
+// to inject any DOM nodes.
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    color: #fff;
+    animation: btn-spin 0.6s linear infinite;
+  }
+  &.btn-ghost::after {
+    color: var(--text);
+  }
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

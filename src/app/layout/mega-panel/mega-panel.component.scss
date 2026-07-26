@@ -1,0 +1,86 @@
+.mega-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: min(790px, calc(100vw - 330px));
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 22px;
+}
+
+.mega-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.mega-context {
+  border-inline-end: 1px solid var(--border);
+  padding-inline-end: 20px;
+}
+.mega-context-art {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 8px;
+  margin-bottom: 15px;
+
+  .group-icon {
+    font-size: 48px;
+    line-height: 1;
+  }
+}
+.mega-context-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.mega-context-note {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.mega-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+  gap: 22px 26px;
+  align-content: start;
+}
+.mega-list-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mega-subitem {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 7px 9px;
+  border-radius: 7px;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  cursor: pointer;
+
+  &:hover,
+  &.active {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+}
+
+.nav-empty {
+  padding: 14px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+}

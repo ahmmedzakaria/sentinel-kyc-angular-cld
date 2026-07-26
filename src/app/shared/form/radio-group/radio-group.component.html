@@ -1,0 +1,28 @@
+<div class="field">
+  @if (label()) {
+    <span class="lbl">{{ label() }}</span>
+  }
+  <div class="options" [class.row]="layout() === 'row'" role="radiogroup" [attr.aria-label]="label() || null">
+    @for (option of options(); track option.label; let i = $index) {
+      <label
+        class="option"
+        [class.disabled]="option.disabled || disabled()"
+        [for]="optionId(i)"
+      >
+        <span class="dot-wrap">
+          <input
+            [id]="optionId(i)"
+            type="radio"
+            class="native-input"
+            [name]="groupName"
+            [checked]="isSelected(option)"
+            [disabled]="option.disabled || disabled()"
+            (change)="select(option)"
+          />
+          <span class="dot" [class.checked]="isSelected(option)"></span>
+        </span>
+        <span class="opt-label">{{ option.label }}</span>
+      </label>
+    }
+  </div>
+</div>

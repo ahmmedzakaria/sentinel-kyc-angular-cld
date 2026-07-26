@@ -1,0 +1,56 @@
+// Shared field styling for Tier 1 form controls. SCSS mixins (not a plain
+// partial) because component stylesheets are individually encapsulated by
+// Angular — each consumer @includes these into its own scoped rules rather
+// than sharing one global class, so there's no cross-component CSS leakage.
+
+@mixin field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+@mixin control-frame {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--paper);
+  transition: border-color 0.15s;
+
+  &:focus-within {
+    outline: 2px solid var(--focus);
+    outline-offset: -1px;
+  }
+  &.invalid {
+    border-color: var(--red);
+  }
+  &.disabled {
+    opacity: 0.6;
+  }
+}
+
+// Resets a native input/textarea sitting inside a .control-frame wrapper so
+// the wrapper owns the visual border/background instead of the input itself.
+@mixin control-reset {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--text);
+  font-size: 13.5px;
+  font-family: inherit;
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+  &:disabled {
+    cursor: default;
+  }
+}
+
+@mixin field-error {
+  font-size: 11.5px;
+  color: var(--red);
+}

@@ -1,0 +1,9 @@
+<div class="banner" [class]="severity()" role="status">
+  <app-icon [name]="icon()" [size]="17" />
+  <span class="msg"><ng-content /></span>
+  @if (dismissible()) {
+    <button type="button" class="close focus-ring" aria-label="Dismiss" (click)="dismissed.emit()">
+      <app-icon name="close" [size]="14" />
+    </button>
+  }
+</div>

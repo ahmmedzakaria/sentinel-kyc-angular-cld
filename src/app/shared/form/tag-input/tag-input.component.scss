@@ -1,0 +1,85 @@
+@use '../field-shell' as shell;
+
+:host {
+  display: block;
+}
+
+.ti-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.label {
+  @include shell.field-label;
+}
+
+.control-frame {
+  @include shell.control-frame;
+  flex-wrap: wrap;
+  min-height: 38px;
+  padding: 5px 8px;
+  row-gap: 5px;
+
+  input {
+    @include shell.control-reset;
+    min-width: 80px;
+  }
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 6px 3px 9px;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+.chip-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 4px;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.suggestion {
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-2);
+  }
+}
+
+.error {
+  @include shell.field-error;
+}

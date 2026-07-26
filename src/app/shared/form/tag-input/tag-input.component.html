@@ -1,0 +1,37 @@
+<div class="ti-field">
+  @if (label()) {
+    <span class="label">{{ label() }}</span>
+  }
+
+  <div class="control-frame" [class.invalid]="!!errorMessage()" [class.disabled]="disabled()">
+    @for (tag of tags(); track tag; let i = $index) {
+      <span class="chip">
+        {{ tag }}
+        <span class="chip-remove" (click)="removeTag(i)">
+          <app-icon name="close" [size]="11" />
+        </span>
+      </span>
+    }
+    <input
+      type="text"
+      [placeholder]="tags().length ? '' : placeholder()"
+      [value]="draft()"
+      [disabled]="disabled()"
+      (input)="onDraftInput($event)"
+      (keydown)="onKeydown($event)"
+      (blur)="markTouched()"
+    />
+  </div>
+
+  @if (filteredSuggestions().length) {
+    <div class="suggestions">
+      @for (s of filteredSuggestions(); track s) {
+        <div class="suggestion" (click)="addSuggestion(s)">{{ s }}</div>
+      }
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <span class="error">{{ errorMessage() }}</span>
+  }
+</div>

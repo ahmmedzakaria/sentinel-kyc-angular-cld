@@ -1,0 +1,30 @@
+<div class="cards">
+  <div class="card">
+    <div class="lbl">Customers</div>
+    <div class="val mono">15,240</div>
+  </div>
+  <div class="card warn">
+    <div class="lbl">Pending Review</div>
+    <div class="val mono">124</div>
+  </div>
+  <div class="card risk">
+    <div class="lbl">Elevated Risk</div>
+    <div class="val mono">18</div>
+  </div>
+</div>
+
+<div class="panel-head"><h3>Recent Records</h3></div>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Status</th>
+  </tr>
+  @for (r of records; track r.id) {
+    <tr>
+      <td class="id">{{ r.id }}</td>
+      <td>{{ r.name }}</td>
+      <td><app-status-badge [status]="r.status" /></td>
+    </tr>
+  }
+</table>

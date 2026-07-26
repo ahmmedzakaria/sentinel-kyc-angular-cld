@@ -1,0 +1,68 @@
+:host {
+  display: inline-block;
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.box-wrap {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.native-input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+
+  &:focus-visible ~ .box {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+}
+
+.box {
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+
+  &.checked,
+  &.indeterminate {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .dash {
+    width: 8px;
+    height: 2px;
+    background: #fff;
+    border-radius: 1px;
+  }
+}
+
+.lbl {
+  font-size: 13.5px;
+  color: var(--text);
+}

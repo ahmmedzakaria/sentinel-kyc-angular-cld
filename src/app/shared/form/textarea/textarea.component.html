@@ -1,0 +1,25 @@
+<div class="field">
+  @if (label()) {
+    <label class="lbl" [for]="uid">{{ label() }}</label>
+  }
+  <div class="control-frame" [class.invalid]="!!errorMessage()" [class.disabled]="disabled()">
+    <textarea
+      [id]="uid"
+      [rows]="rows()"
+      [placeholder]="placeholder()"
+      [attr.maxlength]="maxLength()"
+      [disabled]="disabled()"
+      (input)="onInput($event)"
+      (blur)="markTouched()"
+      >{{ value() ?? '' }}</textarea
+    >
+  </div>
+  <div class="meta-row">
+    @if (errorMessage()) {
+      <span class="error">{{ errorMessage() }}</span>
+    }
+    @if (maxLength()) {
+      <span class="counter">{{ charCount() }}/{{ maxLength() }}</span>
+    }
+  </div>
+</div>

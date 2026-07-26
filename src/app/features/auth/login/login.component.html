@@ -1,0 +1,38 @@
+<div class="auth-screen">
+  <div class="auth-card">
+    <div class="brand">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M12 2l8 3.5v6c0 5-3.4 8.7-8 10.5-4.6-1.8-8-5.5-8-10.5v-6L12 2z" />
+        <path d="M8.5 12l2.3 2.3L15.5 9.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <div>Sentinel KYC<small>Compliance Console</small></div>
+    </div>
+
+    <h1>Sign in</h1>
+    <p class="sub">Use the demo account below, or your own once registered.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <app-textbox
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        autocomplete="username"
+        formControlName="email"
+        [errorMessage]="form.controls.email.touched && form.controls.email.invalid ? 'Enter a valid email address.' : null"
+      />
+
+      <app-password-group
+        label="Password"
+        placeholder="••••••••"
+        autocomplete="current-password"
+        formControlName="password"
+        [errorMessage]="form.controls.password.touched && form.controls.password.invalid ? 'Password is required.' : null"
+      />
+
+      <button type="submit" appButton [loading]="submitting()" [disabled]="submitting()">Sign in</button>
+    </form>
+
+    <p class="hint">Demo password: <code>Password123</code></p>
+    <p class="switch">Don't have an account? <a routerLink="/register">Create one</a></p>
+  </div>
+</div>

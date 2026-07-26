@@ -1,0 +1,55 @@
+<div class="auth-screen">
+  <div class="auth-card">
+    <div class="brand">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M12 2l8 3.5v6c0 5-3.4 8.7-8 10.5-4.6-1.8-8-5.5-8-10.5v-6L12 2z" />
+        <path d="M8.5 12l2.3 2.3L15.5 9.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <div>Sentinel KYC<small>Compliance Console</small></div>
+    </div>
+
+    <h1>Create an account</h1>
+    <p class="sub">Register to get access to the compliance console.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <app-textbox
+        label="Full Name"
+        placeholder="Jane Doe"
+        autocomplete="name"
+        formControlName="name"
+        [errorMessage]="form.controls.name.touched && form.controls.name.invalid ? 'Name is required.' : null"
+      />
+
+      <app-textbox
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        autocomplete="username"
+        formControlName="email"
+        [errorMessage]="form.controls.email.touched && form.controls.email.invalid ? 'Enter a valid email address.' : null"
+      />
+
+      <app-password-group
+        label="Password"
+        placeholder="At least 8 characters"
+        autocomplete="new-password"
+        formControlName="password"
+        [errorMessage]="
+          form.controls.password.touched && form.controls.password.invalid ? 'Password must be at least 8 characters.' : null
+        "
+      />
+
+      <app-password-group
+        label="Confirm Password"
+        placeholder="••••••••"
+        autocomplete="new-password"
+        formControlName="confirmPassword"
+        [errorMessage]="form.controls.confirmPassword.touched && form.hasError('passwordMismatch') ? 'Passwords do not match.' : null"
+      />
+
+      <button type="submit" appButton [loading]="submitting()" [disabled]="submitting()">Create account</button>
+    </form>
+
+    <p class="switch">Already have an account? <a routerLink="/login">Sign in</a></p>
+  </div>
+</div>

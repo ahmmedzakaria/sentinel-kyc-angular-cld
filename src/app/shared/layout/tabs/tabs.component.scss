@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.tablist {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 9px 4px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+
+  & + & {
+    margin-inline-start: 18px;
+  }
+
+  &:hover:not(.disabled) {
+    color: var(--text);
+  }
+  &.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}

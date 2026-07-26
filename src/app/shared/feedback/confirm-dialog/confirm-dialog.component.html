@@ -1,0 +1,20 @@
+<app-modal [open]="open()" [title]="title()" [width]="380" (closed)="onCancel()">
+  <ng-content>
+    <p class="confirm-message">{{ message() }}</p>
+  </ng-content>
+  <div class="actions">
+    <button type="button" appButton variant="ghost" [disabled]="loading()" (click)="onCancel()">
+      {{ cancelLabel() }}
+    </button>
+    <button
+      type="button"
+      appButton
+      [variant]="danger() ? 'danger' : 'primary'"
+      [loading]="loading()"
+      [disabled]="loading()"
+      (click)="onConfirm()"
+    >
+      {{ confirmLabel() }}
+    </button>
+  </div>
+</app-modal>

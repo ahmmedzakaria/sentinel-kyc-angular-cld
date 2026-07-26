@@ -1,0 +1,58 @@
+<form class="person-form" [formGroup]="form" (ngSubmit)="submit()">
+  <app-avatar-upload
+    [photoUrl]="form.controls.photoUrl.value"
+    [fallbackName]="form.controls.firstName.value + ' ' + form.controls.lastName.value"
+    (photoUrlChange)="onPhotoChange($event)"
+  />
+
+  <div class="row two">
+    <app-textbox
+      label="First Name"
+      placeholder="Jane"
+      formControlName="firstName"
+      [errorMessage]="form.controls.firstName.touched && form.controls.firstName.invalid ? 'First name is required.' : null"
+    />
+    <app-textbox
+      label="Last Name"
+      placeholder="Doe"
+      formControlName="lastName"
+      [errorMessage]="form.controls.lastName.touched && form.controls.lastName.invalid ? 'Last name is required.' : null"
+    />
+  </div>
+
+  <app-textbox
+    label="Email"
+    type="email"
+    placeholder="jane.doe@example.com"
+    formControlName="email"
+    [errorMessage]="form.controls.email.touched && form.controls.email.invalid ? 'Enter a valid email address.' : null"
+  />
+
+  <app-textbox
+    label="Mobile"
+    type="tel"
+    placeholder="+880 1XXX XXXXXX"
+    formControlName="mobile"
+    [errorMessage]="form.controls.mobile.touched && form.controls.mobile.invalid ? 'Enter a valid mobile number.' : null"
+  />
+
+  <div class="row two">
+    <app-dropdown
+      [options]="genderOptions"
+      label="Gender"
+      formControlName="gender"
+    />
+    <app-dropdown
+      [options]="educationOptions"
+      label="Education"
+      formControlName="education"
+    />
+  </div>
+
+  <div class="actions">
+    <button type="button" appButton variant="ghost" (click)="cancel.emit()">Cancel</button>
+    <button type="submit" appButton [loading]="submitting()" [disabled]="submitting()">
+      {{ person() ? 'Save Changes' : 'Add Person' }}
+    </button>
+  </div>
+</form>

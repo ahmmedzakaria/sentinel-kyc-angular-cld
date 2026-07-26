@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+.inline-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  font-size: 12.5px;
+  line-height: 1.4;
+
+  app-icon {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .msg {
+    color: var(--text);
+  }
+
+  &.info {
+    background: var(--info-soft);
+    app-icon {
+      color: var(--info);
+    }
+  }
+  &.success {
+    background: var(--success-soft);
+    app-icon {
+      color: var(--success);
+    }
+  }
+  &.warning {
+    background: var(--amber-soft);
+    app-icon {
+      color: var(--amber);
+    }
+  }
+  &.error {
+    background: var(--red-soft);
+    app-icon {
+      color: var(--red);
+    }
+  }
+}

@@ -1,0 +1,30 @@
+@use '../field-shell' as shell;
+
+:host {
+  display: block;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.lbl {
+  @include shell.field-label;
+}
+.control-frame {
+  @include shell.control-frame;
+  height: 38px;
+  padding: 0 11px;
+
+  .prefix {
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  input {
+    @include shell.control-reset;
+  }
+}
+.error {
+  @include shell.field-error;
+}

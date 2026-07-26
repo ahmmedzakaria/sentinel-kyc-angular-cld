@@ -1,0 +1,10 @@
+<div class="bc">
+  🏠
+  @for (seg of breadcrumb.trail(); track $index; let last = $last) {
+    @if (!$first) {
+      <span class="sep">/</span>
+    }
+    <span>{{ seg.label }}</span>
+  }
+</div>
+<h2 class="ttl">{{ breadcrumb.title() }}</h2>

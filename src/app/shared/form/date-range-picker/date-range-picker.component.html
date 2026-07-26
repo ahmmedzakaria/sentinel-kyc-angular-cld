@@ -1,0 +1,78 @@
+<div class="dp-field">
+  @if (label()) {
+    <span class="lbl">{{ label() }}</span>
+  }
+
+  <button
+    type="button"
+    class="trigger focus-ring"
+    cdkOverlayOrigin
+    #origin="cdkOverlayOrigin"
+    [attr.aria-expanded]="open()"
+    aria-haspopup="dialog"
+    [disabled]="disabled()"
+    [class.invalid]="!!errorMessage()"
+    (click)="toggle()"
+  >
+    <app-icon name="calendar" [size]="15" class="cal-icon" />
+    <span class="value" [class.placeholder]="!range().start">{{ displayValue() || placeholder() }}</span>
+  </button>
+
+  @if (errorMessage()) {
+    <span class="error">{{ errorMessage() }}</span>
+  }
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayPositions]="[
+    { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4 },
+    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -4 }
+  ]"
+  (backdropClick)="close()"
+  (detach)="close()"
+>
+  <div class="dp-panel">
+    <div class="dp-header">
+      <button type="button" class="nav-btn focus-ring" aria-label="Previous month" (click)="prevMonth()">
+        <app-icon name="chevron-left" [size]="14" />
+      </button>
+      <span class="month-label">{{ monthLabel() }}</span>
+      <button type="button" class="nav-btn focus-ring" aria-label="Next month" (click)="nextMonth()">
+        <app-icon name="chevron-right" [size]="14" />
+      </button>
+    </div>
+
+    <div class="dp-grid" role="grid">
+      <div class="dp-row weekdays" role="row">
+        @for (w of weekdayLabels; track w) {
+          <span class="weekday" role="columnheader">{{ w }}</span>
+        }
+      </div>
+      @for (week of weeks(); track $index) {
+        <div class="dp-row" role="row">
+          @for (day of week; track day.date.getTime()) {
+            <button
+              type="button"
+              role="gridcell"
+              class="day focus-ring"
+              [class.other-month]="day.otherMonth"
+              [class.start]="isStart(day.date)"
+              [class.end]="isEnd(day.date)"
+              [class.in-range]="isInRange(day.date)"
+              [disabled]="isDisabled(day.date)"
+              (mouseenter)="onDayHover(day.date)"
+              (click)="selectDate(day.date)"
+            >
+              {{ day.date.getDate() }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</ng-template>

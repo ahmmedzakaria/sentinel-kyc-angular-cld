@@ -1,0 +1,23 @@
+<div class="field">
+  @if (label()) {
+    <label class="lbl" [for]="uid">{{ label() }}</label>
+  }
+  <div class="control-frame" [class.invalid]="!!errorMessage()" [class.disabled]="disabled()">
+    @if (prefixIcon()) {
+      <app-icon [name]="prefixIcon()!" [size]="15" class="prefix" />
+    }
+    <input
+      [id]="uid"
+      [type]="type()"
+      [placeholder]="placeholder()"
+      [value]="value() ?? ''"
+      [disabled]="disabled()"
+      [attr.autocomplete]="autocomplete()"
+      (input)="onInput($event)"
+      (blur)="markTouched()"
+    />
+  </div>
+  @if (errorMessage()) {
+    <span class="error">{{ errorMessage() }}</span>
+  }
+</div>

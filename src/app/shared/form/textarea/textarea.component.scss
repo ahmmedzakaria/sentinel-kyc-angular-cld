@@ -1,0 +1,40 @@
+@use '../field-shell' as shell;
+
+:host {
+  display: block;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.lbl {
+  @include shell.field-label;
+}
+.control-frame {
+  @include shell.control-frame;
+  padding: 9px 11px;
+  align-items: stretch;
+
+  textarea {
+    @include shell.control-reset;
+    resize: vertical;
+    min-height: 60px;
+    line-height: 1.5;
+  }
+}
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 14px;
+}
+.error {
+  @include shell.field-error;
+}
+.counter {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-inline-start: auto;
+}
