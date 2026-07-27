@@ -1,0 +1,16 @@
+<div class="wizard">
+  <app-stepper [steps]="stepDefs()" [activeIndex]="currentIndex()" [linear]="true" (stepChange)="onStepperRequest($event)" />
+
+  <div class="wizard-body">
+    <ng-content></ng-content>
+  </div>
+
+  <div class="wizard-actions">
+    <button type="button" appButton variant="ghost" [disabled]="currentIndex() === 0" (click)="back()">
+      {{ backLabel() }}
+    </button>
+    <button type="button" appButton [disabled]="currentInvalid()" (click)="next()">
+      {{ isLastStep() ? finishLabel() : nextLabel() }}
+    </button>
+  </div>
+</div>

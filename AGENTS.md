@@ -138,6 +138,18 @@ npm run build
   built, what's planned, and the design reasoning behind each one — read it
   before adding a new shared component so you don't duplicate something
   already scoped there.
+- `shared/workflow/*` — Tier 5 workflow composites (`Stepper`, `Wizard` +
+  `WizardStep`, `ApprovalActions`, `Timeline`, `ActivityFeed`, `CaseThread`).
+  Stepper is presentational/controlled like DataTable (`activeIndex`/
+  `stepChange` are value-in/change-request-out, not self-managed like Tabs);
+  Wizard layers form-validity gating on top of it via `WizardStepComponent`'s
+  optional `AbstractControl` `form` input (bridged to a signal with
+  `toObservable`/`toSignal`), not by teaching Stepper about forms. Timeline
+  and ActivityFeed share `_timeline-shell.scss`'s mixins (ActivityFeed is a
+  genuine variant, not a rebuild) — same mixin-not-global-class reasoning as
+  Tier 1's `_field-shell.scss`. None of Tier 5 has an existing screen to
+  retrofit into yet. See `COMPONENT_LIBRARY_PLAN.md` for the full design
+  reasoning.
 - `layout/*` — `AppShellComponent`, `HeaderComponent`, `RailNavComponent`,
   `MegaPanelComponent`, `StatusBarComponent` — only mounted for authenticated
   routes

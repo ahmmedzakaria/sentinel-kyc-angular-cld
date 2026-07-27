@@ -1,0 +1,26 @@
+<div class="approval-actions">
+  <button type="button" appButton [disabled]="loading()" (click)="approve()">{{ approveLabel() }}</button>
+  <button type="button" appButton variant="danger" [disabled]="loading()" (click)="requestReject()">{{ rejectLabel() }}</button>
+  @if (showEscalate()) {
+    <button type="button" appButton variant="ghost" [disabled]="loading()" (click)="requestEscalate()">
+      {{ escalateLabel() }}
+    </button>
+  }
+</div>
+
+<app-confirm-dialog
+  [open]="!!pendingAction()"
+  [title]="dialogTitle()"
+  confirmLabel="Submit"
+  [danger]="pendingAction() === 'reject'"
+  [loading]="loading()"
+  (confirmed)="confirmReason()"
+  (cancelled)="cancelReason()"
+>
+  <app-textarea
+    [formControl]="reason"
+    [label]="'Reason for ' + dialogTitle().toLowerCase()"
+    placeholder="Explain why…"
+    [errorMessage]="reasonError() ? 'A reason is required.' : null"
+  />
+</app-confirm-dialog>

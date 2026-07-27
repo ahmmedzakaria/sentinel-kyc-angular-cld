@@ -1,0 +1,30 @@
+@use '../timeline-shell' as shell;
+
+:host {
+  display: block;
+}
+
+.timeline {
+  @include shell.list;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.timeline-item {
+  @include shell.item;
+}
+.timeline-connector {
+  @include shell.connector;
+}
+.timeline-marker {
+  @include shell.marker;
+}
+.timeline-body {
+  @include shell.body;
+}
+.timeline-label {
+  @include shell.label;
+}
+.timeline-meta {
+  @include shell.meta;
+}

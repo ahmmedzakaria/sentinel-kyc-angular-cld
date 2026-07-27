@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.composer-actions {
+  display: flex;
+  justify-content: flex-end;
+}

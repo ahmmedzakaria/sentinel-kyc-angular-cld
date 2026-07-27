@@ -1,0 +1,12 @@
+<div class="case-thread">
+  <app-activity-feed [entries]="entries()" />
+
+  <div class="composer">
+    <app-textarea [formControl]="draft" [placeholder]="placeholder()" [rows]="3" />
+    <div class="composer-actions">
+      <button type="button" appButton [disabled]="!draft.value.trim() || submitting()" [loading]="submitting()" (click)="submit()">
+        Reply
+      </button>
+    </div>
+  </div>
+</div>

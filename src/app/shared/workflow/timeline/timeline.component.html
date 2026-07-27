@@ -1,0 +1,19 @@
+<ol class="timeline">
+  @for (event of events(); track $index) {
+    <li class="timeline-item">
+      <span class="timeline-connector"></span>
+      <span class="timeline-marker">
+        <app-icon [name]="event.icon || 'check-circle'" [size]="14" />
+      </span>
+      <div class="timeline-body">
+        <div class="timeline-label">{{ event.label }}</div>
+        <div class="timeline-meta">
+          {{ formatTimestamp(event.timestamp) }}
+          @if (event.actor) {
+            · {{ event.actor }}
+          }
+        </div>
+      </div>
+    </li>
+  }
+</ol>

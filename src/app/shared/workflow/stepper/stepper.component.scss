@@ -1,0 +1,82 @@
+:host {
+  display: block;
+}
+
+// Visually-hidden-but-announced technique for the aria-live region — 1px/
+// clip-based, not on the --space-* scale, since these are structurally
+// required exact values for this specific CSS trick, not a design decision.
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  font-family: inherit;
+  flex-shrink: 0;
+
+  &:disabled {
+    cursor: default;
+    opacity: var(--opacity-disabled);
+  }
+}
+.step-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-16);
+  height: var(--space-16);
+  border-radius: 50%;
+  border: var(--border-width-thin) solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  flex-shrink: 0;
+}
+.step.active .step-marker {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.step.completed .step-marker {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.step-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.step.active .step-label {
+  color: var(--text);
+  font-weight: var(--font-weight-semibold);
+}
+
+.step-connector {
+  flex: 1;
+  height: var(--border-width-thin);
+  background: var(--border);
+  margin: 0 var(--space-3);
+  min-width: var(--space-8);
+
+  &.completed {
+    background: var(--accent);
+  }
+}
