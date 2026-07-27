@@ -538,7 +538,11 @@ const sizes = {
   radiusBase: 8,
   fontSizeBase: 13.5,
   headerHeight: 58,
-  statusBarHeight: 28
+  statusBarHeight: 28,
+  // Left nav (RailNavComponent) width — ported from the local $rail-width-expanded
+  // SCSS variable/var(--space-32) that used to live only in rail-nav.component.scss.
+  railWidthCollapsed: 64,
+  railWidthExpanded: 230
 };
 
 const config = { navTree: NAVIGATION_TREE, header, statusBar, themes, sizes };

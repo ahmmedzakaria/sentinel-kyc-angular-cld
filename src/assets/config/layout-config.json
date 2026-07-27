@@ -6972,6 +6972,8 @@
     "radiusBase": 8,
     "fontSizeBase": 13.5,
     "headerHeight": 58,
-    "statusBarHeight": 28
+    "statusBarHeight": 28,
+    "railWidthCollapsed": 64,
+    "railWidthExpanded": 230
   }
 }

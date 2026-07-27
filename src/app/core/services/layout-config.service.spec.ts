@@ -18,7 +18,7 @@ const FIXTURE: LayoutConfig = {
       primaries: { text: '#1a222c', paper: '#f3f5f7', card: '#ffffff', accent: '#1f6f5c', amber: '#a8630b', red: '#9f2b2b', success: '#1c7a4c', info: '#2f7dd1' }
     }
   ],
-  sizes: { spaceUnit: 2, radiusBase: 8, fontSizeBase: 13.5, headerHeight: 58, statusBarHeight: 28 }
+  sizes: { spaceUnit: 2, radiusBase: 8, fontSizeBase: 13.5, headerHeight: 58, statusBarHeight: 28, railWidthCollapsed: 64, railWidthExpanded: 230 }
 };
 
 describe('LayoutConfigService', () => {

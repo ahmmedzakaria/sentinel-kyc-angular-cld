@@ -1,10 +1,11 @@
 @use '../../../styles/breakpoints' as bp;
 
-// One-off widths specific to this component — named rather than bare
-// literals, but not promoted to global tokens since nothing else reuses them.
-// (The collapsed rail width is common enough elsewhere to already have one:
-// var(--space-32), 64px.)
-$rail-width-expanded: 230px; // desktop .exp
+// The desktop collapsed/expanded rail widths are config-driven — see
+// LayoutConfigService's `sizes.railWidthCollapsed`/`railWidthExpanded` and
+// color-math.ts's computeSizeTokens(), which set --rail-width-collapsed/
+// --rail-width-expanded. The mobile/tablet off-canvas drawer width stays a
+// local one-off below — it's a distinct overlay behavior, not the same
+// "reserved column" concept, and nothing else reuses it.
 $rail-drawer-width: 260px; // mobile/tablet off-canvas drawer
 
 :host {
@@ -36,7 +37,7 @@ $rail-drawer-width: 260px; // mobile/tablet off-canvas drawer
 }
 
 .rail {
-  width: var(--space-32);
+  width: var(--rail-width-collapsed);
   background: var(--chrome-bg);
   color: var(--chrome-text);
   border-inline-end: 1px solid var(--chrome-border);
@@ -49,7 +50,7 @@ $rail-drawer-width: 260px; // mobile/tablet off-canvas drawer
     color 0.2s;
 
   &.exp {
-    width: #{$rail-width-expanded};
+    width: var(--rail-width-expanded);
   }
 }
 

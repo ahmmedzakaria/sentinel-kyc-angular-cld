@@ -77,4 +77,12 @@ export const DEFAULT_THEMES: ThemeDef[] = [
 ];
 
 /** Fallback size primitives — 1:1 copy of layout-config.json's `sizes`, same reasoning as DEFAULT_THEMES. */
-export const DEFAULT_SIZES = { spaceUnit: 2, radiusBase: 8, fontSizeBase: 13.5, headerHeight: 58, statusBarHeight: 28 };
+export const DEFAULT_SIZES = {
+  spaceUnit: 2,
+  radiusBase: 8,
+  fontSizeBase: 13.5,
+  headerHeight: 58,
+  statusBarHeight: 28,
+  railWidthCollapsed: 64,
+  railWidthExpanded: 230
+};

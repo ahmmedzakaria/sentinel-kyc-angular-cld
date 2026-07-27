@@ -50,6 +50,9 @@ export interface SizeConfig {
   fontSizeBase: number;
   headerHeight: number;
   statusBarHeight: number;
+  /** Left nav (RailNavComponent) width in its icon-only/expanded states — see rail-nav.component.scss. */
+  railWidthCollapsed: number;
+  railWidthExpanded: number;
 }
 
 export interface HeaderAppTile {

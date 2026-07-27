@@ -172,12 +172,11 @@ export class HeaderComponent {
   }
 
   logout(): void {
-    if (confirm('Log out of Sentinel KYC?')) {
-      const name = this.auth.currentUser()?.name;
-      this.auth.logout();
-      this.breadcrumb.reset('Signed out');
-      this.toast.info(name ? `Signed out — see you soon, ${name}.` : 'Signed out.');
-      this.router.navigateByUrl('/login');
-    }
+    const name = this.auth.currentUser()?.name;
+    this.menu.close();
+    this.auth.logout();
+    this.breadcrumb.reset('Signed out');
+    this.toast.info(name ? `Signed out — see you soon, ${name}.` : 'Signed out.');
+    this.router.navigateByUrl('/login');
   }
 }

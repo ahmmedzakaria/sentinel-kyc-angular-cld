@@ -167,7 +167,9 @@ export function computeSizeTokens(sizes: SizeConfig): Record<string, string> {
     '--font-size-xl': px(fontBase * 1.63),
     '--font-size-2xl': px(fontBase * 1.93),
     '--header-height': px(sizes.headerHeight),
-    '--statusbar-height': px(sizes.statusBarHeight)
+    '--statusbar-height': px(sizes.statusBarHeight),
+    '--rail-width-collapsed': px(sizes.railWidthCollapsed),
+    '--rail-width-expanded': px(sizes.railWidthExpanded)
   };
 
   for (const step of spaceSteps) {

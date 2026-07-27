@@ -31,7 +31,15 @@ const NAVY: ThemeConfigEntry = {
   }
 };
 
-const SIZES: SizeConfig = { spaceUnit: 2, radiusBase: 8, fontSizeBase: 13.5, headerHeight: 58, statusBarHeight: 28 };
+const SIZES: SizeConfig = {
+  spaceUnit: 2,
+  radiusBase: 8,
+  fontSizeBase: 13.5,
+  headerHeight: 58,
+  statusBarHeight: 28,
+  railWidthCollapsed: 64,
+  railWidthExpanded: 230
+};
 
 describe('computeThemeTokens', () => {
   it('picks white foreground for Light’s darker accent hue', () => {
@@ -87,6 +95,12 @@ describe('computeSizeTokens', () => {
     expect(tokens['--radius']).toBe('8px');
     expect(tokens['--radius-md']).toBe('9px');
     expect(tokens['--font-size-base']).toBe('13.5px');
+  });
+
+  it('carries left-nav (rail) widths through', () => {
+    const tokens = computeSizeTokens(SIZES);
+    expect(tokens['--rail-width-collapsed']).toBe('64px');
+    expect(tokens['--rail-width-expanded']).toBe('230px');
   });
 
   it('carries header/status-bar fixed heights through', () => {

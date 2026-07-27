@@ -207,11 +207,8 @@
         <div class="opt static muted">{{ auth.currentUser()?.role }}</div>
         <div class="opt" (click)="menu.close()">View Profile</div>
         <div class="opt" (click)="menu.close()">Account Settings</div>
+        <div class="opt" (click)="logout()">Sign out</div>
       </ng-container>
     </app-header-dropdown>
-
-    <button type="button" class="hdr-btn focus-ring" [attr.aria-label]="'header.logout' | transloco" (click)="logout()">
-      <app-icon name="logout" />
-    </button>
   </div>
 </header>

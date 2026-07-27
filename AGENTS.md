@@ -293,8 +293,13 @@ instead.
     sheet; CDK's own overlay backdrops use its own classes instead),
     `--header-height`/`--statusbar-height` (the header and status bar's own
     fixed heights, also read by `RailNavComponent` to offset its mobile/
-    tablet drawer between them). Add a token like these when a literal is
-    genuinely shared across components, not per-component.
+    tablet drawer between them), `--rail-width-collapsed`/`--rail-width-expanded`
+    (the left nav's icon-only/expanded desktop widths — config-driven via
+    `sizes.railWidthCollapsed`/`railWidthExpanded`, see "Layout Config"; the
+    mobile/tablet off-canvas drawer width stays a local one-off in
+    `rail-nav.component.scss` since that's a distinct overlay behavior, not
+    the same reserved-column concept). Add a token like these when a literal
+    is genuinely shared across components, not per-component.
 - Responsive breakpoints live in `src/styles/_breakpoints.scss`:
   `@include bp.mobile { }` (<768px) and `@include bp.tablet-down { }`
   (<1024px). Use these mixins, not ad hoc `@media` queries, so every
