@@ -1,5 +1,10 @@
 @use '../field-shell' as shell;
 
+// One-off dimensions specific to this component — named rather than bare
+// literals, but not promoted to global tokens since nothing else reuses them.
+$input-min-width: 80px; // so the free-text input never gets crushed by wrapped chips
+$suggestions-max-height: 200px;
+
 :host {
   display: block;
 }
@@ -8,7 +13,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--space-3);
 }
 .label {
   @include shell.field-label;
@@ -17,34 +22,34 @@
 .control-frame {
   @include shell.control-frame;
   flex-wrap: wrap;
-  min-height: 38px;
-  padding: 5px 8px;
-  row-gap: 5px;
+  min-height: var(--control-height);
+  padding: var(--space-3) var(--space-4);
+  row-gap: var(--space-3);
 
   input {
     @include shell.control-reset;
-    min-width: 80px;
+    min-width: #{$input-min-width};
   }
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: var(--space-3);
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 3px 6px 3px 9px;
-  border-radius: 99px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
   flex-shrink: 0;
 }
 .chip-remove {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 15px;
-  height: 15px;
+  width: var(--space-8);
+  height: var(--space-8);
   border-radius: 50%;
   cursor: pointer;
 
@@ -58,20 +63,20 @@
   top: 100%;
   left: 0;
   right: 0;
-  margin-top: 4px;
+  margin-top: var(--space-2);
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 4px;
+  padding: var(--space-2);
   z-index: 10;
-  max-height: 200px;
+  max-height: #{$suggestions-max-height};
   overflow-y: auto;
 }
 .suggestion {
-  padding: 7px 10px;
-  border-radius: 6px;
-  font-size: 13px;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
   color: var(--text);
   cursor: pointer;
 

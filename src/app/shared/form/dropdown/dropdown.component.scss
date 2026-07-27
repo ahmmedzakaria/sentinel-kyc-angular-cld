@@ -1,3 +1,9 @@
+// One-off panel dimensions specific to this component's compact select-style
+// panel — not shared with any other Tier 2 control, so named locally rather
+// than promoted to a global token (see _tokens.scss's --panel-max-height-sm
+// for the value this *does* share with MultiSelect).
+$panel-min-width: 180px;
+
 :host {
   display: block;
 }
@@ -5,27 +11,27 @@
 .dropdown-field {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--space-3);
 }
 .label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-muted);
 }
 
 .trigger {
-  height: 38px;
-  border-radius: 7px;
+  height: var(--control-height);
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--paper);
   color: var(--text);
-  padding: 0 10px 0 12px;
-  font-size: 13.5px;
+  padding: 0 var(--space-5) 0 var(--space-6);
+  font-size: var(--font-size-base);
   font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-4);
   cursor: pointer;
   width: 100%;
   text-align: start;
@@ -34,7 +40,7 @@
     border-color: var(--text-muted);
   }
   &:disabled {
-    opacity: 0.6;
+    opacity: var(--opacity-disabled);
     cursor: default;
   }
   &.invalid {
@@ -55,34 +61,34 @@
     transition: transform 0.15s;
   }
   .chev.open {
-    transform: rotate(180deg);
+    transform: rotate(var(--rotate-open));
   }
 }
 
 .error {
-  font-size: 11.5px;
+  font-size: var(--font-size-xs);
   color: var(--red);
 }
 
 .dropdown-panel {
-  min-width: 180px;
-  max-height: 280px;
+  min-width: #{$panel-min-width};
+  max-height: var(--panel-max-height-sm);
   overflow-y: auto;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 4px;
+  padding: var(--space-2);
 }
 
 .option {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  font-size: 13.5px;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
   color: var(--text);
   cursor: pointer;
 
@@ -91,7 +97,7 @@
   }
   &.selected {
     color: var(--accent);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
   }
   &.disabled {
     color: var(--text-muted);

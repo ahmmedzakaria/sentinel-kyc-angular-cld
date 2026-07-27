@@ -1,3 +1,8 @@
+// One-off panel min-width specific to this component's compact select-style
+// panel — not shared with any other Tier 2 control (see _tokens.scss's
+// --panel-max-height-sm for the dimension this *does* share with Dropdown).
+$panel-min-width: 200px;
+
 :host {
   display: block;
 }
@@ -5,26 +10,26 @@
 .ms-field {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--space-3);
 }
 .label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-muted);
 }
 
 .trigger {
-  min-height: 38px;
-  border-radius: 7px;
+  min-height: var(--control-height);
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--paper);
   color: var(--text);
-  padding: 5px 10px;
-  font-size: 13.5px;
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--font-size-base);
   font-family: inherit;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-4);
   cursor: pointer;
   width: 100%;
   text-align: start;
@@ -33,7 +38,7 @@
     border-color: var(--text-muted);
   }
   &:disabled {
-    opacity: 0.6;
+    opacity: var(--opacity-disabled);
     cursor: default;
   }
   &.invalid {
@@ -49,33 +54,33 @@
     margin-inline-start: auto;
   }
   .chev.open {
-    transform: rotate(180deg);
+    transform: rotate(var(--rotate-open));
   }
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: var(--space-3);
   flex: 1;
 }
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: var(--space-3);
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 3px 6px 3px 9px;
-  border-radius: 99px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
 }
 .chip-remove {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 15px;
-  height: 15px;
+  width: var(--space-8);
+  height: var(--space-8);
   border-radius: 50%;
   cursor: pointer;
 
@@ -85,28 +90,28 @@
 }
 
 .error {
-  font-size: 11.5px;
+  font-size: var(--font-size-xs);
   color: var(--red);
 }
 
 .dropdown-panel {
-  min-width: 200px;
-  max-height: 280px;
+  min-width: #{$panel-min-width};
+  max-height: var(--panel-max-height-sm);
   overflow-y: auto;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 4px;
+  padding: var(--space-2);
 }
 
 .option {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  font-size: 13.5px;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
   color: var(--text);
   cursor: pointer;
 
@@ -119,18 +124,18 @@
   }
 }
 .check-box {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: 4px; // below the smallest scale step (--radius-sm, 6px) — deliberately tighter for this compact square
   border: 1.5px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
   flex-shrink: 0;
 
   &.checked {
     background: var(--accent);
     border-color: var(--accent);
+    color: var(--on-accent);
   }
 }

@@ -195,6 +195,14 @@ $shadow-tint: #121821;
   --control-height: var(--space-19); // 38px — Button, Textbox, Password-group, header search/select
   --control-height-sm: var(--space-18); // 36px — header chrome icon buttons/pills
 
+  // Tier 2 form controls' floating-panel dimensions — not on the --space-*
+  // scale (280/260/320 aren't 2px-unit steps), but each recurs across ≥2
+  // Tier 2 components' dropdown/calendar overlays, so named here rather than
+  // duplicated as a separate literal per component.
+  --panel-max-height-sm: 280px; // Dropdown, MultiSelect — compact select-style panels
+  --panel-width-md: 260px; // DropdownAsync(Scrollable), DatePicker, DateRangePicker — search/calendar panels
+  --panel-max-height-md: 320px; // DropdownAsync, DropdownAsyncScrollable
+
   // Typography weight scale — a primitive, not derived from anything else.
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -216,6 +224,24 @@ $shadow-tint: #121821;
   --font-size-lg: calc(var(--font-size-base) * 1.33); // ~18px
   --font-size-xl: calc(var(--font-size-base) * 1.63); // ~22px
   --font-size-2xl: calc(var(--font-size-base) * 1.93); // ~26px
+
+  // Opacity scale — hand-picked intensity levels (not derived from a
+  // primitive), same theme-independent constant across all 7 themes like
+  // --shadow/--overlay-backdrop. Distinct from opacity 0/1 used for fade
+  // toggles (rail labels, toast enter/exit, visually-hidden native inputs)
+  // or the flex-reset/percentage idioms — those are structural endpoints
+  // with only one correct value, not a tunable design decision, so they
+  // stay literal rather than referencing these.
+  --opacity-disabled: 0.6; // disabled buttons/inputs/Tier 1-2 form controls
+  --opacity-muted: 0.55; // de-emphasized but still visible — DatePicker/DateRangePicker's other-month days
+  --opacity-disabled-strong: 0.35; // disabled *and* de-emphasized — DatePicker/DateRangePicker's disabled days
+
+  // A disclosure chevron's open-state rotation — recurs identically across
+  // every Tier 2 dropdown-style control's `.chev`/`.chevron`, so named here
+  // rather than duplicated per component. (A spin animation's `rotate(360deg)`
+  // keyframe end-state isn't included here — "one full turn" has only one
+  // correct value, the same reasoning as opacity 0/1 above.)
+  --rotate-open: 180deg;
 }
 
 body.dark {

@@ -298,8 +298,17 @@ instead.
     `sizes.railWidthCollapsed`/`railWidthExpanded`, see "Layout Config"; the
     mobile/tablet off-canvas drawer width stays a local one-off in
     `rail-nav.component.scss` since that's a distinct overlay behavior, not
-    the same reserved-column concept). Add a token like these when a literal
-    is genuinely shared across components, not per-component.
+    the same reserved-column concept), `--panel-max-height-sm` (280px —
+    Dropdown/MultiSelect's compact select-style panels), `--panel-width-md`
+    (260px — DropdownAsync/DropdownAsyncScrollable/DatePicker/DateRangePicker's
+    search/calendar panels), `--panel-max-height-md` (320px — DropdownAsync/
+    DropdownAsyncScrollable). Add a token like these when a literal is
+    genuinely shared across components, not per-component — each panel
+    dimension above started as a duplicated literal in ≥2 Tier 2 form
+    controls before being promoted here; a dimension that's still only used
+    by one component (e.g. Dropdown's own 180px panel `min-width`,
+    MultiSelect's 200px) stays a local `$variable` in that component's own
+    stylesheet instead.
 - Responsive breakpoints live in `src/styles/_breakpoints.scss`:
   `@include bp.mobile { }` (<768px) and `@include bp.tablet-down { }`
   (<1024px). Use these mixins, not ad hoc `@media` queries, so every
