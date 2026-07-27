@@ -1,59 +1,51 @@
 <div class="toolbar">
-  <div class="count">{{ people().length }} record{{ people().length === 1 ? '' : 's' }}</div>
-  <button type="button" appButton (click)="openCreate()">
-    <app-icon name="plus" [size]="14" />
-    Add Person
-  </button>
+  <div class="count">{{ total() }} record{{ total() === 1 ? '' : 's' }}</div>
+  <div class="toolbar-actions">
+    <app-export-button [rows]="pageRows()" [columns]="exportColumns" filename="people" label="Export CSV" />
+    <button type="button" appButton (click)="openCreate()">
+      <app-icon name="plus" [size]="14" />
+      Add Person
+    </button>
+  </div>
 </div>
 
-<table class="people-table">
-  <tr>
-    <th>Photo</th>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Mobile</th>
-    <th>Gender</th>
-    <th>Education</th>
-    <th></th>
-  </tr>
-  @for (p of people(); track p.id) {
-    <tr>
-      <td>
-        <div class="thumb">
-          @if (p.photoUrl) {
-            <img [src]="p.photoUrl" alt="" />
-          } @else {
-            <span>{{ p.firstName[0] }}{{ p.lastName[0] }}</span>
-          }
-        </div>
-      </td>
-      <td class="name">{{ p.firstName }} {{ p.lastName }}</td>
-      <td class="muted">{{ p.email }}</td>
-      <td class="muted">{{ p.mobile }}</td>
-      <td>{{ p.gender }}</td>
-      <td>{{ p.education }}</td>
-      <td class="row-actions">
-        <button type="button" class="icon-btn focus-ring" aria-label="Edit" (click)="openEdit(p)">
-          <app-icon name="pencil" [size]="14" />
-        </button>
-        <button type="button" class="icon-btn danger focus-ring" aria-label="Delete" (click)="confirmDelete(p)">
-          <app-icon name="trash" [size]="14" />
-        </button>
-      </td>
-    </tr>
-  } @empty {
-    <tr>
-      <td colspan="7" class="empty-cell">
-        <app-empty-state icon="users" title="No records yet" message="Add your first person to get started.">
-          <button type="button" appButton (click)="openCreate()">
-            <app-icon name="plus" [size]="14" />
-            Add Person
-          </button>
-        </app-empty-state>
-      </td>
-    </tr>
-  }
-</table>
+<app-filter-bar class="filters" [searchTypes]="searchTypes" placeholder="Search by name or email…" (searched)="onSearch($event)" />
+
+<app-data-table
+  [columns]="columns()"
+  [data]="pageRows()"
+  [sort]="sort()"
+  [page]="page()"
+  [pageSize]="pageSize"
+  [total]="total()"
+  emptyTitle="No records yet"
+  emptyMessage="Add your first person to get started."
+  (sortChange)="onSortChange($event)"
+  (pageChange)="onPageChange($event)"
+>
+  <ng-template #photoCell let-p>
+    <div class="thumb">
+      @if (p.photoUrl) {
+        <img [src]="p.photoUrl" alt="" />
+      } @else {
+        <span>{{ p.firstName[0] }}{{ p.lastName[0] }}</span>
+      }
+    </div>
+  </ng-template>
+  <ng-template #nameCell let-p>
+    <span class="name">{{ p.firstName }} {{ p.lastName }}</span>
+  </ng-template>
+  <ng-template #actionsCell let-p>
+    <div class="row-actions">
+      <button type="button" class="icon-btn focus-ring" aria-label="Edit" (click)="openEdit(p)">
+        <app-icon name="pencil" [size]="14" />
+      </button>
+      <button type="button" class="icon-btn danger focus-ring" aria-label="Delete" (click)="confirmDelete(p)">
+        <app-icon name="trash" [size]="14" />
+      </button>
+    </div>
+  </ng-template>
+</app-data-table>
 
 <app-modal [open]="formOpen()" [title]="editing() ? 'Edit Person' : 'Add Person'" [width]="520" (closed)="closeForm()">
   <app-person-form [person]="editing()" [submitting]="saving()" (save)="save($event)" (cancel)="closeForm()" />

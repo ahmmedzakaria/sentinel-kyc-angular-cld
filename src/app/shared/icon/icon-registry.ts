@@ -53,5 +53,9 @@ export const ICONS: Record<string, string> = {
   calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/>',
   eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
   'eye-off': '<path d="M3 3l18 18" stroke-linecap="round"/><path d="M10.6 5.2A10.7 10.7 0 0112 5c6.5 0 10 7 10 7a17 17 0 01-3.5 4.3M6.6 6.6C4 8.3 2 12 2 12s3.5 7 10 7a9.7 9.7 0 004.2-.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.9 9.9a3 3 0 004.2 4.2" stroke-linecap="round" stroke-linejoin="round"/>',
-  star: '<path d="M12 3.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17.4l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3.5z" stroke-linejoin="round"/>'
+  star: '<path d="M12 3.5l2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17.4l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3.5z" stroke-linejoin="round"/>',
+  filter: '<path d="M4 5h16l-6 8v6l-4 2v-8L4 5z" stroke-linecap="round" stroke-linejoin="round"/>',
+  download: '<path d="M12 4v11M7.5 11.5L12 16l4.5-4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke-linecap="round" stroke-linejoin="round"/>',
+  'chevrons-left': '<path d="M12 6l-6 6 6 6M19 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/>',
+  'chevrons-right': '<path d="M12 6l6 6-6 6M5 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>'
 };

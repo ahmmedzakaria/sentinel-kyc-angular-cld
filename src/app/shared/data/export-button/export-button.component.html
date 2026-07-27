@@ -1,0 +1,4 @@
+<button type="button" appButton variant="ghost" [disabled]="!rows().length" (click)="runExport()">
+  <app-icon name="download" [size]="14" />
+  {{ label() }}
+</button>

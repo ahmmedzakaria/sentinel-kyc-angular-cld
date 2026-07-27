@@ -29,6 +29,9 @@ body {
 
 // Focus ring used across interactive elements — see shared/a11y.scss usage in components.
 .focus-ring:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: -2px;
+  outline: var(--border-width-thick) solid var(--focus);
+  // -2px isn't one of the two named outline-offset tokens (-1px flush / 2px
+  // detached) — it's this global utility's own value, computed from the
+  // detached step rather than a third near-duplicate token.
+  outline-offset: calc(var(--outline-offset-detached) * -1);
 }

@@ -379,7 +379,21 @@ This document is now detailed enough to start Phase 1. In order:
 | Tabs | ✅ Built (no existing screen to retrofit yet) | `shared/layout/tabs/tabs.component.ts` |
 | ConfirmDialog | ✅ Built, retrofitted into people-list's delete confirmation | `shared/feedback/confirm-dialog/confirm-dialog.component.ts` |
 | **Tier 3: complete.** | | |
+| Pagination | ✅ Built, retrofitted into people-list | `shared/data/pagination/pagination.component.ts` |
+| SearchToolbar | ✅ Built, retrofitted into people-list (via FilterBar) | `shared/data/search-toolbar/search-toolbar.component.ts` |
+| FilterBar | ✅ Built, retrofitted into people-list | `shared/data/filter-bar/filter-bar.component.ts` |
+| DataTable | ✅ Built, retrofitted into people-list (replaced its hand-rolled `<table>`) | `shared/data/data-table/data-table.component.ts` |
+| ExportButton | ✅ Built (CSV strategy only — no `EXPORT_PDF_STRATEGY` provided yet), retrofitted into people-list | `shared/data/export-button/export-button.component.ts` |
+| **Tier 4: complete.** | | |
 | Everything else in this document | 📋 Planned, not yet built | — |
+
+Tier 4 notes:
+- **DataTable never sorts or paginates `data` itself** — `sort`/`page`/`total` are inputs the consumer owns (its own signal), `sortChange`/`pageChange` are just change *requests*. Same "value in, change event out" shape as every CVA-based form control in this app, rather than a second state-management pattern. `page`/`total` are both optional and nullable — omit them to skip rendering the internal Pagination control entirely (a small in-memory list has no need for it).
+- **Row actions reuse the `cellTemplate` mechanism, not a separate content-projection slot.** `<ng-content>` only inserts once per component instance, not once per row, so it can't represent "one action cell per row" — a column with `header: ''` and a `cellTemplate` rendering Edit/Delete buttons does. `ColumnDef.key` was widened from the original `keyof T & string` sketch to `(keyof T & string) | string` for exactly this reason: a purely presentational column (a photo thumbnail, row actions) has no backing field on `T` to key against.
+- **`toggleSort()` cycles asc → desc → none** (not just asc ↔ desc) per §11's stated test focus — clicking a third time returns to unsorted. `SortState.direction` is `'asc' | 'desc' | 'none'`, a genuine third state (not just an absent `sort` input), so `aria-sort="none"` can be reported correctly per §8's DataTable a11y requirement.
+- **FilterBar composes SearchToolbar, it doesn't reimplement it** — its own `search-toolbar.component.ts` output had to be named `searched`, not `search` (the literal name in the §5 API description), since `@angular-eslint/no-output-native` flags any output colliding with a real DOM event name.
+- **ExportButton's CSV path has no dependency** — `csv-export.ts` is pure functions (`buildCsv`/`csvEscape`/`formatCell`), unit-tested without TestBed, same reasoning as DatePicker's `date-utils.ts`. The PDF path is fully decoupled per §7/§14.1: `EXPORT_PDF_STRATEGY` is an `InjectionToken`; with no provider, `format="pdf"` shows a toast instead of silently failing. No PDF provider exists yet in this app — first real PDF export screen will drive which library gets wired in.
+- **Retrofitted `people-list`** (§6 phase 4's target): its hand-rolled `<table>` became `<app-data-table>`, the delete-confirmation's inline empty-table markup was already `<app-empty-state>` (Tier 3), search/sort/pagination are now real (client-side, since `PeopleService` still returns its full in-memory array) instead of absent, and CSV export was net-new (there was nothing to replace).
 
 Tier 3 notes:
 - **Pill is the generic building block; StatusBadge is a thin preset on top of it**, mapping a closed `StatusTone` union to `{tone, label}` via a `Record<StatusTone, …>` — exhaustive by construction, since adding a new `StatusTone` member without a matching entry is a TypeScript compile error, not a silent runtime fallback (per §11's stated test focus for this component).

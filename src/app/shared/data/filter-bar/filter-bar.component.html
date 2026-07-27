@@ -1,0 +1,28 @@
+<div class="filter-bar">
+  <div class="filter-row">
+    <app-search-toolbar class="search-slot" [searchTypes]="searchTypes()" [placeholder]="placeholder()" (searched)="onSearch($event)" />
+    <div class="extra-filters">
+      <ng-content></ng-content>
+    </div>
+    @if (chips().length) {
+      <button type="button" class="clear-btn focus-ring" (click)="clearAll()">Clear all</button>
+    }
+  </div>
+  @if (chips().length) {
+    <div class="chips">
+      @for (chip of chips(); track chip.key) {
+        <span class="chip">
+          {{ chip.label }}
+          <button
+            type="button"
+            class="chip-remove focus-ring"
+            [attr.aria-label]="'Remove filter ' + chip.label"
+            (click)="removeChip(chip.key)"
+          >
+            <app-icon name="close" [size]="11" />
+          </button>
+        </span>
+      }
+    </div>
+  }
+</div>

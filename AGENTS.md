@@ -125,10 +125,19 @@ npm run build
   `shared/breadcrumb` — small standalone building blocks used app-wide
 - `shared/form/*` — Tier 1/2 form controls (CVA-based, extend
   `BaseValueAccessor`); `shared/feedback/*` and `shared/layout/tabs` — Tier 3
-  feedback/layout components. See `COMPONENT_LIBRARY_PLAN.md` for what's built,
-  what's planned, and the design reasoning behind each one — read it before
-  adding a new shared component so you don't duplicate something already
-  scoped there.
+  feedback/layout components; `shared/data/*` — Tier 4 data/list composites
+  (`Pagination`, `SearchToolbar`, `FilterBar`, `DataTable`, `ExportButton`).
+  DataTable is presentational only — it never sorts/paginates `data` itself,
+  the consumer owns `sort`/`page`/`total` as its own state and DataTable just
+  emits change *requests* (`sortChange`/`pageChange`), the same "value in,
+  change event out" shape as every CVA-based form control. Row actions and
+  any non-trivial cell content go through `ColumnDef.cellTemplate`
+  (`TemplateRef`, grabbed via `viewChild()` in the consumer), not a
+  `<ng-content>` slot — content projection only inserts once per component
+  instance, not once per row. See `COMPONENT_LIBRARY_PLAN.md` for what's
+  built, what's planned, and the design reasoning behind each one — read it
+  before adding a new shared component so you don't duplicate something
+  already scoped there.
 - `layout/*` — `AppShellComponent`, `HeaderComponent`, `RailNavComponent`,
   `MegaPanelComponent`, `StatusBarComponent` — only mounted for authenticated
   routes
@@ -460,7 +469,21 @@ instead.
   generic class's default type parameter — you get `SomeGenericComponent<unknown>`
   unless you write `TestBed.createComponent<SomeGenericComponent<string>>(SomeGenericComponent)`.
   This matters for every Tier 2 generic form control (`Dropdown`,
-  `DropdownAsync`, `DropdownAsyncScrollable`, `MultiSelect`, `RadioGroup`).
+  `DropdownAsync`, `DropdownAsyncScrollable`, `MultiSelect`, `RadioGroup`) and
+  for `DataTableComponent<T>`/`ExportButtonComponent<T>`.
+- **jsdom does not implement the Blob URL API** (`URL.createObjectURL`/
+  `URL.revokeObjectURL`) — a spec that exercises a real file-download path
+  (`ExportButtonComponent`'s CSV export) must stub both directly
+  (`window.URL.createObjectURL = vi.fn(...)`) before calling the code under
+  test, same reasoning/pattern as the `matchMedia` gotcha above.
+- **An `output()` name that collides with a real DOM event fails lint**
+  (`@angular-eslint/no-output-native`), not just at authoring time but for
+  any name you'd reach for instinctively — `search`, `change`, `input`,
+  `focus`, `blur`, `scroll`, `error`, `load`, `submit`, `reset`, `select`,
+  `drag`/`drop` variants, etc. are all real DOM events, and are all
+  disallowed as-is. `SearchToolbarComponent.search` had to become `searched`
+  for this reason — reach for a past-tense or otherwise DOM-disjoint name up
+  front instead of hitting this at lint time.
 - Run the narrowest meaningful check before completing work:
 
 ```bash
