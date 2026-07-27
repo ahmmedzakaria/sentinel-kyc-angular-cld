@@ -30,8 +30,8 @@
   cursor: inherit;
 
   &:focus-visible ~ .box {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--border-width-thick) solid var(--focus);
+    outline-offset: var(--outline-offset-detached);
   }
 }
 
@@ -39,7 +39,7 @@
   position: absolute;
   inset: 0;
   border-radius: var(--radius-sm);
-  border: 1.5px solid var(--border);
+  border: var(--border-width-md) solid var(--border);
   background: var(--card);
   display: flex;
   align-items: center;

@@ -14,7 +14,7 @@
   font-weight: var(--font-weight-semibold);
   font-family: inherit;
   cursor: pointer;
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   transition:
     background 0.15s,
     border-color 0.15s,
@@ -26,8 +26,8 @@
     cursor: default;
   }
   &:focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--border-width-thick) solid var(--focus);
+    outline-offset: var(--outline-offset-detached);
   }
 }
 
@@ -72,7 +72,7 @@
     width: var(--space-7);
     height: var(--space-7);
     border-radius: 50%;
-    border: 2px solid currentColor;
+    border: var(--border-width-thick) solid currentColor;
     border-top-color: transparent;
     // Spinner ring color needs to contrast against whichever variant's own
     // background it's spinning on top of — --on-accent covers .btn-primary

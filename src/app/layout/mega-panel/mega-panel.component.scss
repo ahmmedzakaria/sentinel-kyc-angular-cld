@@ -15,7 +15,7 @@ $hero-icon-font-size: 48px;
 
 .mega-panel {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: var(--border-width-thin) solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   width: min(#{$panel-width-desktop}, calc(100vw - #{$rail-clearance-desktop}));
@@ -49,7 +49,7 @@ $hero-icon-font-size: 48px;
 
   .mega-context {
     border-inline-end: none;
-    border-bottom: 1px solid var(--border);
+    border-bottom: var(--border-width-thin) solid var(--border);
     padding-inline-end: 0;
     padding-bottom: var(--space-8);
   }
@@ -64,7 +64,7 @@ $hero-icon-font-size: 48px;
 }
 
 .mega-context {
-  border-inline-end: 1px solid var(--border);
+  border-inline-end: var(--border-width-thin) solid var(--border);
   padding-inline-end: var(--space-10);
 }
 .mega-context-art {
@@ -79,7 +79,7 @@ $hero-icon-font-size: 48px;
 
   .group-icon {
     font-size: #{$hero-icon-font-size};
-    line-height: 1;
+    line-height: var(--line-height-tight);
   }
 }
 .mega-context-title {
@@ -90,7 +90,7 @@ $hero-icon-font-size: 48px;
 }
 .mega-context-note {
   font-size: var(--font-size-sm);
-  line-height: 1.45;
+  line-height: var(--line-height-base);
   color: var(--text-muted);
 }
 

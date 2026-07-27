@@ -1,11 +1,11 @@
 .confirm-message {
-  font-size: 13.5px;
-  line-height: 1.5;
-  margin: 0 0 18px;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  margin: 0 0 var(--space-9);
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--space-4);
 }

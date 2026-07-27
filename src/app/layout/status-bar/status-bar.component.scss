@@ -9,7 +9,7 @@
   justify-content: space-between;
   padding: 0 var(--space-8);
   font-size: var(--font-size-xs);
-  border-top: 1px solid var(--chrome-border);
+  border-top: var(--border-width-thin) solid var(--chrome-border);
   gap: var(--space-6);
   transition:
     background 0.2s,

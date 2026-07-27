@@ -21,7 +21,7 @@ $panel-min-width: 200px;
 .trigger {
   min-height: var(--control-height);
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: var(--border-width-thin) solid var(--border);
   background: var(--paper);
   color: var(--text);
   padding: var(--space-3) var(--space-5);
@@ -99,7 +99,7 @@ $panel-min-width: 200px;
   max-height: var(--panel-max-height-sm);
   overflow-y: auto;
   background: var(--card);
-  border: 1px solid var(--border);
+  border: var(--border-width-thin) solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: var(--space-2);
@@ -127,7 +127,7 @@ $panel-min-width: 200px;
   width: var(--space-8);
   height: var(--space-8);
   border-radius: 4px; // below the smallest scale step (--radius-sm, 6px) — deliberately tighter for this compact square
-  border: 1.5px solid var(--border);
+  border: var(--border-width-md) solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;

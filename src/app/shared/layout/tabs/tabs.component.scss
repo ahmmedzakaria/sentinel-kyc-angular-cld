@@ -4,24 +4,24 @@
 
 .tablist {
   display: flex;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 14px;
+  border-bottom: var(--border-width-thin) solid var(--border);
+  margin-bottom: var(--space-7);
 }
 
 .tab {
   border: none;
   background: transparent;
   color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
   font-family: inherit;
-  padding: 9px 4px;
-  margin-bottom: -1px;
-  border-bottom: 2px solid transparent;
+  padding: var(--space-5) var(--space-2);
+  margin-bottom: -1px; // overlaps .tablist's border-bottom so the active tab's own border replaces it, not a spacing step
+  border-bottom: var(--border-width-thick) solid transparent;
   cursor: pointer;
 
   & + & {
-    margin-inline-start: 18px;
+    margin-inline-start: var(--space-9);
   }
 
   &:hover:not(.disabled) {
@@ -32,7 +32,7 @@
     border-bottom-color: var(--accent);
   }
   &.disabled {
-    opacity: 0.5;
+    opacity: var(--opacity-muted);
     cursor: default;
   }
 }

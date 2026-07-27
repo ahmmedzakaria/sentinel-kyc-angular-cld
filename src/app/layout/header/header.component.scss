@@ -25,7 +25,7 @@ header {
   display: flex;
   align-items: center;
   padding: 0 var(--space-9);
-  border-bottom: 1px solid var(--chrome-border-strong);
+  border-bottom: var(--border-width-thin) solid var(--chrome-border-strong);
   gap: var(--space-10);
   transition:
     background 0.2s,
@@ -86,7 +86,7 @@ header.icon-view .brand-text {
   align-items: center;
   gap: var(--space-1);
   background: var(--chrome-search-bg);
-  border: 1px solid var(--chrome-search-border);
+  border: var(--border-width-thin) solid var(--chrome-search-border);
   border-radius: var(--radius-md);
   height: var(--control-height);
   width: 100%;
@@ -99,7 +99,7 @@ header.icon-view .brand-text {
     color: var(--chrome-icon);
     font-size: var(--font-size-sm);
     height: var(--control-height);
-    border-inline-end: 1px solid var(--chrome-search-border);
+    border-inline-end: var(--border-width-thin) solid var(--chrome-search-border);
     padding-inline-end: var(--space-5);
   }
   input {
@@ -209,8 +209,8 @@ header.icon-view .hdr-pill {
   height: var(--space-7);
   border-radius: 50%;
   box-shadow:
-    0 0 0 2px var(--chrome-bg),
-    0 0 0 3px var(--chrome-border);
+    0 0 0 var(--border-width-thick) var(--chrome-bg),
+    0 0 0 var(--border-width-accent) var(--chrome-border);
 }
 .badge {
   position: absolute;
@@ -227,7 +227,7 @@ header.icon-view .hdr-pill {
   align-items: center;
   justify-content: center;
   padding: 0 var(--space-2);
-  border: 2px solid var(--chrome-bg);
+  border: var(--border-width-thick) solid var(--chrome-bg);
 }
 .favorite-count {
   position: absolute;
@@ -244,8 +244,8 @@ header.icon-view .hdr-pill {
   align-items: center;
   justify-content: center;
   padding: 0 var(--space-2);
-  border: 2px solid var(--chrome-bg);
-  line-height: 1;
+  border: var(--border-width-thick) solid var(--chrome-bg);
+  line-height: var(--line-height-tight);
 }
 
 .avatar {
@@ -276,7 +276,7 @@ header.icon-view .hdr-pill {
 // is what portaled overlay content actually needs.
 ::ng-deep .hdr-dropdown {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: var(--border-width-thin) solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow);
   min-width: #{$dropdown-min-width};
@@ -412,7 +412,7 @@ header.icon-view .hdr-pill {
     .name {
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-medium);
-      line-height: 1.25;
+      line-height: var(--line-height-snug);
     }
   }
 }
@@ -467,7 +467,7 @@ header.icon-view .hdr-pill {
       right: 0;
       padding: var(--space-3) var(--space-4);
       background: var(--chrome-bg);
-      border-bottom: 1px solid var(--chrome-border-strong);
+      border-bottom: var(--border-width-thin) solid var(--chrome-border-strong);
       box-shadow: var(--shadow);
       z-index: 41; // above rail-nav's mega-panel/backdrop, below the rail drawer itself
     }

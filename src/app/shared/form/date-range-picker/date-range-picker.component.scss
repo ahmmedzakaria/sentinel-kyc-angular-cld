@@ -16,7 +16,7 @@
 .trigger {
   height: var(--control-height);
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: var(--border-width-thin) solid var(--border);
   background: var(--paper);
   color: var(--text);
   padding: 0 var(--space-6);
@@ -53,7 +53,7 @@
 
 .dp-panel {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: var(--border-width-thin) solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow);
   padding: var(--space-6);

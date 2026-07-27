@@ -40,7 +40,7 @@ $rail-drawer-width: 260px; // mobile/tablet off-canvas drawer
   width: var(--rail-width-collapsed);
   background: var(--chrome-bg);
   color: var(--chrome-text);
-  border-inline-end: 1px solid var(--chrome-border);
+  border-inline-end: var(--border-width-thin) solid var(--chrome-border);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -92,7 +92,7 @@ $rail-drawer-width: 260px; // mobile/tablet off-canvas drawer
   align-items: center;
   padding-inline-start: var(--space-10);
   cursor: pointer;
-  border-bottom: 1px solid var(--chrome-border);
+  border-bottom: var(--border-width-thin) solid var(--chrome-border);
   color: var(--chrome-text-muted);
   flex-shrink: 0;
 
@@ -118,7 +118,7 @@ $rail-drawer-width: 260px; // mobile/tablet off-canvas drawer
   color: var(--chrome-icon);
   font-family: inherit;
   text-align: start;
-  border-inline-start: 3px solid transparent;
+  border-inline-start: var(--border-width-accent) solid transparent;
 
   .lbl {
     font-size: var(--font-size-base);
@@ -148,7 +148,7 @@ $rail-drawer-width: 260px; // mobile/tablet off-canvas drawer
 
   .emoji-icon {
     font-size: var(--font-size-md);
-    line-height: 1;
+    line-height: var(--line-height-tight);
     flex-shrink: 0;
   }
   &.open,
@@ -213,7 +213,7 @@ $rail-drawer-width: 260px; // mobile/tablet off-canvas drawer
   margin: var(--space-4) var(--space-5) var(--space-5);
   padding: var(--space-4) var(--space-5);
   border-radius: var(--radius);
-  border: 1px dashed var(--chrome-border);
+  border: var(--border-width-thin) dashed var(--chrome-border);
   background: transparent;
   color: var(--chrome-text-muted);
   font-size: var(--font-size-sm);

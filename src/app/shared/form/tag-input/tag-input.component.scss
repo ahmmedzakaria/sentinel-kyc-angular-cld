@@ -65,7 +65,7 @@ $suggestions-max-height: 200px;
   right: 0;
   margin-top: var(--space-2);
   background: var(--card);
-  border: 1px solid var(--border);
+  border: var(--border-width-thin) solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: var(--space-2);

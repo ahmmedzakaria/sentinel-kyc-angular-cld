@@ -1,5 +1,10 @@
 @use '../field-shell' as shell;
 
+// One-off border-width specific to this component's "filled dot" technique
+// (a thick colored ring around a card-colored center) — not shared with any
+// other control, so named locally rather than promoted to the shared scale.
+$dot-checked-border-width: 5px;
+
 :host {
   display: block;
 }
@@ -55,8 +60,8 @@
   cursor: inherit;
 
   &:focus-visible ~ .dot {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--border-width-thick) solid var(--focus);
+    outline-offset: var(--outline-offset-detached);
   }
 }
 
@@ -64,11 +69,11 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1.5px solid var(--border);
+  border: var(--border-width-md) solid var(--border);
   background: var(--card);
 
   &.checked {
     border-color: var(--accent);
-    border-width: 5px;
+    border-width: #{$dot-checked-border-width};
   }
 }

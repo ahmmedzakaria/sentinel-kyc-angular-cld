@@ -5,17 +5,17 @@
 .pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
-  border-radius: 99px;
-  font-size: 12px;
-  font-weight: 600;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
 
   &::before {
     content: '';
-    width: 6px;
-    height: 6px;
+    width: var(--space-3);
+    height: var(--space-3);
     border-radius: 50%;
     flex-shrink: 0;
   }

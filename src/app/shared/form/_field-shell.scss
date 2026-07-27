@@ -14,13 +14,13 @@
   align-items: center;
   gap: var(--space-4);
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: var(--border-width-thin) solid var(--border);
   background: var(--paper);
   transition: border-color 0.15s;
 
   &:focus-within {
-    outline: 2px solid var(--focus);
-    outline-offset: -1px;
+    outline: var(--border-width-thick) solid var(--focus);
+    outline-offset: var(--outline-offset-flush);
   }
   &.invalid {
     border-color: var(--red);

@@ -232,8 +232,8 @@ $shadow-tint: #121821;
   // or the flex-reset/percentage idioms — those are structural endpoints
   // with only one correct value, not a tunable design decision, so they
   // stay literal rather than referencing these.
-  --opacity-disabled: 0.6; // disabled buttons/inputs/Tier 1-2 form controls
-  --opacity-muted: 0.55; // de-emphasized but still visible — DatePicker/DateRangePicker's other-month days
+  --opacity-disabled: 0.6; // disabled buttons/inputs/Tier 1-2 form controls; also EmptyState's de-emphasized icon (same visual weight, different reason)
+  --opacity-muted: 0.55; // de-emphasized but still visible/interactive — DatePicker/DateRangePicker's other-month days, Tabs' disabled tab (0.5 in the original markup, close enough to snap onto this step — same ~tolerance already accepted for size values)
   --opacity-disabled-strong: 0.35; // disabled *and* de-emphasized — DatePicker/DateRangePicker's disabled days
 
   // A disclosure chevron's open-state rotation — recurs identically across
@@ -242,6 +242,31 @@ $shadow-tint: #121821;
   // keyframe end-state isn't included here — "one full turn" has only one
   // correct value, the same reasoning as opacity 0/1 above.)
   --rotate-open: 180deg;
+
+  // Line-height scale — unitless multipliers, hand-picked like the opacity
+  // scale above (not derived from a primitive). `line-height: 1`/`normal`
+  // for a single glyph (an emoji/icon with nothing to lead between) is a
+  // structural "no extra leading" value, not a tunable one, so --line-height-tight
+  // is really just a named alias for readability at the call site rather
+  // than a genuine design decision the way the other three are.
+  --line-height-tight: 1; // single-line icon/glyph/numeral — rail-nav emoji, mega-panel group icon, header badge count
+  --line-height-snug: 1.25; // compact wrapped label — header's app-tile name
+  --line-height-base: 1.4; // compact body copy — tooltip/banner/inline-alert messages, mega-panel context note (1.45 in the original markup, snapped onto this step)
+  --line-height-relaxed: 1.5; // standard paragraph copy — Textarea, ConfirmDialog message, EmptyState message
+
+  // Border/outline-width scale — hand-picked constants, not derived from
+  // --space-unit (hairline widths follow their own scale, independent of
+  // layout spacing). --border-width-thin is the overwhelming default: nearly
+  // every panel/control/divider border in this app. Genuinely one-off widths
+  // (RadioGroup's checked-dot 5px border-width trick) stay a local SCSS
+  // $variable in that component instead of joining this scale.
+  --border-width-thin: 1px;
+  --border-width-md: 1.5px; // Checkbox/RadioGroup/MultiSelect's unchecked option ring
+  --border-width-thick: 2px; // avatar/badge ring, focus outline, spinner ring, header swatch's inner ring
+  --border-width-accent: 3px; // accent-stripe indicators — Banner's left bar, rail-nav's active-row indicator, header swatch's outer ring
+
+  --outline-offset-flush: -1px; // ring sits flush against the control's own border — text inputs
+  --outline-offset-detached: 2px; // ring floats outside the control — checkbox/radio dot, buttons
 }
 
 body.dark {

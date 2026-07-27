@@ -15,13 +15,17 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     `
       .tooltip-panel {
         display: inline-block;
-        max-width: 240px;
-        padding: 6px 10px;
+        /* 240px is a one-off for this bubble, not on the --space-* scale —
+           computed from the primitive rather than a bare literal. Plain CSS
+           here (Angular inline component styles aren't Sass-processed), so
+           var()/calc() rather than a $variable. */
+        max-width: calc(var(--space-unit) * 120);
+        padding: var(--space-3) var(--space-5);
         background: var(--text);
         color: var(--paper);
-        font-size: 12px;
-        line-height: 1.4;
-        border-radius: 6px;
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-base);
+        border-radius: var(--radius-sm);
         box-shadow: var(--shadow);
         pointer-events: none;
       }

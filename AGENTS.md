@@ -14,19 +14,46 @@ diff against it rather than guessing at intent.
 These apply to every change in this app, regardless of what area of the code
 it touches:
 
-- **Never hardcode a size, color, or font value that already has a token.**
-  Colors go through `src/styles/_tokens.scss`'s custom properties (`--accent`,
-  `--text-muted`, `--border`, etc.); spacing/padding/margin/gap goes through
-  `--space-1`…`--space-16`; border-radius goes through `--radius-sm`/
-  `--radius`/`--radius-md`/`--radius-lg`/`--radius-pill`; font-size goes
-  through `--font-size-3xs`…`--font-size-2xl`. If a real value doesn't land on
-  an existing token, that's a signal to add one (see the mixing
-  functions/scale in `_tokens.scss`) — not to drop back to a bare literal. The
-  only accepted exception is a genuinely bespoke, one-off element dimension
-  (a specific icon's width/height, the header's fixed 58px height) — a
-  deliberate size for one specific element, not a reusable spacing/type
-  relationship. See "Styling And UI" below for the full token list and the
-  rounding tradeoffs already made when the existing app was migrated onto it.
+- **Never hardcode a value in a `.scss` file (or a component's inline
+  `styles:` array) — always use a variable or a calculated expression.**
+  This applies to every numeric or color literal, not just the "obvious"
+  ones: size (spacing/width/height/max-width/min-width), color, border-radius,
+  border/outline width, font-size, font-weight, line-height, opacity, and
+  transform/rotation all go through `src/styles/_tokens.scss`'s custom
+  properties — `--accent`/`--text-muted`/`--border`/etc. for color,
+  `--space-1`…`--space-32` for spacing/sizing, `--radius-sm`…`--radius-pill`
+  for border-radius, `--border-width-thin`…`--border-width-accent` +
+  `--outline-offset-flush`/`--outline-offset-detached` for borders/outlines,
+  `--font-size-3xs`…`--font-size-2xl` for type size, `--font-weight-normal`…
+  `--font-weight-bold` for weight, `--line-height-tight`…
+  `--line-height-relaxed` for leading, `--opacity-disabled`/`--opacity-muted`/
+  `--opacity-disabled-strong` for opacity, `--rotate-open` for the disclosure-
+  chevron rotation. If a real value doesn't land on an existing token, that's
+  a signal to add one (see the mixing functions/scale in `_tokens.scss`) —
+  not to drop back to a bare literal. See "Styling And UI" below for the full
+  token list and the rounding tradeoffs already made when the existing app
+  was migrated onto it.
+  - **A genuinely one-off value still isn't a bare literal** — name it as a
+    local SCSS `$variable` in that component's own stylesheet (e.g. the
+    mega-panel's `$panel-width-desktop: 790px`, RadioGroup's
+    `$dot-checked-border-width: 5px`) rather than typing the number directly
+    into a rule. Promote it to a global `_tokens.scss` custom property once a
+    second component needs the same value — see "Styling And UI" for
+    examples of dimensions that crossed that line (`--panel-width-md` etc.).
+    A component's inline `styles: [...]` array (not a `.scss` file) isn't
+    Sass-processed, so `$variables` don't work there — use `var()`/`calc()`
+    instead (both are native CSS), e.g. `calc(var(--space-unit) * 120)`.
+  - **The only literals that stay bare** are structural/mathematical
+    constants with exactly one correct value, not a tunable design decision:
+    `opacity: 0`/`1` (fade toggles), a spin animation's `rotate(360deg)`
+    keyframe end-state, `translateX(-100%)`/`translateX(0)` (fully off/onscreen
+    slide extremes), percentages and viewport units (`%`/`vh`/`vw`), the
+    flex-reset idiom (`min-width: 0`/`min-height: 0`), `border-style` keywords
+    (`solid`/`dashed`/`none`), `z-index` stacking values, and transition/
+    animation *durations* (`0.15s`, etc. — timing isn't on any scale in this
+    app yet). If you're unsure whether a value is "structural" or a real
+    design decision, default to tokenizing it — this app's history is
+    corrections in that direction, not the reverse.
 - **Every new or touched UI must work at mobile, tablet, and desktop.** Use
   the shared breakpoints in `src/styles/_breakpoints.scss`
   (`@include bp.mobile { }` / `@include bp.tablet-down { }`) rather than
@@ -268,6 +295,38 @@ instead.
     `--font-weight-semibold` (600), `--font-weight-bold` (700). Never hardcode
     a numeric `font-weight` — the four steps cover every weight this app
     actually uses.
+  - Opacity → `--opacity-disabled` (0.6), `--opacity-muted` (0.55),
+    `--opacity-disabled-strong` (0.35) — hand-picked intensity levels, same
+    "snap to the nearest existing step" tolerance as the size scale (e.g.
+    Tabs' originally-0.5 disabled state snapped onto `--opacity-muted`).
+    **Not** every `opacity` needs one of these: `opacity: 0`/`1` used for
+    fade toggles (rail labels, toast enter/exit, visually-hidden native
+    `<input>`s in Checkbox/RadioGroup) are structural endpoints with only one
+    correct value, not a tunable design decision, so they stay literal.
+  - Rotation → `--rotate-open` (180deg), the disclosure-chevron open state
+    shared by every Tier 2 dropdown-style control's `.chev`/`.chevron`. A
+    spin animation's `rotate(360deg)` keyframe end-state is **not** tokenized
+    for the same reason as opacity 0/1 above — "one full turn" has only one
+    correct value.
+  - Line-height → `--line-height-tight` (1, single-line icon/glyph/numeral),
+    `--line-height-snug` (1.25), `--line-height-base` (1.4, compact body
+    copy — near-duplicate originals like 1.45 snap onto this step, same
+    tolerance as the size/opacity scales), `--line-height-relaxed` (1.5,
+    standard paragraph copy). Unitless multipliers, hand-picked like the
+    opacity scale, not derived from a primitive.
+  - Border/outline width → `--border-width-thin` (1px, the overwhelming
+    default for every panel/control/divider border), `--border-width-md`
+    (1.5px — Checkbox/RadioGroup/MultiSelect's unchecked option ring),
+    `--border-width-thick` (2px — avatar/badge ring, focus outline, spinner
+    ring, header swatch's inner box-shadow ring), `--border-width-accent`
+    (3px — Banner's left accent bar, rail-nav's active-row indicator,
+    header swatch's outer box-shadow ring). Pair with `--outline-offset-flush`
+    (-1px, ring flush against the control's own border — text inputs) or
+    `--outline-offset-detached` (2px, ring floats outside — checkbox/radio
+    dot, buttons) for `outline-offset`. A genuinely one-off border-width used
+    by exactly one component (RadioGroup's 5px "filled dot" trick) stays a
+    local `$variable` instead of joining this scale — same rule as one-off
+    panel dimensions.
   - `--control-height` (38px, i.e. `var(--space-19)`) and `--control-height-sm`
     (36px, `var(--space-18)`) are semantic aliases for the two recurring
     interactive-control heights (inputs, buttons, header pills/icon-buttons) —
@@ -327,6 +386,23 @@ instead.
   appended to `<body>` — it is **not** a DOM descendant of the host component
   anymore. Styling it requires a genuinely global rule (`::ng-deep` without
   `:host`, as `header.component.scss` already does), not scoped component CSS.
+- A component's inline `styles: [...]` array (`TooltipPanelComponent`, e.g.)
+  is **not** Sass-processed — it's plain CSS, so SCSS `$variables`/`@use`
+  don't work there. `var(--token)` and `calc(...)` still work fine (they're
+  native CSS, not Sass features), so a one-off dimension that would normally
+  get a local `$variable` in a `.scss` file instead gets computed inline,
+  e.g. `calc(var(--space-unit) * 120)`.
+- A component that accepts projected content (`<ng-content>`) and also
+  supplies *default* fallback markup inside that `<ng-content>` tag — see
+  `ConfirmDialogComponent`'s `<p class="confirm-message">` default — only
+  gets its own component stylesheet applied to that fallback when nothing is
+  projected. Once a consumer projects its own content (every current
+  `app-confirm-dialog` usage does), Angular's emulated view encapsulation
+  scopes the projected element's classes to the *consumer's* stylesheet, not
+  the child component's — a class name matching the child's CSS is a
+  coincidence, not a guarantee it's styled. Don't assume a `.scss` rule is
+  reaching projected content without checking who actually declared the
+  projected markup.
 - CDK connected-overlay content anchored to a *row inside a scrollable list*
   (e.g. a drawer) breaks once that row can be scrolled near the viewport
   edge — there may be no room in the anchored direction to render into.
