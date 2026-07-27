@@ -14,15 +14,20 @@ import { AuthService } from '../../core/services/auth.service';
 import { NavTreeStateService } from '../../core/services/nav-tree-state.service';
 import { QuickNavItem, QuickNavService } from '../../core/services/quick-nav.service';
 import { FavoriteNavService } from '../../core/services/favorite-nav.service';
+import { LayoutConfigService } from '../../core/services/layout-config.service';
+import { HeaderAppTile, HeaderLanguage } from '../../core/models/layout-config.model';
 import { ThemeId } from '../../core/models/theme.model';
 import { ToastService } from '../../shared/toast/toast.service';
 
-interface AppTile {
-  name: string;
-  icon: string;
-}
+/**
+ * Fallback header content used before LayoutConfigService's config has
+ * loaded — kept in sync with (and a 1:1 copy of) layout-config.json's
+ * `header` section, same reasoning as theme.model.ts's DEFAULT_THEMES.
+ */
+const DEFAULT_SEARCH_TYPES = ['Customer Name', 'National ID', 'Passport', 'Phone', 'Case Number', 'T Code'];
+const TCODE_SEARCH_TYPE = 'T Code';
 
-const SSO_APPS: AppTile[] = [
+const DEFAULT_APPS: HeaderAppTile[] = [
   { name: 'Case Management', icon: 'folder' },
   { name: 'Document Vault', icon: 'document' },
   { name: 'Risk Analytics', icon: 'bar-chart' },
@@ -34,8 +39,13 @@ const SSO_APPS: AppTile[] = [
   { name: 'Helpdesk', icon: 'help' }
 ];
 
-const SEARCH_TYPES = ['Customer Name', 'National ID', 'Passport', 'Phone', 'Case Number', 'T Code'] as const;
-const TCODE_SEARCH_TYPE: (typeof SEARCH_TYPES)[number] = 'T Code';
+const DEFAULT_TENANTS = ['Prime Bank Ltd.', 'Northgate Finance', 'Meridian Trust Co.'];
+
+const DEFAULT_LANGUAGES: HeaderLanguage[] = [
+  { code: 'en', label: 'English' },
+  { code: 'bn', label: 'বাংলা' },
+  { code: 'ar', label: 'العربية' }
+];
 
 @Component({
   selector: 'app-header',
@@ -52,6 +62,7 @@ export class HeaderComponent {
   protected readonly auth = inject(AuthService);
   protected readonly quickNav = inject(QuickNavService);
   protected readonly favoriteNav = inject(FavoriteNavService);
+  private readonly layoutConfig = inject(LayoutConfigService);
   private readonly tree = inject(NavTreeStateService);
   private readonly breadcrumb = inject(BreadcrumbService);
   private readonly transloco = inject(TranslocoService);
@@ -68,8 +79,8 @@ export class HeaderComponent {
       .join('');
   });
 
-  protected readonly searchTypes = SEARCH_TYPES;
-  protected readonly searchType = signal<(typeof SEARCH_TYPES)[number]>('Customer Name');
+  protected readonly searchTypes = computed(() => this.layoutConfig.header()?.searchTypes ?? DEFAULT_SEARCH_TYPES);
+  protected readonly searchType = signal('Customer Name');
   protected readonly searchQuery = signal('');
 
   protected readonly isTCodeSearch = computed(() => this.searchType() === TCODE_SEARCH_TYPE);
@@ -85,15 +96,11 @@ export class HeaderComponent {
     this.mobileSearchOpen.update((v) => !v);
   }
 
-  protected readonly apps = SSO_APPS;
-  protected readonly tenants = ['Prime Bank Ltd.', 'Northgate Finance', 'Meridian Trust Co.'];
-  protected readonly activeTenant = signal(this.tenants[0]);
+  protected readonly apps = computed(() => this.layoutConfig.header()?.apps ?? DEFAULT_APPS);
+  protected readonly tenants = computed(() => this.layoutConfig.header()?.tenants ?? DEFAULT_TENANTS);
+  protected readonly activeTenant = signal(this.tenants()[0]);
 
-  protected readonly languages: { code: string; label: string }[] = [
-    { code: 'en', label: 'English' },
-    { code: 'bn', label: 'বাংলা' },
-    { code: 'ar', label: 'العربية' }
-  ];
+  protected readonly languages = computed<HeaderLanguage[]>(() => this.layoutConfig.header()?.languages ?? DEFAULT_LANGUAGES);
 
   runSearch(): void {
     // Desktop-only affordance: clicking search in the collapsed icon rail

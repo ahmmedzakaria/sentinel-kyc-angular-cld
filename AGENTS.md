@@ -77,16 +77,23 @@ npm run build
 
 ## Ownership Rules
 
-- `core/guards` — `authGuard`/`guestGuard`
-- `core/models` — `NavNode`/`NAVIGATION_TREE` (nav-tree.model.ts), theme model,
-  user model, mega-panel context notes
-- `core/services` — signal-based state: `ThemeService`, `RailStateService`,
-  `NavTreeStateService` (activePath/expandedPaths + tree helpers),
-  `MegaPanelService`, `HeaderMenuService`, `DirectionService`,
-  `BreadcrumbService`, `AuthService`, `QuickNavService` (T-code index),
-  `FavoriteNavService` (favorited nav shortcuts), `ViewportService`
-  (reactive `isDesktop()`, for components that need different markup, not
-  just different CSS, per breakpoint)
+- `core/guards` — `authGuard` (also loads the layout config — see "Layout
+  Config" below)/`guestGuard`
+- `core/models` — `NavNode` (nav-tree.model.ts, data now lives in JSON —
+  see "Layout Config"), `layout-config.model.ts` (the full config payload
+  shape), theme model (`ThemeDef`/`DEFAULT_THEMES` fallback), user model,
+  mega-panel context notes
+- `core/theme` — `color-math.ts`, the runtime TS port of `_tokens.scss`'s
+  color-mixing functions (see "Layout Config")
+- `core/services` — signal-based state: `LayoutConfigService` (loads/exposes
+  the layout config — see "Layout Config"), `ThemeService`, `RailStateService`,
+  `NavTreeStateService` (activePath/expandedPaths + tree helpers, tree sourced
+  from `LayoutConfigService`), `MegaPanelService`, `HeaderMenuService`,
+  `DirectionService`, `BreadcrumbService`, `AuthService`, `QuickNavService`
+  (T-code index, built from `LayoutConfigService`'s tree), `FavoriteNavService`
+  (favorited nav shortcuts), `ViewportService` (reactive `isDesktop()`, for
+  components that need different markup, not just different CSS, per
+  breakpoint)
 - `shared/icon`, `shared/toast`, `shared/modal`, `shared/avatar-upload`,
   `shared/breadcrumb` — small standalone building blocks used app-wide
 - `shared/form/*` — Tier 1/2 form controls (CVA-based, extend
@@ -119,28 +126,38 @@ npm run build
 
 ## Navigation Tree
 
-`NAVIGATION_TREE` in `core/models/nav-tree.model.ts` is a 5-level recursive
-tree (Module Group → Module → Category → Feature Group → Feature), ported from
-the POC's `navigationTree`. Currently 11 Module Groups: Banking, Compliance,
-Survey, POS, Health & Medical, Education, E-Commerce, Finance, Administration,
-Security, Reporting.
+The nav tree is a 5-level recursive structure (Module Group → Module →
+Category → Feature Group → Feature), ported from the POC's `navigationTree`.
+Currently 11 Module Groups: Banking, Compliance, Survey, POS, Health &
+Medical, Education, E-Commerce, Finance, Administration, Security, Reporting.
+The tree *data* now lives in `src/assets/config/layout-config.json`'s
+`navTree`, loaded at runtime by `LayoutConfigService` — see "Layout Config"
+below for why and how. `core/models/nav-tree.model.ts` only keeps the
+`NavNode` shape plus `moduleIcon()`/`categoryIcon()`, which are presentation
+logic, not data.
 
-- `categories(operationGroups, setupGroups?, reportGroups?)` — most modules
-  share `DEFAULT_SETUP_GROUPS`/`DEFAULT_REPORT_GROUPS`, but a few (KYC,
-  General Ledger, Accounts Payable/Receivable, HR, Payroll, Fixed Asset) define
-  their own — pass the optional args rather than forcing every module onto the
-  shared defaults.
-- `moduleIcon()`/`categoryIcon()` map a node's label to an icon-registry name
-  by keyword. When adding a module, check the POC's own `moduleIcon()`/
-  `railNodeIcon()` functions for the intended mapping before picking an icon —
-  several are ported onto an *existing* icon-registry entry rather than a new
-  SVG (e.g. KYC/KYB/AML → `id-card`, Finance ledger modules → `bank`).
+- The JSON is generated, not hand-written — `scripts/generate-layout-config.mjs`
+  is a plain-JS port of the tree-builder functions that used to live in
+  `nav-tree.model.ts` (`feature`/`featureGroup`/`categories`/`buildModule`/
+  `moduleGroup`, including `DEFAULT_SETUP_GROUPS`/`DEFAULT_REPORT_GROUPS` and
+  the per-module overrides for KYC/General Ledger/Accounts Payable/
+  Receivable/HR/Payroll/Fixed Asset). To change the tree: edit the script,
+  run `node scripts/generate-layout-config.mjs`, commit the regenerated JSON.
+  Don't hand-edit `navTree` in the JSON directly — the next regeneration would
+  silently overwrite it.
+- `moduleIcon()`/`categoryIcon()` (still in `nav-tree.model.ts`) map a node's
+  label to an icon-registry name by keyword. When adding a module, check the
+  POC's own `moduleIcon()`/`railNodeIcon()` functions for the intended mapping
+  before picking an icon — several are ported onto an *existing* icon-registry
+  entry rather than a new SVG (e.g. KYC/KYB/AML → `id-card`, Finance ledger
+  modules → `bank`).
 - `QuickNavService` builds a flat, code-addressable index over every feature
   leaf (`makeTCode`/`codePart`/`normalizeCode`, ported from the POC) — this is
   what the header's "T Code" search type and the datalist autocomplete use.
-  It's rebuilt from `NAVIGATION_TREE` once per app load; adding/removing/
-  reordering tree nodes changes generated codes, so don't treat a specific
-  T-code as a stable identifier across nav-tree edits.
+  `items` is a computed signal over `LayoutConfigService.navTree()` (empty
+  until config loads); adding/removing/reordering tree nodes changes generated
+  codes, so don't treat a specific T-code as a stable identifier across
+  nav-tree edits.
 - `FavoriteNavService` persists a `Set` of `QuickNavItem.pathKey`s to
   `localStorage`, filtered against `QuickNavService.hasPathKey()` on load so a
   stale favorite (from before a nav-tree change) doesn't linger.
@@ -150,6 +167,64 @@ Security, Reporting.
   favorite toggle instead of the default "Last synced/Audit Logging" info.
   Category-level browsing (mega panel open/hover) only ever sets a 3-length
   path, never 5.
+
+## Layout Config
+
+The header/rail-nav/status-bar chrome's content (nav tree, header dropdown
+lists, status-bar labels) and theme configuration (color primaries, size
+primitives) are loaded at runtime rather than hardcoded, so a real backend can
+serve them post-authentication without an app rebuild. This replaced the
+previously hardcoded `NAVIGATION_TREE`/`THEMES`/header constants — don't
+reintroduce a hardcoded tree or theme list elsewhere; extend the config
+instead.
+
+- **`LayoutConfigService`** (`core/services/layout-config.service.ts`) fetches
+  `LayoutConfig` (`core/models/layout-config.model.ts`) via `HttpClient` and
+  exposes it as signals: `navTree`, `header`, `statusBar`, `themes`, `sizes`
+  (all empty/null until loaded). `ensureLoaded()` fetches-and-caches (safe to
+  call repeatedly; only one HTTP request ever fires); `applyConfig()` is a
+  test-only seam to seed state synchronously without HTTP.
+- **Today** it fetches a static asset, `src/assets/config/layout-config.json`
+  (generated by `scripts/generate-layout-config.mjs` — see "Navigation Tree"
+  above). **Swapping to a real API** once the backend serves this
+  post-authentication is a one-line change to the URL constant in
+  `layout-config.service.ts` — nothing downstream needs to change, since every
+  consumer reads the service's signals, not the URL.
+- **Loaded right after login, before the shell renders**: `authGuard`
+  (`core/guards/auth.guard.ts`) calls `layoutConfig.ensureLoaded()` after
+  confirming the user is authenticated, so `AppShellComponent` (header/rail/
+  status-bar) never mounts against an empty config. It fails soft — a load
+  error still lets navigation proceed, just with the config signals at their
+  empty defaults, rather than locking an authenticated user out.
+- **Theme colors/sizes are computed at runtime, not compile time.**
+  `core/theme/color-math.ts` is a TypeScript port of `_tokens.scss`'s
+  color-mixing functions (`soft-tone`/`muted-tone`/`border-tone`/
+  `surface-tone`/`deepen-tone`/`on-color`) and its `--space-*`/`--radius-*`/
+  `--font-size-*` calc()s. `computeThemeTokens(theme)`/`computeSizeTokens(sizes)`
+  reproduce the exact same formulas from a `ThemeConfigEntry`'s primaries
+  (`text`/`paper`/`card`/`accent`/`amber`/`red`/`success`/`info`) — keep the
+  two in sync if either changes; there's a parity test in
+  `color-math.spec.ts` (Navy's gold accent must resolve to the dark ink
+  foreground, not white — the case that originally motivated `on-color()`).
+  `ThemeService`'s constructor `effect()` calls `applyTokens()` to set the
+  computed result as **inline custom properties on `document.body`** — inline
+  style always outranks a stylesheet rule, so this cleanly overrides
+  `_tokens.scss`'s compiled defaults once config loads, without needing to
+  rip out the SCSS system.
+- **Pre-auth/pre-load fallback**: the login/register pages render outside
+  `authGuard` and never trigger the config load, so `ThemeService`/
+  `HeaderComponent`/`StatusBarComponent` each keep a small `DEFAULT_*`
+  constant (`DEFAULT_THEMES`/`DEFAULT_SIZES` in `theme.model.ts`,
+  `DEFAULT_APPS`/`DEFAULT_TENANTS`/`DEFAULT_LANGUAGES`/`DEFAULT_SEARCH_TYPES`
+  in `header.component.ts`, `DEFAULT_STATUS_BAR` in `status-bar.component.ts`)
+  — a 1:1 copy of the JSON's current values, used via `?? DEFAULT_*` until
+  `LayoutConfigService.loaded()` is true. Keep these in sync with the JSON:
+  if you change a default's *value* in the JSON, update its fallback copy
+  too, in the same change.
+- `NavTreeStateService.tree` and `QuickNavService.items` are both `computed()`
+  signals over `LayoutConfigService.navTree()`, not the array-typed properties
+  they used to be — call them (`.tree()`, `.items()`), don't read them as
+  plain arrays.
 
 ## Styling And UI
 
@@ -248,6 +323,22 @@ Security, Reporting.
 
 ## Testing And Verification
 
+- **Specs touching the nav tree (`NavTreeStateService`, `QuickNavService`,
+  `FavoriteNavService`, or anything that injects them transitively) must seed
+  `LayoutConfigService` first**, or the tree/items signals stay at their
+  empty defaults and every tree-dependent assertion fails. Inject
+  `LayoutConfigService` and call `.applyConfig(layoutConfig as LayoutConfig)`
+  with the real JSON asset imported directly (`import layoutConfig from
+  '.../assets/config/layout-config.json'` — `resolveJsonModule` is on in
+  `tsconfig.json` for exactly this) in a `beforeEach`, rather than mocking a
+  trimmed fixture; that keeps these specs honest against the real tree
+  instead of a hand-maintained stand-in. See
+  `nav-tree-state.service.spec.ts`/`quick-nav.service.spec.ts`/
+  `favorite-nav.service.spec.ts` for the pattern — note
+  `favorite-nav.service.spec.ts`'s persistence test re-applies the config
+  after `TestBed.resetTestingModule()`, since that wipes the seeded state too.
+  `LayoutConfigService.spec.ts` itself is the one spec that *should* exercise
+  the real HTTP path, via `provideHttpClientTesting()`/`HttpTestingController`.
 - **This checkout's directory path must not contain parentheses or spaces.**
   Vitest's glob-based test file discovery silently breaks on literal `(`/`)`
   in the path (they're extglob syntax to picomatch/micromatch) and reports "No

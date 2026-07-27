@@ -21,7 +21,7 @@
   <div class="hdr-center">
     <div class="global-search">
       <select [ngModel]="searchType()" (ngModelChange)="searchType.set($event)" aria-label="Search by">
-        @for (type of searchTypes; track type) {
+        @for (type of searchTypes(); track type) {
           <option [value]="type">{{ type }}</option>
         }
       </select>
@@ -93,7 +93,7 @@
       <ng-container panel>
         <div class="dd-head">Your Apps <span class="sso-tag">SSO</span></div>
         <div class="apps-grid">
-          @for (app of apps; track app.name) {
+          @for (app of apps(); track app.name) {
             <button type="button" class="app-tile focus-ring" (click)="launchApp(app.name)">
               <span class="tile-icon"><app-icon [name]="app.icon" /></span>
               <span class="name">{{ app.name }}</span>
@@ -143,11 +143,11 @@
     <app-header-dropdown id="language" class="hide-xs">
       <button trigger type="button" class="hdr-pill focus-ring" (click)="menu.toggle('language')">
         <span class="icon-wrap"><app-icon name="globe" [size]="15" /></span>
-        <span class="lbl-text">{{ languages[0].label }}</span>
+        <span class="lbl-text">{{ languages()[0].label }}</span>
         <app-icon name="chevron-down" [size]="11" class="chev" />
       </button>
       <ng-container panel>
-        @for (lang of languages; track lang.code) {
+        @for (lang of languages(); track lang.code) {
           <div class="opt" (click)="selectLanguage(lang.code)">{{ lang.label }}<span class="meta">{{ lang.code | uppercase }}</span></div>
         }
       </ng-container>
@@ -168,7 +168,7 @@
       </button>
       <ng-container panel>
         <div class="dd-head">{{ 'header.theme' | transloco }}</div>
-        @for (t of theme.themes; track t.id) {
+        @for (t of theme.themes(); track t.id) {
           <div class="opt" [class.active]="t.id === theme.current().id" (click)="selectTheme(t.id)">
             @if (t.swatch === 'sun' || t.swatch === 'moon') {
               <app-icon [name]="t.swatch" [size]="14" />
@@ -190,7 +190,7 @@
       </button>
       <ng-container panel>
         <div class="dd-head">{{ 'header.tenant' | transloco }}</div>
-        @for (t of tenants; track t) {
+        @for (t of tenants(); track t) {
           <div class="opt" [class.active]="t === activeTenant()" (click)="selectTenant(t)">{{ t }}</div>
         }
       </ng-container>

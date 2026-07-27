@@ -48,7 +48,7 @@ export class RailNavComponent {
     this.treeState.expandedPaths(); // register as a dependency
     const rows: RailRow[] = [];
 
-    this.treeState.tree.forEach((group, groupIndex) => {
+    this.treeState.tree().forEach((group, groupIndex) => {
       const groupPath = [groupIndex];
       rows.push({ path: groupPath, level: 1, node: group });
 

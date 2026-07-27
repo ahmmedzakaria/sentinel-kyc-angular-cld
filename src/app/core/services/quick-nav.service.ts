@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { NAVIGATION_TREE, NavNode } from '../models/nav-tree.model';
+import { Injectable, computed, inject } from '@angular/core';
+import { NavNode } from '../models/nav-tree.model';
+import { LayoutConfigService } from './layout-config.service';
 
 export interface QuickNavItem {
   code: string;
@@ -61,16 +62,20 @@ function buildQuickNavItems(tree: readonly NavNode[]): QuickNavItem[] {
 }
 
 /**
- * Flat, code-addressable index over every feature leaf in NAVIGATION_TREE —
- * ported from the source POC's initQuickNavigation()/makeTCode(). The tree is
- * static, so this is built once; every lookup here is a plain Map read.
+ * Flat, code-addressable index over every feature leaf in the nav tree —
+ * ported from the source POC's initQuickNavigation()/makeTCode(). The tree
+ * now comes from LayoutConfigService rather than a static import, so this
+ * recomputes once the config loads (empty until then); every lookup past
+ * that point is still a plain array/Map read.
  */
 @Injectable({ providedIn: 'root' })
 export class QuickNavService {
-  readonly items: readonly QuickNavItem[] = buildQuickNavItems(NAVIGATION_TREE);
+  private readonly layoutConfig = inject(LayoutConfigService);
 
-  private readonly byCode = new Map(this.items.map((item) => [normalizeCode(item.code), item]));
-  private readonly byPathKey = new Map(this.items.map((item) => [item.pathKey, item]));
+  readonly items = computed<readonly QuickNavItem[]>(() => buildQuickNavItems(this.layoutConfig.navTree()));
+
+  private readonly byCode = computed(() => new Map(this.items().map((item) => [normalizeCode(item.code), item])));
+  private readonly byPathKey = computed(() => new Map(this.items().map((item) => [item.pathKey, item])));
 
   /** Exact code match first, then falls back to a label/path text match — mirrors findTCodeItem(). */
   findByCode(value: string): QuickNavItem | undefined {
@@ -80,8 +85,8 @@ export class QuickNavService {
       return undefined;
     }
     return (
-      this.byCode.get(normalized) ??
-      this.items.find(
+      this.byCode().get(normalized) ??
+      this.items().find(
         (item) =>
           normalizeCode(item.code).includes(normalized) ||
           item.label.toLowerCase().includes(text) ||
@@ -91,11 +96,11 @@ export class QuickNavService {
   }
 
   getByPathKey(pathKey: string): QuickNavItem | undefined {
-    return this.byPathKey.get(pathKey);
+    return this.byPathKey().get(pathKey);
   }
 
   hasPathKey(pathKey: string): boolean {
-    return this.byPathKey.has(pathKey);
+    return this.byPathKey().has(pathKey);
   }
 
   /** Matches for the T-code datalist — mirrors the source POC's renderTCodeList(). */
@@ -106,7 +111,7 @@ export class QuickNavService {
       return [];
     }
     const text = value.toLowerCase();
-    return this.items
+    return this.items()
       .filter(
         (item) =>
           normalizeCode(item.code).includes(normalized) ||

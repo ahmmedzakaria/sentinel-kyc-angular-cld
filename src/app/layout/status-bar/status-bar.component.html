@@ -1,8 +1,8 @@
 <div class="statusbar">
   <div class="sb-group sb-left">
-    <div class="sb-item"><span class="sb-dot"></span> System Operational</div>
+    <div class="sb-item"><span class="sb-dot"></span> {{ statusBar().systemStatusLabel }}</div>
     <div class="sb-div"></div>
-    <div class="sb-item">Env: <span class="sb-tag">Production</span></div>
+    <div class="sb-item">Env: <span class="sb-tag">{{ statusBar().envLabel }}</span></div>
   </div>
 
   <div class="sb-group sb-mid">
@@ -30,6 +30,6 @@
     <div class="sb-div hide-xs"></div>
     <div class="sb-item sb-mono">{{ clock() }}</div>
     <div class="sb-div hide-xs"></div>
-    <div class="sb-item hide-xs">v2.4.1</div>
+    <div class="sb-item hide-xs">{{ statusBar().version }}</div>
   </div>
 </div>

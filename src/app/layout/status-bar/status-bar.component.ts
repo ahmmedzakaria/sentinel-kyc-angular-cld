@@ -3,6 +3,10 @@ import { IconComponent } from '../../shared/icon/icon.component';
 import { NavTreeStateService } from '../../core/services/nav-tree-state.service';
 import { QuickNavService } from '../../core/services/quick-nav.service';
 import { FavoriteNavService } from '../../core/services/favorite-nav.service';
+import { LayoutConfigService } from '../../core/services/layout-config.service';
+
+/** Fallback status-bar content, used before LayoutConfigService's config has loaded — 1:1 copy of layout-config.json's `statusBar`. */
+const DEFAULT_STATUS_BAR = { systemStatusLabel: 'System Operational', envLabel: 'Production', version: 'v2.4.1' };
 
 @Component({
   selector: 'app-status-bar',
@@ -16,7 +20,10 @@ export class StatusBarComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly tree = inject(NavTreeStateService);
   private readonly quickNav = inject(QuickNavService);
+  private readonly layoutConfig = inject(LayoutConfigService);
   protected readonly favoriteNav = inject(FavoriteNavService);
+
+  protected readonly statusBar = computed(() => this.layoutConfig.statusBar() ?? DEFAULT_STATUS_BAR);
 
   protected readonly clock = signal(this.formatTime());
 

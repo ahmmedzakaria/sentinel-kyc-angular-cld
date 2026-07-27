@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { NAVIGATION_TREE, categoryIcon, moduleIcon } from './nav-tree.model';
+import layoutConfig from '../../../assets/config/layout-config.json';
+import { NavNode, categoryIcon, moduleIcon } from './nav-tree.model';
 
-describe('NAVIGATION_TREE', () => {
+// The tree data itself now lives in layout-config.json (see
+// scripts/generate-layout-config.mjs) — these assertions moved with it
+// wholesale so the JSON stays honest about the same invariants the old
+// hardcoded NAVIGATION_TREE was checked against.
+const NAVIGATION_TREE = layoutConfig.navTree as NavNode[];
+
+describe('layout-config.json navTree', () => {
   it('every module orders its categories as Operation, Setup, Report', () => {
     for (const group of NAVIGATION_TREE) {
       for (const mod of group.children ?? []) {

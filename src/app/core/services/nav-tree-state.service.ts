@@ -1,5 +1,6 @@
-import { Injectable, computed, signal } from '@angular/core';
-import { NAVIGATION_TREE, NavNode } from '../models/nav-tree.model';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { NavNode } from '../models/nav-tree.model';
+import { LayoutConfigService } from './layout-config.service';
 
 function pathKey(path: number[]): string {
   return path.join('.');
@@ -11,7 +12,10 @@ function pathsEqual(a: number[], b: number[]): boolean {
 
 @Injectable({ providedIn: 'root' })
 export class NavTreeStateService {
-  readonly tree: readonly NavNode[] = NAVIGATION_TREE;
+  private readonly layoutConfig = inject(LayoutConfigService);
+
+  /** Empty until LayoutConfigService's config loads — see AppShellComponent, which the authGuard only lets render once it has. */
+  readonly tree = computed<readonly NavNode[]>(() => this.layoutConfig.navTree());
 
   /** Path of the currently active node (any depth). Empty = Home/Dashboard. */
   readonly activePath = signal<number[]>([]);
@@ -20,7 +24,7 @@ export class NavTreeStateService {
 
   readonly isExpandedToLevel3 = computed(() => {
     const expanded = this.expandedPaths();
-    return this.tree.every((group, groupIndex) => {
+    return this.tree().every((group, groupIndex) => {
       const groupPath = [groupIndex];
       if (!expanded.has(pathKey(groupPath))) {
         return false;
@@ -30,7 +34,7 @@ export class NavTreeStateService {
   });
 
   getNode(path: number[]): NavNode | undefined {
-    let list: NavNode[] = this.tree as NavNode[];
+    let list: NavNode[] = this.tree() as NavNode[];
     let node: NavNode | undefined;
     for (const index of path) {
       node = list[index];
@@ -41,7 +45,7 @@ export class NavTreeStateService {
 
   getChildren(path: number[]): NavNode[] {
     if (!path.length) {
-      return this.tree as NavNode[];
+      return this.tree() as NavNode[];
     }
     return this.getNode(path)?.children ?? [];
   }
@@ -71,7 +75,7 @@ export class NavTreeStateService {
 
   expandToLevel3(): void {
     const next = new Set<string>();
-    this.tree.forEach((group, groupIndex) => {
+    this.tree().forEach((group, groupIndex) => {
       const groupPath = [groupIndex];
       next.add(pathKey(groupPath));
       (group.children ?? []).forEach((_, moduleIndex) => next.add(pathKey(groupPath.concat(moduleIndex))));
