@@ -1,0 +1,55 @@
+@if (kycCase(); as kycCase) {
+  <div class="header">
+    <div class="header-main">
+      <h1 class="page-title">{{ displayName(kycCase) }}</h1>
+      <div class="header-badges">
+        <app-status-badge [status]="statusTone[kycCase.status]" />
+        <app-pill [label]="kycCase.riskLevel + ' risk'" [tone]="riskTone[kycCase.riskLevel]" />
+      </div>
+    </div>
+    <button type="button" appButton variant="ghost" (click)="editCase()">Edit</button>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">Profile</h2>
+    <div class="profile-grid">
+      @if (kycCase.entityType === 'individual') {
+        <div class="field"><span class="field-label">Full Name</span><span>{{ kycCase.individual?.fullName }}</span></div>
+        <div class="field"><span class="field-label">National ID</span><span>{{ kycCase.individual?.nationalId }}</span></div>
+        <div class="field"><span class="field-label">Date of Birth</span><span>{{ kycCase.individual?.dateOfBirth }}</span></div>
+        <div class="field"><span class="field-label">Nationality</span><span>{{ kycCase.individual?.nationality }}</span></div>
+      } @else {
+        <div class="field"><span class="field-label">Business Name</span><span>{{ kycCase.business?.businessName }}</span></div>
+        <div class="field"><span class="field-label">Registration Number</span><span>{{ kycCase.business?.registrationNumber }}</span></div>
+        <div class="field"><span class="field-label">Trade License Number</span><span>{{ kycCase.business?.tradeLicenseNumber }}</span></div>
+        <div class="field"><span class="field-label">Owner Name</span><span>{{ kycCase.business?.ownerName }}</span></div>
+      }
+      <div class="field"><span class="field-label">Email</span><span>{{ kycCase.email }}</span></div>
+      <div class="field"><span class="field-label">Mobile</span><span>{{ kycCase.mobile }}</span></div>
+      <div class="field wide"><span class="field-label">Address</span><span>{{ kycCase.address }}</span></div>
+      <div class="field"><span class="field-label">Created</span><span>{{ formatDate(asDate(kycCase.createdAt)) }}</span></div>
+      <div class="field"><span class="field-label">Last Updated</span><span>{{ formatDate(asDate(kycCase.updatedAt)) }}</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">Documents</h2>
+    <app-document-list [documents]="documentItems()" [removable]="false" (itemClick)="openDocument($event)" />
+  </div>
+
+  @if (kycCase.status === 'pending') {
+    <div class="card">
+      <h2 class="card-title">Review Decision</h2>
+      <app-approval-actions [loading]="deciding()" (decided)="decide($event)" />
+    </div>
+  }
+
+  <div class="card">
+    <h2 class="card-title">Activity</h2>
+    <app-activity-feed [entries]="activityEntries()" />
+  </div>
+
+  <app-viewer [open]="viewerOpen()" [source]="viewerSource()" (closed)="closeViewer()" />
+} @else {
+  <p class="not-found">Case not found.</p>
+}

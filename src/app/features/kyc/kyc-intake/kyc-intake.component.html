@@ -1,0 +1,153 @@
+<h1 class="page-title">{{ id() ? 'Edit Customer' : 'Customer Registration' }}</h1>
+
+<app-wizard finishLabel="Submit" (finished)="finish()">
+  <app-wizard-step label="Customer Details" [form]="step1Form">
+    <form class="step-form" [formGroup]="step1Form">
+      <app-radio-group [options]="entityTypeOptions" label="Entity Type" layout="row" formControlName="entityType" />
+
+      @if (isIndividual()) {
+        <div class="row two">
+          <app-textbox
+            label="Full Name"
+            placeholder="Jane Doe"
+            formControlName="fullName"
+            [errorMessage]="step1Form.controls.fullName.touched && step1Form.controls.fullName.invalid ? 'Full name is required.' : null"
+          />
+          <app-textbox
+            label="National ID"
+            placeholder="NID-XXXXXXXXXX"
+            formControlName="nationalId"
+            [errorMessage]="step1Form.controls.nationalId.touched && step1Form.controls.nationalId.invalid ? 'National ID is required.' : null"
+          />
+        </div>
+        <div class="row two">
+          <app-date-picker label="Date of Birth" formControlName="dateOfBirth" [max]="today" />
+          <app-textbox
+            label="Nationality"
+            placeholder="Bangladeshi"
+            formControlName="nationality"
+            [errorMessage]="step1Form.controls.nationality.touched && step1Form.controls.nationality.invalid ? 'Nationality is required.' : null"
+          />
+        </div>
+      } @else {
+        <div class="row two">
+          <app-textbox
+            label="Business Name"
+            placeholder="Novatrade Ltd."
+            formControlName="businessName"
+            [errorMessage]="step1Form.controls.businessName.touched && step1Form.controls.businessName.invalid ? 'Business name is required.' : null"
+          />
+          <app-textbox
+            label="Registration Number"
+            placeholder="REG-XXXXXX"
+            formControlName="registrationNumber"
+            [errorMessage]="step1Form.controls.registrationNumber.touched && step1Form.controls.registrationNumber.invalid ? 'Registration number is required.' : null"
+          />
+        </div>
+        <div class="row two">
+          <app-textbox
+            label="Trade License Number"
+            placeholder="TL-XXXX-XXXX"
+            formControlName="tradeLicenseNumber"
+            [errorMessage]="step1Form.controls.tradeLicenseNumber.touched && step1Form.controls.tradeLicenseNumber.invalid ? 'Trade license number is required.' : null"
+          />
+          <app-textbox
+            label="Owner Name"
+            placeholder="Jane Doe"
+            formControlName="ownerName"
+            [errorMessage]="step1Form.controls.ownerName.touched && step1Form.controls.ownerName.invalid ? 'Owner name is required.' : null"
+          />
+        </div>
+      }
+
+      <div class="row two">
+        <app-textbox
+          label="Email"
+          type="email"
+          placeholder="name@example.com"
+          formControlName="email"
+          [errorMessage]="step1Form.controls.email.touched && step1Form.controls.email.invalid ? 'Enter a valid email address.' : null"
+        />
+        <app-textbox
+          label="Mobile"
+          type="tel"
+          placeholder="+880 1XXX XXXXXX"
+          formControlName="mobile"
+          [errorMessage]="step1Form.controls.mobile.touched && step1Form.controls.mobile.invalid ? 'Enter a valid mobile number.' : null"
+        />
+      </div>
+
+      <app-textarea
+        label="Address"
+        placeholder="Street, area, city"
+        formControlName="address"
+        [errorMessage]="step1Form.controls.address.touched && step1Form.controls.address.invalid ? 'Address is required.' : null"
+      />
+    </form>
+  </app-wizard-step>
+
+  <app-wizard-step label="Document Capture" [form]="documentsControl">
+    <div class="step-form">
+      <div class="upload-row">
+        <app-dropdown
+          [options]="documentTypeOptions"
+          label="Document Type"
+          [ngModel]="newDocumentType()"
+          (ngModelChange)="onDocumentTypeChange($event)"
+        />
+        <label class="file-picker focus-ring">
+          <app-icon name="plus" [size]="14" />
+          Add Document
+          <input type="file" accept="image/*,application/pdf" (change)="onFileSelected($event)" />
+        </label>
+      </div>
+
+      <app-document-list [documents]="newDocuments()" [removable]="true" (itemRemove)="removeDocument($event)" />
+    </div>
+  </app-wizard-step>
+
+  <app-wizard-step label="Risk Classification" [form]="riskControl">
+    <div class="step-form">
+      <app-radio-group [options]="riskLevelOptions" label="Risk Level" [formControl]="riskControl" />
+    </div>
+  </app-wizard-step>
+
+  <app-wizard-step label="Review & Submit">
+    <div class="step-form review">
+      <div class="review-row">
+        <span class="review-label">Entity Type</span>
+        <app-pill [label]="isIndividual() ? 'Individual' : 'Business'" tone="neutral" [dot]="false" />
+      </div>
+
+      @if (isIndividual()) {
+        <div class="review-row"><span class="review-label">Full Name</span><span>{{ step1Form.controls.fullName.value }}</span></div>
+        <div class="review-row"><span class="review-label">National ID</span><span>{{ step1Form.controls.nationalId.value }}</span></div>
+        <div class="review-row"><span class="review-label">Date of Birth</span><span>{{ formatDate(step1Form.controls.dateOfBirth.value) }}</span></div>
+        <div class="review-row"><span class="review-label">Nationality</span><span>{{ step1Form.controls.nationality.value }}</span></div>
+      } @else {
+        <div class="review-row"><span class="review-label">Business Name</span><span>{{ step1Form.controls.businessName.value }}</span></div>
+        <div class="review-row"><span class="review-label">Registration Number</span><span>{{ step1Form.controls.registrationNumber.value }}</span></div>
+        <div class="review-row"><span class="review-label">Trade License Number</span><span>{{ step1Form.controls.tradeLicenseNumber.value }}</span></div>
+        <div class="review-row"><span class="review-label">Owner Name</span><span>{{ step1Form.controls.ownerName.value }}</span></div>
+      }
+
+      <div class="review-row"><span class="review-label">Email</span><span>{{ step1Form.controls.email.value }}</span></div>
+      <div class="review-row"><span class="review-label">Mobile</span><span>{{ step1Form.controls.mobile.value }}</span></div>
+      <div class="review-row"><span class="review-label">Address</span><span>{{ step1Form.controls.address.value }}</span></div>
+      <div class="review-row">
+        <span class="review-label">Documents</span>
+        <span>{{ newDocuments().length }} attached</span>
+      </div>
+      <div class="review-row">
+        <span class="review-label">Risk Level</span>
+        @if (riskControl.value; as risk) {
+          <app-pill [label]="risk" [tone]="riskTone[risk]" />
+        }
+      </div>
+
+      @if (saving()) {
+        <p class="saving-note">Submitting…</p>
+      }
+    </div>
+  </app-wizard-step>
+</app-wizard>

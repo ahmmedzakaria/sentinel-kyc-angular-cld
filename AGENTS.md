@@ -150,13 +150,30 @@ npm run build
   Tier 1's `_field-shell.scss`. None of Tier 5 has an existing screen to
   retrofit into yet. See `COMPONENT_LIBRARY_PLAN.md` for the full design
   reasoning.
+- `shared/media/*` — Tier 6 document/media components (`ImagePreview`,
+  `DocumentList`, `Viewer` + `viewer-strategy.ts`). Built against a real
+  screen (the KYC module below), not speculatively — see
+  `COMPONENT_LIBRARY_PLAN.md`'s Tier 6 notes. `Viewer` wraps `ModalComponent`,
+  so its content is CDK-portaled to `<body>`: specs must query
+  `document.querySelector(...)`, not `fixture.nativeElement.querySelector(...)`
+  (same gotcha as Dropdown/overlay panels below). `VIEWER_PDF_STRATEGY`
+  mirrors `EXPORT_PDF_STRATEGY` — a component `Type` rendered via
+  `NgComponentOutlet`, `inject(..., { optional: true })`, no provider yet.
 - `layout/*` — `AppShellComponent`, `HeaderComponent`, `RailNavComponent`,
   `MegaPanelComponent`, `StatusBarComponent` — only mounted for authenticated
   routes
 - `features/*` — routed screens (`auth/login`, `auth/register`, `dashboard`,
-  `people`). Only `Dashboard` and `Customers > List` are wired into
+  `people`, `kyc`). `Dashboard`, `Customers > List`, and the KYC module
+  (`kyc/list`, `kyc/new`, `kyc/:id/edit`, `kyc/:id`) are wired into
   `app.routes.ts` today; everything else in the nav tree updates
-  breadcrumb/title only until a real screen is built for it.
+  breadcrumb/title only until a real screen is built for it. `features/kyc/*`
+  covers both individual and business entity types in one `KycCase` model
+  (`entityType` discriminates which of `individual`/`business` is non-null) —
+  see `kyc-case.model.ts`'s `displayName()` for the one place that branch
+  logic lives. `kyc-detail` reads the active case via a `computed()` over
+  `KycCaseService`'s own signal (`list().find(...)`), not a route-resolved
+  snapshot, so an approval decision or document upload updates the screen
+  immediately.
 
 ## Angular Rules
 
@@ -171,6 +188,11 @@ npm run build
   HeaderDropdown) use CDK `Overlay` — `GlobalPositionStrategy` for centered
   dialogs (Modal), connected/anchored positioning for triggers (Dropdown,
   Tooltip, HeaderDropdown).
+- `provideRouter(routes, withComponentInputBinding())` is on — a route's
+  `:id` (etc.) param is available as a plain `readonly id = input<string>();`
+  on the routed component, not via manually injected `ActivatedRoute`. Used
+  by `kyc-intake`/`kyc-detail`; prefer it for any new routed component that
+  needs a param.
 
 ## Navigation Tree
 

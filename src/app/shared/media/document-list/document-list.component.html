@@ -1,0 +1,25 @@
+<ul class="document-list">
+  @for (doc of documents(); track doc.id) {
+    <li class="document-item">
+      <div
+        class="doc-row focus-ring"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="'Preview ' + doc.name"
+        (click)="itemClick.emit(doc)"
+        (keydown.enter)="itemClick.emit(doc)"
+      >
+        <app-image-preview class="doc-thumb" [src]="doc.thumbnail ?? ''" [alt]="doc.name" />
+        <div class="doc-info">
+          <div class="doc-name">{{ doc.name }}</div>
+          <app-status-badge [status]="doc.status" />
+        </div>
+      </div>
+      @if (removable()) {
+        <button type="button" class="remove-btn focus-ring" [attr.aria-label]="'Remove ' + doc.name" (click)="itemRemove.emit(doc)">
+          <app-icon name="trash" [size]="14" />
+        </button>
+      }
+    </li>
+  }
+</ul>

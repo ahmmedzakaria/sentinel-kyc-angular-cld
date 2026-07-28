@@ -1,0 +1,34 @@
+<div class="image-preview">
+  <div class="main">
+    @if (activeSrc(); as src) {
+      <img [src]="src" [alt]="alt()" />
+    } @else {
+      <div class="placeholder">
+        <app-icon name="document" [size]="32" />
+      </div>
+    }
+    @if (isGallery()) {
+      <button type="button" class="nav-btn prev focus-ring" aria-label="Previous image" (click)="prev()">
+        <app-icon name="chevron-left" [size]="16" />
+      </button>
+      <button type="button" class="nav-btn next focus-ring" aria-label="Next image" (click)="next()">
+        <app-icon name="chevron-right" [size]="16" />
+      </button>
+    }
+  </div>
+  @if (isGallery()) {
+    <div class="thumbs">
+      @for (img of images(); track img; let i = $index) {
+        <button
+          type="button"
+          class="thumb focus-ring"
+          [class.active]="i === activeIndex()"
+          [attr.aria-label]="'Show image ' + (i + 1)"
+          (click)="selectImage(i)"
+        >
+          <img [src]="img" alt="" />
+        </button>
+      }
+    </div>
+  }
+</div>

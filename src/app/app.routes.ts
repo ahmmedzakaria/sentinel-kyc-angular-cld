@@ -30,8 +30,27 @@ export const routes: Routes = [
         path: 'customers/list',
         loadComponent: () =>
           import('./features/people/people-list/people-list.component').then((m) => m.PeopleListComponent)
+      },
+      // Literal segments (kyc/list, kyc/new) must precede the parameterized kyc/:id
+      // routes below — Angular matches array order, so kyc/:id would otherwise
+      // shadow kyc/new.
+      {
+        path: 'kyc/list',
+        loadComponent: () => import('./features/kyc/kyc-list/kyc-list.component').then((m) => m.KycListComponent)
+      },
+      {
+        path: 'kyc/new',
+        loadComponent: () => import('./features/kyc/kyc-intake/kyc-intake.component').then((m) => m.KycIntakeComponent)
+      },
+      {
+        path: 'kyc/:id/edit',
+        loadComponent: () => import('./features/kyc/kyc-intake/kyc-intake.component').then((m) => m.KycIntakeComponent)
+      },
+      {
+        path: 'kyc/:id',
+        loadComponent: () => import('./features/kyc/kyc-detail/kyc-detail.component').then((m) => m.KycDetailComponent)
       }
-      // KYC and Admin feature areas, and the remaining Customers sub-items, get their
+      // Admin feature areas, and the remaining Customers sub-items, get their
       // own lazy-loaded routes here following the same loadComponent pattern.
     ]
   }

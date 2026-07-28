@@ -392,7 +392,19 @@ This document is now detailed enough to start Phase 1. In order:
 | ActivityFeed | ✅ Built (no existing screen to retrofit yet) | `shared/workflow/activity-feed/activity-feed.component.ts` |
 | CaseThread | ✅ Built (no existing screen to retrofit yet) | `shared/workflow/case-thread/case-thread.component.ts` |
 | **Tier 5: complete.** | | |
+| Image-preview | ✅ Built, retrofitted into the KYC module (document thumbnails + Viewer) | `shared/media/image-preview/image-preview.component.ts` |
+| DocumentList | ✅ Built, retrofitted into KYC intake (editable) and KYC detail (read-only) | `shared/media/document-list/document-list.component.ts` |
+| Viewer | ✅ Built (image path only — no `VIEWER_PDF_STRATEGY` provided yet), retrofitted into KYC detail | `shared/media/viewer/viewer.component.ts` + `viewer-strategy.ts` |
+| **Tier 6: complete.** | | |
 | Everything else in this document | 📋 Planned, not yet built | — |
+
+Tier 6 notes:
+- **Built against a real screen, closing the loop on this tier's own caveat** — §6 explicitly held Tier 6 for "a real screen (KYC Document Upload) rather than speculatively." The KYC module (`features/kyc/*`) is that screen: intake's Document Capture step and the case detail page are genuine, non-speculative consumers of all three components, not a standalone spec-only build like Tier 5.
+- **Image-preview is not AvatarUploadComponent** — rectangular (not circular), no initials fallback (a generic document icon instead), and supports a `string[]` gallery mode with prev/next + thumbnail strip, none of which AvatarUploadComponent needed for its single-circular-photo use case.
+- **Viewer's `VIEWER_PDF_STRATEGY` has no factory default** (unlike a token with `{ factory: () => null }`) — `inject(VIEWER_PDF_STRATEGY, { optional: true })` returns `null` when nothing is provided, same effective behavior, one less token argument. No PDF provider exists yet in this app (same as ExportButton's `EXPORT_PDF_STRATEGY` today); Viewer falls back to an inline message + a plain download link rather than a silently-broken preview.
+- **DocumentList's `removable` toggle drives both KYC screens off one component** — the intake wizard's Document Capture step (`removable=true`) and the case detail page (`removable=false`) are the same component, not two near-duplicates. Removal only applies to documents added during the current wizard session (temporary negative IDs) — `KycCaseService` has no document-removal endpoint, so already-persisted documents aren't shown as removable anywhere.
+- **Modal-portaled content needs `document.querySelector`, not `fixture.nativeElement.querySelector`, in specs** — `ViewerComponent` wraps `ModalComponent`, whose content is portaled by CDK Overlay to a global `.cdk-overlay-container` on `<body>`, the same gotcha already documented for Dropdown/overlay panels (see AGENTS.md).
+- **`StatusTone` (Tier 3) was extended with `rejected`/`escalated`** to cover `KycCase.status`, rather than inventing a parallel badge vocabulary — the `Record<StatusTone, …>` in `StatusBadgeComponent` makes an unmapped tone a compile error, so this was a required, not optional, addition.
 
 Tier 5 notes:
 - **No retrofit this tier** — same "no speculative UI" principle applied throughout this plan (§6 says as much explicitly: "first real usage will be whichever Compliance/Banking screen gets built next"). No Loan Application/Wizard, `*Approval` leaf, or Case Management screen exists yet to retrofit into, so these were built and tested standalone against the §5/§8/§11 specs rather than against real usage.

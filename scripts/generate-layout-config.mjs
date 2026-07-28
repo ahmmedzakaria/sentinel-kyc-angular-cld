@@ -113,8 +113,8 @@ const NAVIGATION_TREE = [
       'KYC',
       [
         featureGroup('Person KYC', [
-          'Customer Registration',
-          'KYC Profile',
+          feature('Customer Registration', 'kyc/new'),
+          feature('KYC Profile', 'kyc/list'),
           'Document Capture',
           'Identity Verification',
           'Risk Classification',

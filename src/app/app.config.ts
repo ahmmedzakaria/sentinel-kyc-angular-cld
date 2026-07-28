@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { provideTransloco } from '@jsverse/transloco';
@@ -11,7 +11,8 @@ export const appConfig: ApplicationConfig = {
   providers: [
     // Standard as of Angular 20+ — no Zone.js in the bundle.
     provideZonelessChangeDetection(),
-    provideRouter(routes),
+    // Binds route params (e.g. `:id`) directly to component `input()`s.
+    provideRouter(routes, withComponentInputBinding()),
     // Needed for CDK overlay enter/exit transitions on the flyout menu.
     provideAnimations(),
     provideHttpClient(),

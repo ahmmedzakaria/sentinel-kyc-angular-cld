@@ -1,0 +1,93 @@
+:host {
+  display: block;
+}
+
+.image-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.main {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface-2);
+  border: var(--border-width-thin) solid var(--border);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: var(--card);
+  }
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  border-radius: 50%;
+  border: none;
+  background: var(--overlay-backdrop);
+  // Sits on a fixed translucent-black scrim over arbitrary image content,
+  // not a themed surface — white is the deliberate, theme-independent
+  // choice here (unlike --on-accent, which would pick Navy's dark ink and
+  // become illegible against this specific always-dark background).
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &.prev {
+    left: var(--space-4);
+  }
+  &.next {
+    right: var(--space-4);
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.thumbs {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+}
+.thumb {
+  flex-shrink: 0;
+  width: var(--space-32);
+  height: var(--space-22);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--border);
+  padding: 0;
+  cursor: pointer;
+  background: var(--surface-2);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &.active {
+    border-color: var(--accent);
+    border-width: var(--border-width-thick);
+  }
+}

@@ -1,0 +1,73 @@
+:host {
+  display: block;
+}
+
+.document-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.document-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  border: var(--border-width-thin) solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  background: var(--card);
+}
+
+.doc-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+// Constrains ImagePreviewComponent's own aspect-ratio box down to a compact
+// row thumbnail — its internal layout still comes from its own stylesheet,
+// this just sets the host's footprint from the parent.
+.doc-thumb {
+  width: var(--space-32);
+  flex-shrink: 0;
+}
+
+.doc-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.doc-name {
+  font-size: var(--font-size-base);
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove-btn {
+  flex-shrink: 0;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+}

@@ -1,0 +1,44 @@
+<div class="toolbar">
+  <div class="count">{{ total() }} case{{ total() === 1 ? '' : 's' }}</div>
+  <div class="toolbar-actions">
+    <app-export-button [rows]="pageRows()" [columns]="exportColumns" filename="kyc-cases" label="Export CSV" />
+    <button type="button" appButton (click)="openCreate()">New Case</button>
+  </div>
+</div>
+
+<app-filter-bar class="filters" [searchTypes]="searchTypes" placeholder="Search by name or email…" (searched)="onSearch($event)" />
+
+<app-data-table
+  [columns]="columns()"
+  [data]="pageRows()"
+  [sort]="sort()"
+  [page]="page()"
+  [pageSize]="pageSize"
+  [total]="total()"
+  emptyTitle="No cases yet"
+  emptyMessage="Register your first customer to get started."
+  (rowClick)="openDetail($event)"
+  (sortChange)="onSortChange($event)"
+  (pageChange)="onPageChange($event)"
+>
+  <ng-template #nameCell let-c>
+    <span class="name">{{ displayName(c) }}</span>
+  </ng-template>
+  <ng-template #entityCell let-c>
+    <app-pill [label]="c.entityType === 'individual' ? 'Individual' : 'Business'" tone="neutral" [dot]="false" />
+  </ng-template>
+  <ng-template #riskCell let-c>
+    <app-pill [label]="c.riskLevel" [tone]="riskTone(c.riskLevel)" />
+  </ng-template>
+  <ng-template #statusCell let-c>
+    <app-status-badge [status]="statusTone(c.status)" />
+  </ng-template>
+  <ng-template #createdCell let-c>
+    {{ formatCreated(c) }}
+  </ng-template>
+  <ng-template #actionsCell let-c>
+    <div class="row-actions">
+      <button type="button" class="link-btn focus-ring" (click)="openEdit(c, $event)">Edit</button>
+    </div>
+  </ng-template>
+</app-data-table>

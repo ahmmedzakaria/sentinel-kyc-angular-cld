@@ -1377,11 +1377,13 @@
                   "children": [
                     {
                       "label": "Customer Registration",
-                      "type": "feature"
+                      "type": "feature",
+                      "route": "kyc/new"
                     },
                     {
                       "label": "KYC Profile",
-                      "type": "feature"
+                      "type": "feature",
+                      "route": "kyc/list"
                     },
                     {
                       "label": "Document Capture",

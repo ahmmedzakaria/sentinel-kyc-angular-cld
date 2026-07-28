@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { PillComponent, PillTone } from '../pill/pill.component';
 
-export type StatusTone = 'pending' | 'approved' | 'risk' | 'active' | 'suspended' | 'draft';
+export type StatusTone = 'pending' | 'approved' | 'risk' | 'active' | 'suspended' | 'draft' | 'rejected' | 'escalated';
 
 interface StatusPreset {
   tone: PillTone;
@@ -16,7 +16,9 @@ const STATUS_PRESETS: Record<StatusTone, StatusPreset> = {
   risk: { tone: 'red', label: 'Elevated Risk' },
   active: { tone: 'success', label: 'Active' },
   suspended: { tone: 'red', label: 'Suspended' },
-  draft: { tone: 'neutral', label: 'Draft' }
+  draft: { tone: 'neutral', label: 'Draft' },
+  rejected: { tone: 'red', label: 'Rejected' },
+  escalated: { tone: 'amber', label: 'Escalated' }
 };
 
 /**

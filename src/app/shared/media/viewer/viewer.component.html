@@ -1,0 +1,14 @@
+<app-modal [open]="open()" [title]="source()?.name || 'Preview'" [width]="720" (closed)="closed.emit()">
+  @if (source(); as src) {
+    @if (isImage()) {
+      <app-image-preview [src]="src.url" [alt]="src.name ?? ''" />
+    } @else if (isPdf() && pdfStrategy) {
+      <ng-container *ngComponentOutlet="pdfStrategy; inputs: { source: src }" />
+    } @else {
+      <app-inline-alert severity="warning">Preview isn't available for this file type yet.</app-inline-alert>
+      <a class="download-link" [href]="src.url" [download]="src.name || 'document'">
+        Download {{ src.name || 'file' }}
+      </a>
+    }
+  }
+</app-modal>
